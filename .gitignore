@@ -41,3 +41,8 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+/src/EventTracker.Business/bin
+/src/EventTracker.Business/obj
+/src/EventTracker.BusinessServices/bin
+/src/EventTracker.BusinessServices/obj
+/src/packages

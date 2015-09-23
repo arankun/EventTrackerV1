@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="EventTracker.DataModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="EventAttendance">
+    <Key>
+      <PropertyRef Name="EventAttendanceId" />
+    </Key>
+    <Property Name="EventAttendanceId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserId" Type="Int32" Nullable="false" />
+    <Property Name="EventId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Event" Relationship="Self.FK_EventAttendance_Event" FromRole="EventAttendance" ToRole="Events" />
+    <NavigationProperty Name="User" Relationship="Self.FK_EventAttendance_User" FromRole="EventAttendance" ToRole="Users" />
+  </EntityType>
+  <EntityType Name="Event">
+    <Key>
+      <PropertyRef Name="EventId" />
+    </Key>
+    <Property Name="EventId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="EventName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="EventDate" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="EventAttendances" Relationship="Self.FK_EventAttendance_Event" FromRole="Events" ToRole="EventAttendance" />
+  </EntityType>
+  <EntityType Name="Token">
+    <Key>
+      <PropertyRef Name="TokenId" />
+    </Key>
+    <Property Name="TokenId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserId" Type="Int32" Nullable="false" />
+    <Property Name="AuthToken" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="IssuedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="ExpiresOn" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="User" Relationship="Self.FK_Tokens_User" FromRole="Tokens" ToRole="Users" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="UserId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="EventAttendances" Relationship="Self.FK_EventAttendance_User" FromRole="Users" ToRole="EventAttendance" />
+    <NavigationProperty Name="Tokens" Relationship="Self.FK_Tokens_User" FromRole="Users" ToRole="Tokens" />
+  </EntityType>
+  <Association Name="FK_EventAttendance_Event">
+    <End Role="Events" Type="Self.Event" Multiplicity="1" />
+    <End Role="EventAttendance" Type="Self.EventAttendance" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Events">
+        <PropertyRef Name="EventId" />
+      </Principal>
+      <Dependent Role="EventAttendance">
+        <PropertyRef Name="EventId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_EventAttendance_User">
+    <End Role="Users" Type="Self.User" Multiplicity="1" />
+    <End Role="EventAttendance" Type="Self.EventAttendance" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="EventAttendance">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Tokens_User">
+    <End Role="Users" Type="Self.User" Multiplicity="1" />
+    <End Role="Tokens" Type="Self.Token" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="Tokens">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="EventTrackerDBContext" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="EventAttendances" EntityType="Self.EventAttendance" />
+    <EntitySet Name="Events" EntityType="Self.Event" />
+    <EntitySet Name="Tokens" EntityType="Self.Token" />
+    <EntitySet Name="Users" EntityType="Self.User" />
+    <AssociationSet Name="FK_EventAttendance_Event" Association="Self.FK_EventAttendance_Event">
+      <End Role="Events" EntitySet="Events" />
+      <End Role="EventAttendance" EntitySet="EventAttendances" />
+    </AssociationSet>
+    <AssociationSet Name="FK_EventAttendance_User" Association="Self.FK_EventAttendance_User">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="EventAttendance" EntitySet="EventAttendances" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Tokens_User" Association="Self.FK_Tokens_User">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Tokens" EntitySet="Tokens" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
