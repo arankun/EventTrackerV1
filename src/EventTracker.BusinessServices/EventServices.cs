@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Transactions;
 using AutoMapper;
-using EventTracker.BusinessObjects;
+using EventTracker.BusinessModel;
 using EventTracker.DataModel.UnitOfWork;
 
 namespace EventTracker.BusinessServices
@@ -11,9 +11,9 @@ namespace EventTracker.BusinessServices
     {
         private readonly UnitOfWork _unitOfWork;
 
-        public EventServices()
+        public EventServices(UnitOfWork unitOfWork)
         {
-            _unitOfWork = new UnitOfWork();
+            _unitOfWork = unitOfWork;
         }
 
         public Event GetEventById(int eventId)

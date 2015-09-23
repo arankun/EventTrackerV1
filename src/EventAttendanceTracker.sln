@@ -11,9 +11,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BusinessLayer", "BusinessLa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventTracker.DataModel", "EventTracker.DataModel\EventTracker.DataModel.csproj", "{7F77C579-4030-4225-9DEF-B7A3BD807487}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventTracker.BusinessObjects", "EventTracker.Business\EventTracker.BusinessObjects.csproj", "{3E0F5684-38FB-4CEF-B166-F5EADBEDC327}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventTracker.BusinessModel", "EventTracker.Business\EventTracker.BusinessModel.csproj", "{3E0F5684-38FB-4CEF-B166-F5EADBEDC327}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventTracker.BusinessServices", "EventTracker.BusinessServices\EventTracker.BusinessServices.csproj", "{0CBE144D-53F4-4A29-ACDD-0F678AD3450A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{0C234BF7-79DD-4E2F-AD06-53EB499C0036}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventTracker.Resolver", "EventTracker.Resolver\EventTracker.Resolver.csproj", "{BF4932D7-A685-4AC1-B4D4-4FE345A0D555}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,6 +41,10 @@ Global
 		{0CBE144D-53F4-4A29-ACDD-0F678AD3450A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0CBE144D-53F4-4A29-ACDD-0F678AD3450A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0CBE144D-53F4-4A29-ACDD-0F678AD3450A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF4932D7-A685-4AC1-B4D4-4FE345A0D555}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF4932D7-A685-4AC1-B4D4-4FE345A0D555}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF4932D7-A685-4AC1-B4D4-4FE345A0D555}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF4932D7-A685-4AC1-B4D4-4FE345A0D555}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -45,5 +53,6 @@ Global
 		{7F77C579-4030-4225-9DEF-B7A3BD807487} = {6A139BA1-2D29-4E6F-B455-514133FC344E}
 		{3E0F5684-38FB-4CEF-B166-F5EADBEDC327} = {A575C8C9-99BA-4530-813B-B75AB0BA5633}
 		{0CBE144D-53F4-4A29-ACDD-0F678AD3450A} = {A575C8C9-99BA-4530-813B-B75AB0BA5633}
+		{BF4932D7-A685-4AC1-B4D4-4FE345A0D555} = {0C234BF7-79DD-4E2F-AD06-53EB499C0036}
 	EndGlobalSection
 EndGlobal

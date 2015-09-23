@@ -4,18 +4,19 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using EventTracker.BusinessModel;
 using EventTracker.BusinessServices;
-using EventTracker.BusinessObjects;
+
 namespace EventTrackerAPI.Controllers
 {
     [RoutePrefix("api/events")]
     public class EventController : ApiController
     {
-        private EventServices _eventService;
+        private IEventServices _eventService;
 
-        public EventController()
+        public EventController(IEventServices eventServices)
         {
-            _eventService = new EventServices();
+            _eventService = eventServices;
         }
 
         public IHttpActionResult Get()

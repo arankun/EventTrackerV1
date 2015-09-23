@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using EventTracker.BusinessObjects;
+using EventTracker.BusinessModel;
 
 namespace EventTracker.BusinessServices
 {

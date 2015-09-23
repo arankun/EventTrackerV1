@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0CBE144D-53F4-4A29-ACDD-0F678AD3450A}</ProjectGuid>
+    <ProjectGuid>{3E0F5684-38FB-4CEF-B166-F5EADBEDC327}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EventTracker.BusinessServices</RootNamespace>
-    <AssemblyName>EventTracker.BusinessServices</AssemblyName>
+    <RootNamespace>EventTracker.BusinessModel</RootNamespace>
+    <AssemblyName>EventTracker.Business</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,14 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutoMapper, Version=4.0.4.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoMapper.4.0.4\lib\net45\AutoMapper.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -45,27 +39,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DependencyResolver.cs" />
-    <Compile Include="IEventServices.cs" />
-    <Compile Include="EventServices.cs" />
+    <Compile Include="EventAttendance.cs" />
+    <Compile Include="Event.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\EventTracker.Business\EventTracker.BusinessModel.csproj">
-      <Project>{3e0f5684-38fb-4cef-b166-f5eadbedc327}</Project>
-      <Name>EventTracker.BusinessModel</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\EventTracker.DataModel\EventTracker.DataModel.csproj">
-      <Project>{7f77c579-4030-4225-9def-b7a3bd807487}</Project>
-      <Name>EventTracker.DataModel</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\EventTracker.Resolver\EventTracker.Resolver.csproj">
-      <Project>{bf4932d7-a685-4ac1-b4d4-4fe345a0d555}</Project>
-      <Name>EventTracker.Resolver</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
+    <Compile Include="Token.cs" />
+    <Compile Include="User.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

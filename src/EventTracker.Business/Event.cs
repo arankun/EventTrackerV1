@@ -1,4 +1,4 @@
-﻿namespace EventTracker.BusinessObjects
+﻿namespace EventTracker.BusinessModel
 {
     public class Event
     {
