@@ -6,9 +6,11 @@ using System.Net.Http;
 using System.Web.Http;
 using EventTracker.BusinessModel;
 using EventTracker.BusinessServices;
+using EventTrackerAPI.Filters;
 
 namespace EventTrackerAPI.Controllers
 {
+    [ApiAuthenticationFilter(true)]
     [RoutePrefix("api/events")]
     public class EventController : ApiController
     {

@@ -9,6 +9,7 @@ namespace EventTracker.BusinessServices
         {
             //AT: Register Service components here
             registerComponent.RegisterType<IEventServices, EventServices>();
+            registerComponent.RegisterType<IUserServices, UserServices>();
         }
     }
 }
