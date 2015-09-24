@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿#region directives
+
+using System;
+using EventTrackerAPI.Models;
+using EventTrackerAPI.Providers;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
-using Microsoft.Owin.Security.Google;
 using Microsoft.Owin.Security.OAuth;
 using Owin;
-using EventTrackerAPI.Providers;
-using EventTrackerAPI.Models;
+
+#endregion
 
 namespace EventTrackerAPI
 {

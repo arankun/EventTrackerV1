@@ -1,5 +1,9 @@
+#region directives
+
 using System.Web.Http;
 using System.Web.Mvc;
+
+#endregion
 
 namespace EventTrackerAPI.Areas.HelpPage
 {

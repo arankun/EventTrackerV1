@@ -1,5 +1,9 @@
+#region directives
+
 using System;
 using System.Reflection;
+
+#endregion
 
 namespace EventTrackerAPI.Areas.HelpPage.ModelDescriptions
 {

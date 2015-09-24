@@ -1,4 +1,8 @@
-﻿using Microsoft.Practices.Unity;
+﻿#region directives
+
+using Microsoft.Practices.Unity;
+
+#endregion
 
 namespace EventTracker.Resolver
 {
@@ -19,13 +23,13 @@ namespace EventTracker.Resolver
             }
             else
             {
-                this._container.RegisterType<TFrom, TTo>();
+                _container.RegisterType<TFrom, TTo>();
             }
         }
 
         public void RegisterTypeWithControlledLifeTime<TFrom, TTo>(bool withInterception = false) where TTo : TFrom
         {
-            this._container.RegisterType<TFrom, TTo>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<TFrom, TTo>(new ContainerControlledLifetimeManager());
         }
     }
 }

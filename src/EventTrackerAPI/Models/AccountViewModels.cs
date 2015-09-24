@@ -1,5 +1,8 @@
-﻿using System;
+﻿#region directives
+
 using System.Collections.Generic;
+
+#endregion
 
 namespace EventTrackerAPI.Models
 {

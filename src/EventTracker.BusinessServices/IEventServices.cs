@@ -1,5 +1,9 @@
-﻿using System.Collections.Generic;
+﻿#region directives
+
+using System.Collections.Generic;
 using EventTracker.BusinessModel;
+
+#endregion
 
 namespace EventTracker.BusinessServices
 {

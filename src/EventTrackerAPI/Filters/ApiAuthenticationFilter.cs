@@ -1,6 +1,10 @@
-﻿using System.Threading;
+﻿#region directives
+
+using System.Threading;
 using System.Web.Http.Controllers;
 using EventTracker.BusinessServices;
+
+#endregion
 
 namespace EventTrackerAPI.Filters
 {

@@ -1,8 +1,11 @@
-﻿using System.Security.Claims;
+﻿#region directives
+
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.AspNet.Identity.Owin;
+
+#endregion
 
 namespace EventTrackerAPI.Models
 {
@@ -24,7 +27,7 @@ namespace EventTrackerAPI.Models
             : base("DefaultConnection", throwIfV1Schema: false)
         {
         }
-        
+
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();

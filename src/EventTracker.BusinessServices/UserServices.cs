@@ -1,4 +1,8 @@
-﻿using EventTracker.DataModel.UnitOfWork;
+﻿#region directives
+
+using EventTracker.DataModel.UnitOfWork;
+
+#endregion
 
 namespace EventTracker.BusinessServices
 {

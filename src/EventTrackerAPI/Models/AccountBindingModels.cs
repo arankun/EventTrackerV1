@@ -1,6 +1,8 @@
-﻿using System;
+﻿#region directives
+
 using System.ComponentModel.DataAnnotations;
-using Newtonsoft.Json;
+
+#endregion
 
 namespace EventTrackerAPI.Models
 {

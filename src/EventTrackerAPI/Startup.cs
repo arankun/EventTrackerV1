@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿#region directives
+
 using Microsoft.Owin;
 using Owin;
+
+#endregion
 
 [assembly: OwinStartup(typeof(EventTrackerAPI.Startup))]
 

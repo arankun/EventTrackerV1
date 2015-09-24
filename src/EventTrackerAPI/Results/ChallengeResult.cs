@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿#region directives
+
 using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
+
+#endregion
 
 namespace EventTrackerAPI.Results
 {
@@ -24,7 +25,7 @@ namespace EventTrackerAPI.Results
         {
             Request.GetOwinContext().Authentication.Challenge(LoginProvider);
 
-            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.Unauthorized);
+            var response = new HttpResponseMessage(HttpStatusCode.Unauthorized);
             response.RequestMessage = Request;
             return Task.FromResult(response);
         }

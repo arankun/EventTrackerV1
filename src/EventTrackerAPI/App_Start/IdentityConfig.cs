@@ -1,9 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿#region directives
+
+using EventTrackerAPI.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
-using EventTrackerAPI.Models;
+
+#endregion
 
 namespace EventTrackerAPI
 {

@@ -1,26 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
+﻿#region directives
+
 using System.Web.Http;
 using EventTracker.BusinessModel;
 using EventTracker.BusinessServices;
-using EventTrackerAPI.Filters;
+using EventTrackerAPI.ActionFilters;
+
+#endregion
 
 namespace EventTrackerAPI.Controllers
 {
-    [ApiAuthenticationFilter(true)]
+    [AuthorizationRequired]
     [RoutePrefix("api/events")]
     public class EventController : ApiController
     {
-        private IEventServices _eventService;
+        private readonly IEventServices _eventService;
 
         public EventController(IEventServices eventServices)
         {
             _eventService = eventServices;
         }
 
+        [Route("getall")]
         public IHttpActionResult Get()
         {
             var events = _eventService.GetAllEvents();

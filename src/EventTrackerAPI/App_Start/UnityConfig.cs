@@ -1,8 +1,11 @@
-using Microsoft.Practices.Unity;
+#region directives
+
 using System.Web.Http;
-using EventTracker.BusinessServices;
 using EventTracker.Resolver;
+using Microsoft.Practices.Unity;
 using Unity.WebApi;
+
+#endregion
 
 namespace EventTrackerAPI
 {

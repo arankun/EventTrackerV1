@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿#region directives
+
+using System;
 using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition.Primitives;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using Microsoft.Practices.Unity;
+
+#endregion
 
 namespace EventTracker.Resolver
 {
@@ -24,13 +26,13 @@ namespace EventTracker.Resolver
 
                     using (var componsitionContainer = new CompositionContainer(aggregateCatalog))
                     {
-                        IEnumerable<Export> exports = componsitionContainer.GetExports(importDef);
+                        var exports = componsitionContainer.GetExports(importDef);
 
-                        IEnumerable<IComponent> modules =
+                        var modules =
                             exports.Select(export => export.Value as IComponent).Where(m => m != null);
 
                         var registerComponent = new RegisterComponent(container);
-                        foreach (IComponent module in modules)
+                        foreach (var module in modules)
                         {
                             module.SetUp(registerComponent);
                         }
@@ -40,7 +42,7 @@ namespace EventTracker.Resolver
             catch (ReflectionTypeLoadException typeLoadException)
             {
                 var builder = new StringBuilder();
-                foreach (Exception loaderException in typeLoadException.LoaderExceptions)
+                foreach (var loaderException in typeLoadException.LoaderExceptions)
                 {
                     builder.AppendFormat("{0}\n", loaderException.Message);
                 }
@@ -53,6 +55,6 @@ namespace EventTracker.Resolver
         {
             return new ImportDefinition(
                 def => true, typeof(IComponent).FullName, ImportCardinality.ZeroOrMore, false, false);
-        } 
+        }
     }
 }

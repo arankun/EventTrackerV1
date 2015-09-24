@@ -1,5 +1,8 @@
-﻿using System.Web;
+﻿#region directives
+
 using System.Web.Mvc;
+
+#endregion
 
 namespace EventTrackerAPI
 {

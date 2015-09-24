@@ -1,13 +1,15 @@
-﻿using System;
+﻿#region directives
+
+using System;
 using System.Net;
 using System.Net.Http;
-using System.Security.Claims;
 using System.Security.Principal;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
+
+#endregion
 
 namespace EventTrackerAPI.Filters
 {
@@ -51,6 +53,7 @@ namespace EventTrackerAPI.Filters
                 authHeaderValue = authRequest.Parameter;
             if (string.IsNullOrEmpty(authHeaderValue))
                 return null;
+            //AT: Use/replace encryption mechanism here.
             authHeaderValue = Encoding.Default.GetString(Convert.FromBase64String(authHeaderValue));
             var credentials = authHeaderValue.Split(':');
             return credentials.Length < 2 ? null : new BasicAuthenticationIdentity(credentials[0], credentials[1]);
@@ -69,7 +72,5 @@ namespace EventTrackerAPI.Filters
             actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
             actionContext.Response.Headers.Add("WWW-Authenticate", string.Format("Basic realm=\"{0}\"", dnsHost));
         }
-
-
     }
 }
