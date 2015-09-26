@@ -1,7 +1,7 @@
 ﻿#region directives
 
-using EventTracker.Resolver;
 using System.ComponentModel.Composition;
+using EventTracker.Resolver;
 
 #endregion
 
@@ -16,6 +16,7 @@ namespace EventTracker.BusinessServices
             registerComponent.RegisterType<IEventServices, EventServices>();
             registerComponent.RegisterType<IUserServices, UserServices>();
             registerComponent.RegisterType<ITokenServices, TokenServices>();
+            registerComponent.RegisterType<IEventAttendanceLogServices, EventAttendanceServices>();
         }
     }
 }

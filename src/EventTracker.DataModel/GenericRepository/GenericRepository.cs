@@ -1,10 +1,12 @@
-﻿using System;
+﻿#region directives
+
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using EventTracker.DataModel.Generated;
+
+#endregion
 
 namespace EventTracker.DataModel.GenericRepository
 {
@@ -15,20 +17,23 @@ namespace EventTracker.DataModel.GenericRepository
     public class GenericRepository<TEntity> where TEntity : class
     {
         #region Private member variables...
-        internal EventTrackerDBContext Context;
+
+        public EventTrackerDBContext Context;
         internal DbSet<TEntity> DbSet;
+
         #endregion
 
         #region Public Constructor...
+
         /// <summary>
         /// Public Constructor,initializes privately declared local variables.
         /// </summary>
         /// <param name="context"></param>
         public GenericRepository(EventTrackerDBContext context)
         {
-            this.Context = context;
-            this.DbSet = context.Set<TEntity>();
-            this.Database = context.Database;
+            Context = context;
+            DbSet = context.Set<TEntity>();
+            Database = context.Database;
         }
 
         public Database Database { get; private set; }
@@ -73,7 +78,7 @@ namespace EventTracker.DataModel.GenericRepository
         /// <param name="id"></param>
         public virtual void Delete(object id)
         {
-            TEntity entityToDelete = DbSet.Find(id);
+            var entityToDelete = DbSet.Find(id);
             Delete(entityToDelete);
         }
 
@@ -137,8 +142,8 @@ namespace EventTracker.DataModel.GenericRepository
         /// <returns></returns>
         public void Delete(Func<TEntity, Boolean> where)
         {
-            IQueryable<TEntity> objects = DbSet.Where<TEntity>(where).AsQueryable();
-            foreach (TEntity obj in objects)
+            var objects = DbSet.Where<TEntity>(where).AsQueryable();
+            foreach (var obj in objects)
                 DbSet.Remove(obj);
         }
 
@@ -161,7 +166,7 @@ namespace EventTracker.DataModel.GenericRepository
             System.Linq.Expressions.Expression<Func<TEntity,
             bool>> predicate, params string[] include)
         {
-            IQueryable<TEntity> query = this.DbSet;
+            IQueryable<TEntity> query = DbSet;
             query = include.Aggregate(query, (current, inc) => current.Include(inc));
             return query.Where(predicate);
         }
@@ -195,7 +200,6 @@ namespace EventTracker.DataModel.GenericRepository
         {
             return DbSet.First<TEntity>(predicate);
         }
-
 
         #endregion
     }

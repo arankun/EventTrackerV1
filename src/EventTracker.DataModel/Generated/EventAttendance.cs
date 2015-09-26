@@ -15,8 +15,10 @@ namespace EventTracker.DataModel.Generated
     public partial class EventAttendance
     {
         public int EventAttendanceId { get; set; }
-        public int UserId { get; set; }
         public int EventId { get; set; }
+        public int UserId { get; set; }
+        public Nullable<int> LogBy { get; set; }
+        public System.DateTime LogDate { get; set; }
     
         public virtual Event Event { get; set; }
         public virtual User User { get; set; }

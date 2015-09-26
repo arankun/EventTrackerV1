@@ -6,7 +6,7 @@ using System.Transactions;
 using AutoMapper;
 using EventTracker.BusinessModel;
 using EventTracker.DataModel.UnitOfWork;
-
+using DBObject = EventTracker.DataModel.Generated;
 #endregion
 
 namespace EventTracker.BusinessServices
@@ -100,6 +100,40 @@ namespace EventTracker.BusinessServices
                 }
             }
             return success;
+        }
+
+        public List<Event> GetEventWithAttendance(int eventId)
+        {
+            using (var context = _unitOfWork.DbContext)
+            {
+                var eventAttendances = (from e in context.Events
+                                        join a in context.EventAttendances on e.EventId equals a.EventId
+                                        join u in context.Users on a.UserId equals u.UserId
+                                        where e.EventId == eventId
+                                        select new Event
+                                        {
+                                            EventId = e.EventId,
+                                            EventName = e.EventName,
+                                            EventDate = e.EventDate,
+                                            EventAttendances  = new List<EventAttendance>()
+                                            {
+                                                new EventAttendance()
+                                                {
+                                                    EventAttendanceId = a.EventAttendanceId,
+                                                    Attendee = new AppUser()
+                                                    {
+                                                        UserId = u.UserId,
+                                                        Name =  u.Name
+                                                    }
+                                                }
+
+                                            }
+                                        }).ToList();
+
+
+                return eventAttendances;
+            };
+            return null;
         }
     }
 }

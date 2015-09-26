@@ -9,6 +9,7 @@ namespace EventTracker.BusinessServices
     public interface ITokenServices
     {
         #region Interface member methods.
+
         /// <summary>
         ///  Function to generate unique token with expiry against the provided userId.
         ///  Also add a record in database for generated token.
@@ -36,6 +37,7 @@ namespace EventTracker.BusinessServices
         /// <param name="userId"></param>
         /// <returns></returns>
         bool DeleteByUserId(int userId);
+
         #endregion
     }
 

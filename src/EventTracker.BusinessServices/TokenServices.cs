@@ -21,9 +21,9 @@ namespace EventTracker.BusinessServices
 
         public Token GenerateToken(int userId)
         {
-            string token = Guid.NewGuid().ToString();
-            DateTime issuedOn = DateTime.Now;
-            DateTime expiredOn = DateTime.Now.AddSeconds(
+            var token = Guid.NewGuid().ToString();
+            var issuedOn = DateTime.Now;
+            var expiredOn = DateTime.Now.AddSeconds(
                                               Convert.ToDouble(ConfigurationManager.AppSettings["AuthTokenExpiry"]));
             var tokendomain = new DataModel.Generated.Token()
             {

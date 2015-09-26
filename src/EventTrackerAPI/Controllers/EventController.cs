@@ -3,13 +3,12 @@
 using System.Web.Http;
 using EventTracker.BusinessModel;
 using EventTracker.BusinessServices;
-using EventTrackerAPI.ActionFilters;
 
 #endregion
 
 namespace EventTrackerAPI.Controllers
 {
-    [AuthorizationRequired]
+    //[AuthorizationRequired]
     [RoutePrefix("api/events")]
     public class EventController : ApiController
     {
@@ -37,6 +36,18 @@ namespace EventTrackerAPI.Controllers
             var anEvent = _eventService.GetEventById(id);
             if (anEvent != null)
                 return Ok(anEvent);
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        [Route("{eventId}/attendance")]
+        public IHttpActionResult GetEventAttendance(int eventId)
+        {
+            var attendance = _eventService.GetEventWithAttendance(eventId);
+            if (attendance != null)
+                return Ok(attendance);
             else
             {
                 return NotFound();

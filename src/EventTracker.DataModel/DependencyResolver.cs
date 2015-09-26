@@ -1,6 +1,11 @@
-﻿using EventTracker.DataModel.UnitOfWork;
-using EventTracker.Resolver;
+﻿#region directives
+
 using System.ComponentModel.Composition;
+using EventTracker.DataModel.UnitOfWork;
+using EventTracker.Resolver;
+
+#endregion
+
 namespace EventTracker.DataModel
 {
     [Export(typeof(IComponent))]

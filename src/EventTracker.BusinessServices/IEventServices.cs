@@ -14,5 +14,8 @@ namespace EventTracker.BusinessServices
         int CreateEvent(Event anEvent);
         bool UpdateEvent(int eventId, Event anEvent);
         bool DeleteEvent(int eventId);
+        //List<DataModel.Generated.Event> GetAttendanceByEventId(int eventId);
+
+        List<Event> GetEventWithAttendance(int eventId);
     }
 }

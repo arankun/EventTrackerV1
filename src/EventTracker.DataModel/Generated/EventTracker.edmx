@@ -4,14 +4,16 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="EventTracker.DataModel.DbObjects.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <EntityType Name="EventAttendance">
+      <Schema Namespace="EventTracker.DBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="EventAttendances">
           <Key>
             <PropertyRef Name="EventAttendanceId" />
           </Key>
           <Property Name="EventAttendanceId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="UserId" Type="int" Nullable="false" />
           <Property Name="EventId" Type="int" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="LogBy" Type="int" />
+          <Property Name="LogDate" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="Events">
           <Key>
@@ -40,26 +42,26 @@
           <Property Name="Password" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" />
         </EntityType>
-        <Association Name="FK_EventAttendance_Event">
+        <Association Name="FK_EventAttendanceLog_Event">
           <End Role="Events" Type="Self.Events" Multiplicity="1" />
-          <End Role="EventAttendance" Type="Self.EventAttendance" Multiplicity="*" />
+          <End Role="EventAttendances" Type="Self.EventAttendances" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Events">
               <PropertyRef Name="EventId" />
             </Principal>
-            <Dependent Role="EventAttendance">
+            <Dependent Role="EventAttendances">
               <PropertyRef Name="EventId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_EventAttendance_User">
+        <Association Name="FK_EventAttendanceLog_User">
           <End Role="Users" Type="Self.Users" Multiplicity="1" />
-          <End Role="EventAttendance" Type="Self.EventAttendance" Multiplicity="*" />
+          <End Role="EventAttendances" Type="Self.EventAttendances" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Users">
               <PropertyRef Name="UserId" />
             </Principal>
-            <Dependent Role="EventAttendance">
+            <Dependent Role="EventAttendances">
               <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
@@ -76,18 +78,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="EventTrackerDataModelDbObjectsStoreContainer">
-          <EntitySet Name="EventAttendance" EntityType="Self.EventAttendance" Schema="dbo" store:Type="Tables" />
+        <EntityContainer Name="EventTrackerDBModelStoreContainer">
+          <EntitySet Name="EventAttendances" EntityType="Self.EventAttendances" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Events" EntityType="Self.Events" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tokens" EntityType="Self.Tokens" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK_EventAttendance_Event" Association="Self.FK_EventAttendance_Event">
+          <AssociationSet Name="FK_EventAttendanceLog_Event" Association="Self.FK_EventAttendanceLog_Event">
             <End Role="Events" EntitySet="Events" />
-            <End Role="EventAttendance" EntitySet="EventAttendance" />
+            <End Role="EventAttendances" EntitySet="EventAttendances" />
           </AssociationSet>
-          <AssociationSet Name="FK_EventAttendance_User" Association="Self.FK_EventAttendance_User">
+          <AssociationSet Name="FK_EventAttendanceLog_User" Association="Self.FK_EventAttendanceLog_User">
             <End Role="Users" EntitySet="Users" />
-            <End Role="EventAttendance" EntitySet="EventAttendance" />
+            <End Role="EventAttendances" EntitySet="EventAttendances" />
           </AssociationSet>
           <AssociationSet Name="FK_Tokens_User" Association="Self.FK_Tokens_User">
             <End Role="Users" EntitySet="Users" />
@@ -98,16 +100,18 @@
     </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="EventTracker.DataModel.DbObjects" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="EventTracker.DBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="EventAttendance">
           <Key>
             <PropertyRef Name="EventAttendanceId" />
           </Key>
           <Property Name="EventAttendanceId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UserId" Type="Int32" Nullable="false" />
           <Property Name="EventId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Event" Relationship="Self.FK_EventAttendance_Event" FromRole="EventAttendance" ToRole="Events" />
-          <NavigationProperty Name="User" Relationship="Self.FK_EventAttendance_User" FromRole="EventAttendance" ToRole="Users" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="LogBy" Type="Int32" />
+          <Property Name="LogDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Event" Relationship="Self.FK_EventAttendanceLog_Event" FromRole="EventAttendances" ToRole="Events" />
+          <NavigationProperty Name="User" Relationship="Self.FK_EventAttendanceLog_User" FromRole="EventAttendances" ToRole="Users" />
         </EntityType>
         <EntityType Name="Event">
           <Key>
@@ -116,7 +120,7 @@
           <Property Name="EventId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="EventName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="EventDate" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="EventAttendances" Relationship="Self.FK_EventAttendance_Event" FromRole="Events" ToRole="EventAttendance" />
+          <NavigationProperty Name="EventAttendances" Relationship="Self.FK_EventAttendanceLog_Event" FromRole="Events" ToRole="EventAttendances" />
         </EntityType>
         <EntityType Name="Token">
           <Key>
@@ -137,29 +141,29 @@
           <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="EventAttendances" Relationship="Self.FK_EventAttendance_User" FromRole="Users" ToRole="EventAttendance" />
+          <NavigationProperty Name="EventAttendances" Relationship="Self.FK_EventAttendanceLog_User" FromRole="Users" ToRole="EventAttendances" />
           <NavigationProperty Name="Tokens" Relationship="Self.FK_Tokens_User" FromRole="Users" ToRole="Tokens" />
         </EntityType>
-        <Association Name="FK_EventAttendance_Event">
+        <Association Name="FK_EventAttendanceLog_Event">
           <End Role="Events" Type="Self.Event" Multiplicity="1" />
-          <End Role="EventAttendance" Type="Self.EventAttendance" Multiplicity="*" />
+          <End Role="EventAttendances" Type="Self.EventAttendance" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Events">
               <PropertyRef Name="EventId" />
             </Principal>
-            <Dependent Role="EventAttendance">
+            <Dependent Role="EventAttendances">
               <PropertyRef Name="EventId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_EventAttendance_User">
+        <Association Name="FK_EventAttendanceLog_User">
           <End Role="Users" Type="Self.User" Multiplicity="1" />
-          <End Role="EventAttendance" Type="Self.EventAttendance" Multiplicity="*" />
+          <End Role="EventAttendances" Type="Self.EventAttendance" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Users">
               <PropertyRef Name="UserId" />
             </Principal>
-            <Dependent Role="EventAttendance">
+            <Dependent Role="EventAttendances">
               <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
@@ -181,13 +185,13 @@
           <EntitySet Name="Events" EntityType="Self.Event" />
           <EntitySet Name="Tokens" EntityType="Self.Token" />
           <EntitySet Name="Users" EntityType="Self.User" />
-          <AssociationSet Name="FK_EventAttendance_Event" Association="Self.FK_EventAttendance_Event">
+          <AssociationSet Name="FK_EventAttendanceLog_Event" Association="Self.FK_EventAttendanceLog_Event">
             <End Role="Events" EntitySet="Events" />
-            <End Role="EventAttendance" EntitySet="EventAttendances" />
+            <End Role="EventAttendances" EntitySet="EventAttendances" />
           </AssociationSet>
-          <AssociationSet Name="FK_EventAttendance_User" Association="Self.FK_EventAttendance_User">
+          <AssociationSet Name="FK_EventAttendanceLog_User" Association="Self.FK_EventAttendanceLog_User">
             <End Role="Users" EntitySet="Users" />
-            <End Role="EventAttendance" EntitySet="EventAttendances" />
+            <End Role="EventAttendances" EntitySet="EventAttendances" />
           </AssociationSet>
           <AssociationSet Name="FK_Tokens_User" Association="Self.FK_Tokens_User">
             <End Role="Users" EntitySet="Users" />
@@ -199,18 +203,20 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="EventTrackerDataModelDbObjectsStoreContainer" CdmEntityContainer="EventTrackerDBContext">
+        <EntityContainerMapping StorageEntityContainer="EventTrackerDBModelStoreContainer" CdmEntityContainer="EventTrackerDBContext">
           <EntitySetMapping Name="EventAttendances">
-            <EntityTypeMapping TypeName="EventTracker.DataModel.DbObjects.EventAttendance">
-              <MappingFragment StoreEntitySet="EventAttendance">
+            <EntityTypeMapping TypeName="EventTracker.DBModel.EventAttendance">
+              <MappingFragment StoreEntitySet="EventAttendances">
                 <ScalarProperty Name="EventAttendanceId" ColumnName="EventAttendanceId" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="EventId" ColumnName="EventId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="LogBy" ColumnName="LogBy" />
+                <ScalarProperty Name="LogDate" ColumnName="LogDate" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Events">
-            <EntityTypeMapping TypeName="EventTracker.DataModel.DbObjects.Event">
+            <EntityTypeMapping TypeName="EventTracker.DBModel.Event">
               <MappingFragment StoreEntitySet="Events">
                 <ScalarProperty Name="EventId" ColumnName="EventId" />
                 <ScalarProperty Name="EventName" ColumnName="EventName" />
@@ -219,7 +225,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Tokens">
-            <EntityTypeMapping TypeName="EventTracker.DataModel.DbObjects.Token">
+            <EntityTypeMapping TypeName="EventTracker.DBModel.Token">
               <MappingFragment StoreEntitySet="Tokens">
                 <ScalarProperty Name="TokenId" ColumnName="TokenId" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
@@ -230,7 +236,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Users">
-            <EntityTypeMapping TypeName="EventTracker.DataModel.DbObjects.User">
+            <EntityTypeMapping TypeName="EventTracker.DBModel.User">
               <MappingFragment StoreEntitySet="Users">
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="UserName" ColumnName="UserName" />

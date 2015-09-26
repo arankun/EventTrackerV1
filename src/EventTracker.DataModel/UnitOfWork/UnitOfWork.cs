@@ -1,13 +1,13 @@
-﻿using System;
+﻿#region directives
+
+using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EventTracker.DataModel.GenericRepository;
-using EventTracker.DataModel;
 using EventTracker.DataModel.Generated;
+using EventTracker.DataModel.GenericRepository;
+
+#endregion
 
 namespace EventTracker.DataModel.UnitOfWork
 {
@@ -16,73 +16,19 @@ namespace EventTracker.DataModel.UnitOfWork
     /// </summary>
     public class UnitOfWork : IDisposable, IUnitOfWork
     {
-        #region Private member variables...
-
-        private EventTrackerDBContext _context = null;
-        private GenericRepository<User> _userRepository;
-        private GenericRepository<Event> _productRepository;
-        private GenericRepository<Token> _tokenRepository;
-        private GenericRepository<EventAttendance> _eventAttendanceRepository;
-        #endregion
-
         public UnitOfWork()
         {
-            _context = new EventTrackerDBContext();
+            _dbContext = new EventTrackerDBContext();
+            _dbContext.Configuration.LazyLoadingEnabled = false;
         }
 
-        #region Public Repository Creation properties...
-
-        /// <summary>
-        /// Get/Set Property for product repository.
-        /// </summary>
-        public GenericRepository<Event> EventRepository
+        public EventTrackerDBContext DbContext
         {
-            get
-            {
-                if (this._productRepository == null)
-                    this._productRepository = new GenericRepository<Event>(_context);
-                return _productRepository;
-            }
+            get { return _dbContext; }
         }
-
-        /// <summary>
-        /// Get/Set Property for user repository.
-        /// </summary>
-        public GenericRepository<User> UserRepository
-        {
-            get
-            {
-                if (this._userRepository == null)
-                    this._userRepository = new GenericRepository<User>(_context);
-                return _userRepository;
-            }
-        }
-
-        /// <summary>
-        /// Get/Set Property for token repository.
-        /// </summary>
-        public GenericRepository<Token> TokenRepository
-        {
-            get
-            {
-                if (this._tokenRepository == null)
-                    this._tokenRepository = new GenericRepository<Token>(_context);
-                return _tokenRepository;
-            }
-        }
-
-        public GenericRepository<EventAttendance> EventAttendanceRepository
-        {
-            get
-            {
-                if (this._eventAttendanceRepository == null)
-                    this._eventAttendanceRepository = new GenericRepository<EventAttendance>(_context);
-                return _eventAttendanceRepository;
-            }
-        }
-        #endregion
 
         #region Public member methods...
+
         /// <summary>
         /// Save method.
         /// </summary>
@@ -90,7 +36,7 @@ namespace EventTracker.DataModel.UnitOfWork
         {
             try
             {
-                _context.SaveChanges();
+                _dbContext.SaveChanges();
             }
             catch (DbEntityValidationException e)
             {
@@ -115,10 +61,85 @@ namespace EventTracker.DataModel.UnitOfWork
 
         #endregion
 
+        #region Private member variables...
+
+        private readonly EventTrackerDBContext _dbContext = null;
+        private GenericRepository<User> _userRepository;
+        private GenericRepository<Event> _productRepository;
+        private GenericRepository<Token> _tokenRepository;
+        private GenericRepository<EventAttendance> _eventAttendanceRepository;
+
+        #endregion
+
+        #region Public Repository Creation properties...
+
+        /// <summary>
+        /// Get/Set Property for product repository.
+        /// </summary>
+        public GenericRepository<Event> EventRepository
+        {
+            get
+            {
+                if (_productRepository == null)
+                    _productRepository = new GenericRepository<Event>(_dbContext);
+                return _productRepository;
+            }
+        }
+
+        /// <summary>
+        /// Get/Set Property for user repository.
+        /// </summary>
+        public GenericRepository<User> UserRepository
+        {
+            get
+            {
+                if (_userRepository == null)
+                    _userRepository = new GenericRepository<User>(_dbContext);
+                return _userRepository;
+            }
+        }
+
+        /// <summary>
+        /// Get/Set Property for token repository.
+        /// </summary>
+        public GenericRepository<Token> TokenRepository
+        {
+            get
+            {
+                if (_tokenRepository == null)
+                    _tokenRepository = new GenericRepository<Token>(_dbContext);
+                return _tokenRepository;
+            }
+        }
+
+        public GenericRepository<EventAttendance> EventAttendanceRepository
+        {
+            get
+            {
+                if (_eventAttendanceRepository == null)
+                    _eventAttendanceRepository = new GenericRepository<EventAttendance>(_dbContext);
+                return _eventAttendanceRepository;
+            }
+        }
+
+        //public GenericRepository<EventAttendanceLog> EventAttendanceLogRepository
+        //{
+        //    get
+        //    {
+        //        if (this._eventAttendanceLogRepository == null)
+        //            this._eventAttendanceLogRepository = new GenericRepository<EventAttendanceLog>(_dbContext);
+        //        return _eventAttendanceLogRepository;
+        //    }
+        //}
+
+        #endregion
+
         #region Implementing IDiosposable...
 
         #region private dispose variable declaration...
+
         private bool disposed = false;
+
         #endregion
 
         /// <summary>
@@ -127,15 +148,15 @@ namespace EventTracker.DataModel.UnitOfWork
         /// <param name="disposing"></param>
         protected virtual void Dispose(bool disposing)
         {
-            if (!this.disposed)
+            if (!disposed)
             {
                 if (disposing)
                 {
                     Debug.WriteLine("UnitOfWork is being disposed");
-                    _context.Dispose();
+                    _dbContext.Dispose();
                 }
             }
-            this.disposed = true;
+            disposed = true;
         }
 
         /// <summary>
@@ -146,6 +167,7 @@ namespace EventTracker.DataModel.UnitOfWork
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
         #endregion
     }
 }
