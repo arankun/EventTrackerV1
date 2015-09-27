@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="EventAttendance.cs" />
     <Compile Include="Event.cs" />
+    <Compile Include="EventAttendanceSummary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Token.cs" />
     <Compile Include="AppUser.cs" />

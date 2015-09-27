@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="EventTracker.DataModel.DbObjects" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Event">
+    <Key>
+      <PropertyRef Name="EventId" />
+    </Key>
+    <Property Name="EventId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="EventName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="EventDate" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="EventAttendances1" Relationship="EventTracker.DataModel.DbObjects.FK_EventAttendanceLog_Event" FromRole="Event" ToRole="EventAttendance" />
+  </EntityType>
+  <EntityType Name="Token">
+    <Key>
+      <PropertyRef Name="TokenId" />
+    </Key>
+    <Property Name="TokenId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserId" Type="Int32" Nullable="false" />
+    <Property Name="AuthToken" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="IssuedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="ExpiresOn" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="User" Relationship="Self.FK_Tokens_User" FromRole="Tokens" ToRole="Users" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="UserId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Tokens" Relationship="Self.FK_Tokens_User" FromRole="Users" ToRole="Tokens" />
+    <NavigationProperty Name="EventAttendances1" Relationship="EventTracker.DataModel.DbObjects.FK_EventAttendanceLog_User" FromRole="User" ToRole="EventAttendance" />
+  </EntityType>
+  <Association Name="FK_Tokens_User">
+    <End Role="Users" Type="Self.User" Multiplicity="1" />
+    <End Role="Tokens" Type="Self.Token" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="Tokens">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="EventTrackerDBContext" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Events" EntityType="Self.Event" />
+    <EntitySet Name="Tokens" EntityType="Self.Token" />
+    <EntitySet Name="Users" EntityType="Self.User" />
+    <AssociationSet Name="FK_Tokens_User" Association="Self.FK_Tokens_User">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Tokens" EntitySet="Tokens" />
+    </AssociationSet>
+    <EntitySet Name="EventAttendance" EntityType="EventTracker.DataModel.DbObjects.EventAttendance" />
+    <AssociationSet Name="FK_EventAttendanceLog_Event" Association="EventTracker.DataModel.DbObjects.FK_EventAttendanceLog_Event">
+      <End Role="Event" EntitySet="Events" />
+      <End Role="EventAttendance" EntitySet="EventAttendance" />
+    </AssociationSet>
+    <AssociationSet Name="FK_EventAttendanceLog_User" Association="EventTracker.DataModel.DbObjects.FK_EventAttendanceLog_User">
+      <End Role="User" EntitySet="Users" />
+      <End Role="EventAttendance" EntitySet="EventAttendance" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="EventAttendance">
+    <Key>
+      <PropertyRef Name="EventAttendanceLogId" />
+    </Key>
+    <Property Name="EventAttendanceLogId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="EventId" Type="Int32" Nullable="false" />
+    <Property Name="UserId" Type="Int32" Nullable="false" />
+    <Property Name="LogBy" Type="Int32" />
+    <Property Name="LogDate" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="Event" Relationship="EventTracker.DataModel.DbObjects.FK_EventAttendanceLog_Event" FromRole="EventAttendance" ToRole="Event" />
+    <NavigationProperty Name="User" Relationship="EventTracker.DataModel.DbObjects.FK_EventAttendanceLog_User" FromRole="EventAttendance" ToRole="User" />
+  </EntityType>
+  <Association Name="FK_EventAttendanceLog_Event">
+    <End Type="EventTracker.DataModel.DbObjects.Event" Role="Event" Multiplicity="1" />
+    <End Type="EventTracker.DataModel.DbObjects.EventAttendance" Role="EventAttendance" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Event">
+        <PropertyRef Name="EventId" />
+      </Principal>
+      <Dependent Role="EventAttendance">
+        <PropertyRef Name="EventId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_EventAttendanceLog_User">
+    <End Type="EventTracker.DataModel.DbObjects.User" Role="User" Multiplicity="1" />
+    <End Type="EventTracker.DataModel.DbObjects.EventAttendance" Role="EventAttendance" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="EventAttendance">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

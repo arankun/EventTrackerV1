@@ -17,5 +17,7 @@ namespace EventTracker.BusinessServices
         //List<DataModel.Generated.Event> GetAttendanceByEventId(int eventId);
 
         List<Event> GetEventWithAttendance(int eventId);
+        List<EventAttendanceSummary> GetEventWithAttendanceUsingProjection(int eventId);
+        List<EventAttendanceSummary> GetEventAttendanceSummary(int eventId);
     }
 }

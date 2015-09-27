@@ -54,6 +54,18 @@ namespace EventTrackerAPI.Controllers
             }
         }
 
+        [Route("{eventId}/attendancesummary")]
+        public IHttpActionResult GetEventAttendanceSummary(int eventId)
+        {
+            var attendance = _eventService.GetEventAttendanceSummary(eventId);
+            if (attendance != null)
+                return Ok(attendance);
+            else
+            {
+                return NotFound();
+            }
+        }
+
         public int Post([FromBody] Event newEvent)
         {
             return _eventService.CreateEvent(newEvent);
