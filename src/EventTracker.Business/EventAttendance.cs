@@ -1,6 +1,7 @@
 ﻿#region directives
 
 using System;
+using EventTracker.BusinessModel.Membership;
 
 #endregion
 

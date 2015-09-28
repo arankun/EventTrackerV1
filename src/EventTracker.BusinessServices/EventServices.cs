@@ -6,6 +6,7 @@ using System.Linq;
 using System.Transactions;
 using AutoMapper;
 using EventTracker.BusinessModel;
+using EventTracker.BusinessModel.Membership;
 using EventTracker.DataModel.UnitOfWork;
 using DBObject = EventTracker.DataModel.Generated;
 #endregion

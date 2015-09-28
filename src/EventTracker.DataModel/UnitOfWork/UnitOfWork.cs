@@ -122,15 +122,25 @@ namespace EventTracker.DataModel.UnitOfWork
             }
         }
 
-        //public GenericRepository<EventAttendanceLog> EventAttendanceLogRepository
-        //{
-        //    get
-        //    {
-        //        if (this._eventAttendanceLogRepository == null)
-        //            this._eventAttendanceLogRepository = new GenericRepository<EventAttendanceLog>(_dbContext);
-        //        return _eventAttendanceLogRepository;
-        //    }
-        //}
+        public GenericRepository<Member> MemberRepository
+        {
+            get
+            {
+                if (_memberRepository == null)
+                    _memberRepository = new GenericRepository<Member>(_dbContext);
+                return _memberRepository;
+            }
+        }
+
+        public GenericRepository<MemberMembership> MemberMembershipRepository
+        {
+            get
+            {
+                if (_memberMembershipRepository == null)
+                    _memberMembershipRepository = new GenericRepository<MemberMembership>(_dbContext);
+                return _memberMembershipRepository;
+            }
+        }
 
         #endregion
 
@@ -139,6 +149,8 @@ namespace EventTracker.DataModel.UnitOfWork
         #region private dispose variable declaration...
 
         private bool disposed = false;
+        private GenericRepository<Member> _memberRepository;
+        private GenericRepository<MemberMembership> _memberMembershipRepository;
 
         #endregion
 

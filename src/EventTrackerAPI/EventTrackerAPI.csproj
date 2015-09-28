@@ -217,9 +217,14 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AuthenticateController.cs" />
-    <Compile Include="Controllers\EventController.cs" />
+    <Compile Include="Controllers\EventController.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LogOffController.cs" />
+    <Compile Include="Controllers\MembershipController.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Filters\ApiAuthenticationFilter.cs" />
     <Compile Include="Filters\BasicAuthenticationIdentity.cs" />

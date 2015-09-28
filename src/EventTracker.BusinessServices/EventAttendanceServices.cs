@@ -5,6 +5,7 @@ using System.Linq;
 using System.Transactions;
 using AutoMapper;
 using EventTracker.BusinessModel;
+using EventTracker.BusinessModel.Membership;
 using EventTracker.DataModel.UnitOfWork;
 using DBObject = EventTracker.DataModel.Generated;
 
@@ -12,12 +13,12 @@ using DBObject = EventTracker.DataModel.Generated;
 
 namespace EventTracker.BusinessServices
 {
-    public interface IEventAttendanceLogServices
+    public interface IEventAttendanceServices
     {
         int CreateEventAttendance(int eventId, int memberId, int logBy);
     }
 
-    public class EventAttendanceServices : IEventAttendanceLogServices
+    public class EventAttendanceServices : IEventAttendanceServices
     {
         private readonly UnitOfWork _unitOfWork;
 
