@@ -1,17 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-  <EntityContainerMapping StorageEntityContainer="EventTrackerDataModelStoreContainer" CdmEntityContainer="EventTrackerDBContext">
+  <EntityContainerMapping StorageEntityContainer="EventTrackerDBModelStoreContainer" CdmEntityContainer="Entities">
     <EntitySetMapping Name="EventAttendances">
-      <EntityTypeMapping TypeName="EventTracker.DataModel.EventAttendance">
-        <MappingFragment StoreEntitySet="EventAttendance">
+      <EntityTypeMapping TypeName="EventTrackerDBModel.EventAttendance">
+        <MappingFragment StoreEntitySet="EventAttendances">
           <ScalarProperty Name="EventAttendanceId" ColumnName="EventAttendanceId" />
-          <ScalarProperty Name="UserId" ColumnName="UserId" />
           <ScalarProperty Name="EventId" ColumnName="EventId" />
+          <ScalarProperty Name="MemberId" ColumnName="MemberId" />
+          <ScalarProperty Name="LogBy" ColumnName="LogBy" />
+          <ScalarProperty Name="LogDate" ColumnName="LogDate" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="Events">
-      <EntityTypeMapping TypeName="EventTracker.DataModel.Event">
+      <EntityTypeMapping TypeName="EventTrackerDBModel.Event">
         <MappingFragment StoreEntitySet="Events">
           <ScalarProperty Name="EventId" ColumnName="EventId" />
           <ScalarProperty Name="EventName" ColumnName="EventName" />
@@ -19,8 +21,59 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="HouseHoldMembers">
+      <EntityTypeMapping TypeName="EventTrackerDBModel.HouseHoldMember">
+        <MappingFragment StoreEntitySet="HouseHoldMembers">
+          <ScalarProperty Name="HouseHoldMemberId" ColumnName="HouseHoldMemberId" />
+          <ScalarProperty Name="HouseHoldId" ColumnName="HouseHoldId" />
+          <ScalarProperty Name="MemberId" ColumnName="MemberId" />
+          <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+          <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="HouseHolds">
+      <EntityTypeMapping TypeName="EventTrackerDBModel.HouseHold">
+        <MappingFragment StoreEntitySet="HouseHolds">
+          <ScalarProperty Name="HouseHoldId" ColumnName="HouseHoldId" />
+          <ScalarProperty Name="HouseHoldLeaderMemberId" ColumnName="HouseHoldLeaderMemberId" />
+          <ScalarProperty Name="Area" ColumnName="Area" />
+          <ScalarProperty Name="State" ColumnName="State" />
+          <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+          <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="MemberMemberships">
+      <EntityTypeMapping TypeName="EventTrackerDBModel.MemberMembership">
+        <MappingFragment StoreEntitySet="MemberMemberships">
+          <ScalarProperty Name="MemberMembershipId" ColumnName="MemberMembershipId" />
+          <ScalarProperty Name="MemberId" ColumnName="MemberId" />
+          <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+          <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+          <ScalarProperty Name="MemberOf" ColumnName="MemberOf" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Members">
+      <EntityTypeMapping TypeName="EventTrackerDBModel.Member">
+        <MappingFragment StoreEntitySet="Members">
+          <ScalarProperty Name="MemberId" ColumnName="MemberId" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="DOB" ColumnName="DOB" />
+          <ScalarProperty Name="Gender" ColumnName="Gender" />
+          <ScalarProperty Name="Phone" ColumnName="Phone" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="MembershipDate" ColumnName="MembershipDate" />
+          <ScalarProperty Name="SpouseMemberId" ColumnName="SpouseMemberId" />
+          <ScalarProperty Name="ParentMemberId" ColumnName="ParentMemberId" />
+          <ScalarProperty Name="SpouseName" ColumnName="SpouseName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <EntitySetMapping Name="Tokens">
-      <EntityTypeMapping TypeName="EventTracker.DataModel.Token">
+      <EntityTypeMapping TypeName="EventTrackerDBModel.Token">
         <MappingFragment StoreEntitySet="Tokens">
           <ScalarProperty Name="TokenId" ColumnName="TokenId" />
           <ScalarProperty Name="UserId" ColumnName="UserId" />
@@ -30,13 +83,27 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="UserEvents">
+      <EntityTypeMapping TypeName="EventTrackerDBModel.UserEvent">
+        <MappingFragment StoreEntitySet="UserEvents">
+          <ScalarProperty Name="UserEventId" ColumnName="UserEventId" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="EventCode" ColumnName="EventCode" />
+          <ScalarProperty Name="EventStatus" ColumnName="EventStatus" />
+          <ScalarProperty Name="EventDate" ColumnName="EventDate" />
+          <ScalarProperty Name="EventMessage" ColumnName="EventMessage" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <EntitySetMapping Name="Users">
-      <EntityTypeMapping TypeName="EventTracker.DataModel.User">
+      <EntityTypeMapping TypeName="EventTrackerDBModel.User">
         <MappingFragment StoreEntitySet="Users">
           <ScalarProperty Name="UserId" ColumnName="UserId" />
           <ScalarProperty Name="UserName" ColumnName="UserName" />
           <ScalarProperty Name="Password" ColumnName="Password" />
           <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="MemberId" ColumnName="MemberId" />
+          <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

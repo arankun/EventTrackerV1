@@ -8,6 +8,7 @@ using EventTracker.BusinessServices;
 
 namespace EventTrackerAPI.Controllers
 {
+    [RoutePrefix("api/membership")]
     public class MembershipController : ApiController
     {
         private readonly IMembershipServices _services;
@@ -18,7 +19,7 @@ namespace EventTrackerAPI.Controllers
         }
 
         [HttpGet]
-        [Route("{memberId}/get")]
+        [Route("{memberId}")]
         public Member GetMember(int memberId)
         {
             return _services.GetMember(memberId);

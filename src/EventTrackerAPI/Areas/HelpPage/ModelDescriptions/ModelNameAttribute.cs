@@ -1,8 +1,4 @@
-#region directives
-
 using System;
-
-#endregion
 
 namespace EventTrackerAPI.Areas.HelpPage.ModelDescriptions
 {

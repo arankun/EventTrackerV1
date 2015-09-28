@@ -102,7 +102,10 @@ namespace EventTracker.BusinessServices
             var dbMember = _unitOfWork.MemberRepository.Get(u => u.MemberId == memberId);
             if (dbMember != null && dbMember.MemberId > 0)
             {
-                Mapper.CreateMap<DataModel.Generated.Member, Member>();
+                //AT: Custom mapping a field
+                Mapper.CreateMap<DataModel.Generated.Member, Member>()
+                    .ForMember(dest => dest.DateOfBirth,
+                        opts => opts.MapFrom(src => src.DOB));
                 var aMember = Mapper.Map<DataModel.Generated.Member, Member>(dbMember);
                 return aMember;
             }
