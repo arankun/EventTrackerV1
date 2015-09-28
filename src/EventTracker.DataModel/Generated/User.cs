@@ -19,16 +19,22 @@ namespace EventTracker.DataModel.Generated
         {
             this.EventAttendances = new HashSet<EventAttendance>();
             this.Tokens = new HashSet<Token>();
+            this.UserEvents = new HashSet<UserEvent>();
         }
     
         public int UserId { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
         public string Name { get; set; }
+        public Nullable<int> MemberId { get; set; }
+        public Nullable<System.DateTime> CreateDate { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<EventAttendance> EventAttendances { get; set; }
+        public virtual Member Member { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Token> Tokens { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<UserEvent> UserEvents { get; set; }
     }
 }

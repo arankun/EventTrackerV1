@@ -12,16 +12,14 @@ namespace EventTracker.DataModel.Generated
     using System;
     using System.Collections.Generic;
     
-    public partial class EventAttendance
+    public partial class MemberMembership
     {
-        public int EventAttendanceId { get; set; }
-        public int EventId { get; set; }
+        public int MemberMembershipId { get; set; }
         public int MemberId { get; set; }
-        public Nullable<int> LogBy { get; set; }
-        public System.DateTime LogDate { get; set; }
+        public System.DateTime StartDate { get; set; }
+        public Nullable<System.DateTime> EndDate { get; set; }
+        public string MemberOf { get; set; }
     
-        public virtual Event Event { get; set; }
         public virtual Member Member { get; set; }
-        public virtual User User { get; set; }
     }
 }

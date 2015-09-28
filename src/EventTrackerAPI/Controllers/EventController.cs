@@ -31,6 +31,7 @@ namespace EventTrackerAPI.Controllers
             }
         }
 
+        [Route("{id}")]
         public IHttpActionResult Get(int id)
         {
             var anEvent = _eventService.GetEventById(id);
@@ -45,7 +46,7 @@ namespace EventTrackerAPI.Controllers
         [Route("{eventId}/attendance")]
         public IHttpActionResult GetEventAttendance(int eventId)
         {
-            var attendance = _eventService.GetEventWithAttendance(eventId);
+            var attendance = _eventService.GetEventWithAttendanceDetails(eventId);
             if (attendance != null)
                 return Ok(attendance);
             else

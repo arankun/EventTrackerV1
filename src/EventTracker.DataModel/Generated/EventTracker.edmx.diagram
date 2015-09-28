@@ -4,14 +4,27 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="fcffd88af6d6492c8dfc21aabb46a048" Name="Diagram1">
-        <EntityTypeShape EntityType="EventTracker.DBModel.EventAttendance" Width="1.5" PointX="3" PointY="3.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="EventTracker.DBModel.Event" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EventTracker.DBModel.Token" Width="1.5" PointX="3" PointY="6.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="EventTracker.DBModel.User" Width="1.5" PointX="0.75" PointY="3.5" IsExpanded="true" />
-        <AssociationConnector Association="EventTracker.DBModel.FK_EventAttendanceLog_Event" ManuallyRouted="false" />
-        <AssociationConnector Association="EventTracker.DBModel.FK_EventAttendanceLog_User" ManuallyRouted="false" />
-        <AssociationConnector Association="EventTracker.DBModel.FK_Tokens_User" ManuallyRouted="false" />
+      <Diagram DiagramId="ead9c92fc9424a348128be110123884b" Name="Diagram1">
+        <EntityTypeShape EntityType="EventTrackerDBModel.EventAttendance" Width="1.5" PointX="5.25" PointY="12.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="EventTrackerDBModel.Event" Width="1.5" PointX="3" PointY="7.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="EventTrackerDBModel.HouseHoldMember" Width="1.5" PointX="5.25" PointY="9.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="EventTrackerDBModel.HouseHold" Width="1.5" PointX="3" PointY="11.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="EventTrackerDBModel.MemberMembership" Width="1.5" PointX="3" PointY="14.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="EventTrackerDBModel.Member" Width="1.5" PointX="0.75" PointY="7.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="EventTrackerDBModel.Token" Width="1.5" PointX="5.25" PointY="17.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EventTrackerDBModel.UserEvent" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EventTrackerDBModel.User" Width="1.5" PointX="3" PointY="17.5" IsExpanded="true" />
+        <AssociationConnector Association="EventTrackerDBModel.FK_EventAttendance_Event" ManuallyRouted="false" />
+        <AssociationConnector Association="EventTrackerDBModel.FK_EventAttendance_Member" ManuallyRouted="false" />
+        <AssociationConnector Association="EventTrackerDBModel.FK_EventAttendances_LogBy" ManuallyRouted="false" />
+        <AssociationConnector Association="EventTrackerDBModel.FK_HouseHoldMembers_HouseHold" ManuallyRouted="false" />
+        <AssociationConnector Association="EventTrackerDBModel.FK_HouseHoldMembers_Member" ManuallyRouted="false" />
+        <AssociationConnector Association="EventTrackerDBModel.FK_HouseHolds_LeaderMemberId" ManuallyRouted="false" />
+        <AssociationConnector Association="EventTrackerDBModel.FK_MemberMemberships_Member" ManuallyRouted="false" />
+        <AssociationConnector Association="EventTrackerDBModel.FK_Users_Members" ManuallyRouted="false" />
+        <AssociationConnector Association="EventTrackerDBModel.FK_Tokens_User" ManuallyRouted="false" />
+        <AssociationConnector Association="EventTrackerDBModel.FK_UserEvents_User" ManuallyRouted="false" />
+        <AssociationConnector Association="EventTrackerDBModel.FK_UserEvents_User1" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

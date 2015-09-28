@@ -4,14 +4,14 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="EventTracker.DBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="EventTrackerDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="EventAttendances">
           <Key>
             <PropertyRef Name="EventAttendanceId" />
           </Key>
           <Property Name="EventAttendanceId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="EventId" Type="int" Nullable="false" />
-          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="MemberId" Type="int" Nullable="false" />
           <Property Name="LogBy" Type="int" />
           <Property Name="LogDate" Type="datetime" Nullable="false" />
         </EntityType>
@@ -23,6 +23,53 @@
           <Property Name="EventName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="EventDate" Type="datetime" Nullable="false" />
         </EntityType>
+        <EntityType Name="HouseHoldMembers">
+          <Key>
+            <PropertyRef Name="HouseHoldMemberId" />
+          </Key>
+          <Property Name="HouseHoldMemberId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="HouseHoldId" Type="int" Nullable="false" />
+          <Property Name="MemberId" Type="int" Nullable="false" />
+          <Property Name="StartDate" Type="datetime" />
+          <Property Name="EndDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="HouseHolds">
+          <Key>
+            <PropertyRef Name="HouseHoldId" />
+          </Key>
+          <Property Name="HouseHoldId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="HouseHoldLeaderMemberId" Type="int" Nullable="false" />
+          <Property Name="Area" Type="varchar" MaxLength="50" />
+          <Property Name="State" Type="varchar" MaxLength="50" />
+          <Property Name="StartDate" Type="datetime" />
+          <Property Name="EndDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="MemberMemberships">
+          <Key>
+            <PropertyRef Name="MemberMembershipId" />
+          </Key>
+          <Property Name="MemberMembershipId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MemberId" Type="int" Nullable="false" />
+          <Property Name="StartDate" Type="datetime" Nullable="false" />
+          <Property Name="EndDate" Type="datetime" />
+          <Property Name="MemberOf" Type="nchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Members">
+          <Key>
+            <PropertyRef Name="MemberId" />
+          </Key>
+          <Property Name="MemberId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FirstName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="LastName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="DOB" Type="datetime" />
+          <Property Name="Gender" Type="char" MaxLength="1" />
+          <Property Name="Phone" Type="varchar" MaxLength="20" />
+          <Property Name="Email" Type="varchar" MaxLength="50" />
+          <Property Name="MembershipDate" Type="datetime" />
+          <Property Name="SpouseMemberId" Type="int" />
+          <Property Name="ParentMemberId" Type="int" />
+          <Property Name="SpouseName" Type="varchar" MaxLength="50" />
+        </EntityType>
         <EntityType Name="Tokens">
           <Key>
             <PropertyRef Name="TokenId" />
@@ -33,6 +80,17 @@
           <Property Name="IssuedOn" Type="datetime" Nullable="false" />
           <Property Name="ExpiresOn" Type="datetime" Nullable="false" />
         </EntityType>
+        <EntityType Name="UserEvents">
+          <Key>
+            <PropertyRef Name="UserEventId" />
+          </Key>
+          <Property Name="UserEventId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="EventCode" Type="nvarchar" MaxLength="15" Nullable="false" />
+          <Property Name="EventStatus" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="EventDate" Type="datetime" Nullable="false" />
+          <Property Name="EventMessage" Type="varchar" MaxLength="50" />
+        </EntityType>
         <EntityType Name="Users">
           <Key>
             <PropertyRef Name="UserId" />
@@ -41,8 +99,10 @@
           <Property Name="UserName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Password" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="MemberId" Type="int" />
+          <Property Name="CreateDate" Type="datetime" />
         </EntityType>
-        <Association Name="FK_EventAttendanceLog_Event">
+        <Association Name="FK_EventAttendance_Event">
           <End Role="Events" Type="Self.Events" Multiplicity="1" />
           <End Role="EventAttendances" Type="Self.EventAttendances" Multiplicity="*" />
           <ReferentialConstraint>
@@ -54,15 +114,75 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_EventAttendanceLog_User">
-          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+        <Association Name="FK_EventAttendance_Member">
+          <End Role="Members" Type="Self.Members" Multiplicity="1" />
+          <End Role="EventAttendances" Type="Self.EventAttendances" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Members">
+              <PropertyRef Name="MemberId" />
+            </Principal>
+            <Dependent Role="EventAttendances">
+              <PropertyRef Name="MemberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EventAttendances_LogBy">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
           <End Role="EventAttendances" Type="Self.EventAttendances" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Users">
               <PropertyRef Name="UserId" />
             </Principal>
             <Dependent Role="EventAttendances">
-              <PropertyRef Name="UserId" />
+              <PropertyRef Name="LogBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_HouseHoldMembers_HouseHold">
+          <End Role="HouseHolds" Type="Self.HouseHolds" Multiplicity="1" />
+          <End Role="HouseHoldMembers" Type="Self.HouseHoldMembers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="HouseHolds">
+              <PropertyRef Name="HouseHoldId" />
+            </Principal>
+            <Dependent Role="HouseHoldMembers">
+              <PropertyRef Name="HouseHoldId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_HouseHoldMembers_Member">
+          <End Role="Members" Type="Self.Members" Multiplicity="1" />
+          <End Role="HouseHoldMembers" Type="Self.HouseHoldMembers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Members">
+              <PropertyRef Name="MemberId" />
+            </Principal>
+            <Dependent Role="HouseHoldMembers">
+              <PropertyRef Name="MemberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_HouseHolds_LeaderMemberId">
+          <End Role="Members" Type="Self.Members" Multiplicity="1" />
+          <End Role="HouseHolds" Type="Self.HouseHolds" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Members">
+              <PropertyRef Name="MemberId" />
+            </Principal>
+            <Dependent Role="HouseHolds">
+              <PropertyRef Name="HouseHoldLeaderMemberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MemberMemberships_Member">
+          <End Role="Members" Type="Self.Members" Multiplicity="1" />
+          <End Role="MemberMemberships" Type="Self.MemberMemberships" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Members">
+              <PropertyRef Name="MemberId" />
+            </Principal>
+            <Dependent Role="MemberMemberships">
+              <PropertyRef Name="MemberId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -78,40 +198,97 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_UserEvents_User">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="UserEvents" Type="Self.UserEvents" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserEvents">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Users_Members">
+          <End Role="Members" Type="Self.Members" Multiplicity="0..1" />
+          <End Role="Users" Type="Self.Users" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Members">
+              <PropertyRef Name="MemberId" />
+            </Principal>
+            <Dependent Role="Users">
+              <PropertyRef Name="MemberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="EventTrackerDBModelStoreContainer">
           <EntitySet Name="EventAttendances" EntityType="Self.EventAttendances" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Events" EntityType="Self.Events" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="HouseHoldMembers" EntityType="Self.HouseHoldMembers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="HouseHolds" EntityType="Self.HouseHolds" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MemberMemberships" EntityType="Self.MemberMemberships" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Members" EntityType="Self.Members" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tokens" EntityType="Self.Tokens" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserEvents" EntityType="Self.UserEvents" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK_EventAttendanceLog_Event" Association="Self.FK_EventAttendanceLog_Event">
+          <AssociationSet Name="FK_EventAttendance_Event" Association="Self.FK_EventAttendance_Event">
             <End Role="Events" EntitySet="Events" />
             <End Role="EventAttendances" EntitySet="EventAttendances" />
           </AssociationSet>
-          <AssociationSet Name="FK_EventAttendanceLog_User" Association="Self.FK_EventAttendanceLog_User">
+          <AssociationSet Name="FK_EventAttendance_Member" Association="Self.FK_EventAttendance_Member">
+            <End Role="Members" EntitySet="Members" />
+            <End Role="EventAttendances" EntitySet="EventAttendances" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EventAttendances_LogBy" Association="Self.FK_EventAttendances_LogBy">
             <End Role="Users" EntitySet="Users" />
             <End Role="EventAttendances" EntitySet="EventAttendances" />
+          </AssociationSet>
+          <AssociationSet Name="FK_HouseHoldMembers_HouseHold" Association="Self.FK_HouseHoldMembers_HouseHold">
+            <End Role="HouseHolds" EntitySet="HouseHolds" />
+            <End Role="HouseHoldMembers" EntitySet="HouseHoldMembers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_HouseHoldMembers_Member" Association="Self.FK_HouseHoldMembers_Member">
+            <End Role="Members" EntitySet="Members" />
+            <End Role="HouseHoldMembers" EntitySet="HouseHoldMembers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_HouseHolds_LeaderMemberId" Association="Self.FK_HouseHolds_LeaderMemberId">
+            <End Role="Members" EntitySet="Members" />
+            <End Role="HouseHolds" EntitySet="HouseHolds" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MemberMemberships_Member" Association="Self.FK_MemberMemberships_Member">
+            <End Role="Members" EntitySet="Members" />
+            <End Role="MemberMemberships" EntitySet="MemberMemberships" />
           </AssociationSet>
           <AssociationSet Name="FK_Tokens_User" Association="Self.FK_Tokens_User">
             <End Role="Users" EntitySet="Users" />
             <End Role="Tokens" EntitySet="Tokens" />
           </AssociationSet>
+          <AssociationSet Name="FK_UserEvents_User" Association="Self.FK_UserEvents_User">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UserEvents" EntitySet="UserEvents" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Users_Members" Association="Self.FK_Users_Members">
+            <End Role="Members" EntitySet="Members" />
+            <End Role="Users" EntitySet="Users" />
+          </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="EventTracker.DBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="EventTrackerDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="EventAttendance">
           <Key>
             <PropertyRef Name="EventAttendanceId" />
           </Key>
           <Property Name="EventAttendanceId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="EventId" Type="Int32" Nullable="false" />
-          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="MemberId" Type="Int32" Nullable="false" />
           <Property Name="LogBy" Type="Int32" />
           <Property Name="LogDate" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Event" Relationship="Self.FK_EventAttendanceLog_Event" FromRole="EventAttendances" ToRole="Events" />
-          <NavigationProperty Name="User" Relationship="Self.FK_EventAttendanceLog_User" FromRole="EventAttendances" ToRole="Users" />
+          <NavigationProperty Name="Event" Relationship="Self.FK_EventAttendance_Event" FromRole="EventAttendances" ToRole="Events" />
+          <NavigationProperty Name="Member" Relationship="Self.FK_EventAttendance_Member" FromRole="EventAttendances" ToRole="Members" />
+          <NavigationProperty Name="User" Relationship="Self.FK_EventAttendances_LogBy" FromRole="EventAttendances" ToRole="Users" />
         </EntityType>
         <EntityType Name="Event">
           <Key>
@@ -120,7 +297,64 @@
           <Property Name="EventId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="EventName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="EventDate" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="EventAttendances" Relationship="Self.FK_EventAttendanceLog_Event" FromRole="Events" ToRole="EventAttendances" />
+          <NavigationProperty Name="EventAttendances" Relationship="Self.FK_EventAttendance_Event" FromRole="Events" ToRole="EventAttendances" />
+        </EntityType>
+        <EntityType Name="HouseHoldMember">
+          <Key>
+            <PropertyRef Name="HouseHoldMemberId" />
+          </Key>
+          <Property Name="HouseHoldMemberId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="HouseHoldId" Type="Int32" Nullable="false" />
+          <Property Name="MemberId" Type="Int32" Nullable="false" />
+          <Property Name="StartDate" Type="DateTime" Precision="3" />
+          <Property Name="EndDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="HouseHold" Relationship="Self.FK_HouseHoldMembers_HouseHold" FromRole="HouseHoldMembers" ToRole="HouseHolds" />
+          <NavigationProperty Name="Member" Relationship="Self.FK_HouseHoldMembers_Member" FromRole="HouseHoldMembers" ToRole="Members" />
+        </EntityType>
+        <EntityType Name="HouseHold">
+          <Key>
+            <PropertyRef Name="HouseHoldId" />
+          </Key>
+          <Property Name="HouseHoldId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="HouseHoldLeaderMemberId" Type="Int32" Nullable="false" />
+          <Property Name="Area" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="State" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StartDate" Type="DateTime" Precision="3" />
+          <Property Name="EndDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="HouseHoldMembers" Relationship="Self.FK_HouseHoldMembers_HouseHold" FromRole="HouseHolds" ToRole="HouseHoldMembers" />
+          <NavigationProperty Name="Member" Relationship="Self.FK_HouseHolds_LeaderMemberId" FromRole="HouseHolds" ToRole="Members" />
+        </EntityType>
+        <EntityType Name="MemberMembership">
+          <Key>
+            <PropertyRef Name="MemberMembershipId" />
+          </Key>
+          <Property Name="MemberMembershipId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MemberId" Type="Int32" Nullable="false" />
+          <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EndDate" Type="DateTime" Precision="3" />
+          <Property Name="MemberOf" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Member" Relationship="Self.FK_MemberMemberships_Member" FromRole="MemberMemberships" ToRole="Members" />
+        </EntityType>
+        <EntityType Name="Member">
+          <Key>
+            <PropertyRef Name="MemberId" />
+          </Key>
+          <Property Name="MemberId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="DOB" Type="DateTime" Precision="3" />
+          <Property Name="Gender" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="Phone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="MembershipDate" Type="DateTime" Precision="3" />
+          <Property Name="SpouseMemberId" Type="Int32" />
+          <Property Name="ParentMemberId" Type="Int32" />
+          <Property Name="SpouseName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="EventAttendances" Relationship="Self.FK_EventAttendance_Member" FromRole="Members" ToRole="EventAttendances" />
+          <NavigationProperty Name="HouseHoldMembers" Relationship="Self.FK_HouseHoldMembers_Member" FromRole="Members" ToRole="HouseHoldMembers" />
+          <NavigationProperty Name="HouseHolds" Relationship="Self.FK_HouseHolds_LeaderMemberId" FromRole="Members" ToRole="HouseHolds" />
+          <NavigationProperty Name="MemberMemberships" Relationship="Self.FK_MemberMemberships_Member" FromRole="Members" ToRole="MemberMemberships" />
+          <NavigationProperty Name="Users" Relationship="Self.FK_Users_Members" FromRole="Members" ToRole="Users" />
         </EntityType>
         <EntityType Name="Token">
           <Key>
@@ -133,6 +367,18 @@
           <Property Name="ExpiresOn" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="User" Relationship="Self.FK_Tokens_User" FromRole="Tokens" ToRole="Users" />
         </EntityType>
+        <EntityType Name="UserEvent">
+          <Key>
+            <PropertyRef Name="UserEventId" />
+          </Key>
+          <Property Name="UserEventId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="EventCode" Type="String" MaxLength="15" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="EventStatus" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="EventDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EventMessage" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="User" Relationship="EventTrackerDBModel.FK_UserEvents_User1" FromRole="UserEvent" ToRole="User" />
+        </EntityType>
         <EntityType Name="User">
           <Key>
             <PropertyRef Name="UserId" />
@@ -141,10 +387,14 @@
           <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="EventAttendances" Relationship="Self.FK_EventAttendanceLog_User" FromRole="Users" ToRole="EventAttendances" />
+          <Property Name="MemberId" Type="Int32" />
+          <Property Name="CreateDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="EventAttendances" Relationship="Self.FK_EventAttendances_LogBy" FromRole="Users" ToRole="EventAttendances" />
+          <NavigationProperty Name="Member" Relationship="Self.FK_Users_Members" FromRole="Users" ToRole="Members" />
           <NavigationProperty Name="Tokens" Relationship="Self.FK_Tokens_User" FromRole="Users" ToRole="Tokens" />
+          <NavigationProperty Name="UserEvents" Relationship="EventTrackerDBModel.FK_UserEvents_User1" FromRole="User" ToRole="UserEvent" />
         </EntityType>
-        <Association Name="FK_EventAttendanceLog_Event">
+        <Association Name="FK_EventAttendance_Event">
           <End Role="Events" Type="Self.Event" Multiplicity="1" />
           <End Role="EventAttendances" Type="Self.EventAttendance" Multiplicity="*" />
           <ReferentialConstraint>
@@ -156,15 +406,87 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_EventAttendanceLog_User">
-          <End Role="Users" Type="Self.User" Multiplicity="1" />
+        <Association Name="FK_EventAttendance_Member">
+          <End Role="Members" Type="Self.Member" Multiplicity="1" />
+          <End Role="EventAttendances" Type="Self.EventAttendance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Members">
+              <PropertyRef Name="MemberId" />
+            </Principal>
+            <Dependent Role="EventAttendances">
+              <PropertyRef Name="MemberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EventAttendances_LogBy">
+          <End Role="Users" Type="Self.User" Multiplicity="0..1" />
           <End Role="EventAttendances" Type="Self.EventAttendance" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Users">
               <PropertyRef Name="UserId" />
             </Principal>
             <Dependent Role="EventAttendances">
-              <PropertyRef Name="UserId" />
+              <PropertyRef Name="LogBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_HouseHoldMembers_HouseHold">
+          <End Role="HouseHolds" Type="Self.HouseHold" Multiplicity="1" />
+          <End Role="HouseHoldMembers" Type="Self.HouseHoldMember" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="HouseHolds">
+              <PropertyRef Name="HouseHoldId" />
+            </Principal>
+            <Dependent Role="HouseHoldMembers">
+              <PropertyRef Name="HouseHoldId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_HouseHoldMembers_Member">
+          <End Role="Members" Type="Self.Member" Multiplicity="1" />
+          <End Role="HouseHoldMembers" Type="Self.HouseHoldMember" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Members">
+              <PropertyRef Name="MemberId" />
+            </Principal>
+            <Dependent Role="HouseHoldMembers">
+              <PropertyRef Name="MemberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_HouseHolds_LeaderMemberId">
+          <End Role="Members" Type="Self.Member" Multiplicity="1" />
+          <End Role="HouseHolds" Type="Self.HouseHold" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Members">
+              <PropertyRef Name="MemberId" />
+            </Principal>
+            <Dependent Role="HouseHolds">
+              <PropertyRef Name="HouseHoldLeaderMemberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MemberMemberships_Member">
+          <End Role="Members" Type="Self.Member" Multiplicity="1" />
+          <End Role="MemberMemberships" Type="Self.MemberMembership" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Members">
+              <PropertyRef Name="MemberId" />
+            </Principal>
+            <Dependent Role="MemberMemberships">
+              <PropertyRef Name="MemberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Users_Members">
+          <End Role="Members" Type="Self.Member" Multiplicity="0..1" />
+          <End Role="Users" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Members">
+              <PropertyRef Name="MemberId" />
+            </Principal>
+            <Dependent Role="Users">
+              <PropertyRef Name="MemberId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -180,24 +502,85 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_UserEvents_User">
+          <End Role="UserEvents" Type="Self.UserEvent" Multiplicity="1" />
+          <End Role="UserEvents1" Type="Self.UserEvent" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="UserEvents">
+              <PropertyRef Name="UserEventId" />
+            </Principal>
+            <Dependent Role="UserEvents1">
+              <PropertyRef Name="UserEventId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="EventTrackerDBContext" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="EventAttendances" EntityType="Self.EventAttendance" />
           <EntitySet Name="Events" EntityType="Self.Event" />
+          <EntitySet Name="HouseHoldMembers" EntityType="Self.HouseHoldMember" />
+          <EntitySet Name="HouseHolds" EntityType="Self.HouseHold" />
+          <EntitySet Name="MemberMemberships" EntityType="Self.MemberMembership" />
+          <EntitySet Name="Members" EntityType="Self.Member" />
           <EntitySet Name="Tokens" EntityType="Self.Token" />
+          <EntitySet Name="UserEvents" EntityType="Self.UserEvent" />
           <EntitySet Name="Users" EntityType="Self.User" />
-          <AssociationSet Name="FK_EventAttendanceLog_Event" Association="Self.FK_EventAttendanceLog_Event">
+          <AssociationSet Name="FK_EventAttendance_Event" Association="Self.FK_EventAttendance_Event">
             <End Role="Events" EntitySet="Events" />
             <End Role="EventAttendances" EntitySet="EventAttendances" />
           </AssociationSet>
-          <AssociationSet Name="FK_EventAttendanceLog_User" Association="Self.FK_EventAttendanceLog_User">
+          <AssociationSet Name="FK_EventAttendance_Member" Association="Self.FK_EventAttendance_Member">
+            <End Role="Members" EntitySet="Members" />
+            <End Role="EventAttendances" EntitySet="EventAttendances" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EventAttendances_LogBy" Association="Self.FK_EventAttendances_LogBy">
             <End Role="Users" EntitySet="Users" />
             <End Role="EventAttendances" EntitySet="EventAttendances" />
+          </AssociationSet>
+          <AssociationSet Name="FK_HouseHoldMembers_HouseHold" Association="Self.FK_HouseHoldMembers_HouseHold">
+            <End Role="HouseHolds" EntitySet="HouseHolds" />
+            <End Role="HouseHoldMembers" EntitySet="HouseHoldMembers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_HouseHoldMembers_Member" Association="Self.FK_HouseHoldMembers_Member">
+            <End Role="Members" EntitySet="Members" />
+            <End Role="HouseHoldMembers" EntitySet="HouseHoldMembers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_HouseHolds_LeaderMemberId" Association="Self.FK_HouseHolds_LeaderMemberId">
+            <End Role="Members" EntitySet="Members" />
+            <End Role="HouseHolds" EntitySet="HouseHolds" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MemberMemberships_Member" Association="Self.FK_MemberMemberships_Member">
+            <End Role="Members" EntitySet="Members" />
+            <End Role="MemberMemberships" EntitySet="MemberMemberships" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Users_Members" Association="Self.FK_Users_Members">
+            <End Role="Members" EntitySet="Members" />
+            <End Role="Users" EntitySet="Users" />
           </AssociationSet>
           <AssociationSet Name="FK_Tokens_User" Association="Self.FK_Tokens_User">
             <End Role="Users" EntitySet="Users" />
             <End Role="Tokens" EntitySet="Tokens" />
           </AssociationSet>
+          <AssociationSet Name="FK_UserEvents_User" Association="Self.FK_UserEvents_User">
+            <End Role="UserEvents" EntitySet="UserEvents" />
+            <End Role="UserEvents1" EntitySet="UserEvents" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserEvents_User1" Association="EventTrackerDBModel.FK_UserEvents_User1">
+            <End Role="User" EntitySet="Users" />
+            <End Role="UserEvent" EntitySet="UserEvents" />
+          </AssociationSet>
         </EntityContainer>
+        <Association Name="FK_UserEvents_User1">
+          <End Type="EventTrackerDBModel.User" Role="User" Multiplicity="1" />
+          <End Type="EventTrackerDBModel.UserEvent" Role="UserEvent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserEvent">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -205,18 +588,18 @@
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="EventTrackerDBModelStoreContainer" CdmEntityContainer="EventTrackerDBContext">
           <EntitySetMapping Name="EventAttendances">
-            <EntityTypeMapping TypeName="EventTracker.DBModel.EventAttendance">
+            <EntityTypeMapping TypeName="EventTrackerDBModel.EventAttendance">
               <MappingFragment StoreEntitySet="EventAttendances">
                 <ScalarProperty Name="EventAttendanceId" ColumnName="EventAttendanceId" />
                 <ScalarProperty Name="EventId" ColumnName="EventId" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="MemberId" ColumnName="MemberId" />
                 <ScalarProperty Name="LogBy" ColumnName="LogBy" />
                 <ScalarProperty Name="LogDate" ColumnName="LogDate" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Events">
-            <EntityTypeMapping TypeName="EventTracker.DBModel.Event">
+            <EntityTypeMapping TypeName="EventTrackerDBModel.Event">
               <MappingFragment StoreEntitySet="Events">
                 <ScalarProperty Name="EventId" ColumnName="EventId" />
                 <ScalarProperty Name="EventName" ColumnName="EventName" />
@@ -224,8 +607,59 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="HouseHoldMembers">
+            <EntityTypeMapping TypeName="EventTrackerDBModel.HouseHoldMember">
+              <MappingFragment StoreEntitySet="HouseHoldMembers">
+                <ScalarProperty Name="HouseHoldMemberId" ColumnName="HouseHoldMemberId" />
+                <ScalarProperty Name="HouseHoldId" ColumnName="HouseHoldId" />
+                <ScalarProperty Name="MemberId" ColumnName="MemberId" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="HouseHolds">
+            <EntityTypeMapping TypeName="EventTrackerDBModel.HouseHold">
+              <MappingFragment StoreEntitySet="HouseHolds">
+                <ScalarProperty Name="HouseHoldId" ColumnName="HouseHoldId" />
+                <ScalarProperty Name="HouseHoldLeaderMemberId" ColumnName="HouseHoldLeaderMemberId" />
+                <ScalarProperty Name="Area" ColumnName="Area" />
+                <ScalarProperty Name="State" ColumnName="State" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MemberMemberships">
+            <EntityTypeMapping TypeName="EventTrackerDBModel.MemberMembership">
+              <MappingFragment StoreEntitySet="MemberMemberships">
+                <ScalarProperty Name="MemberMembershipId" ColumnName="MemberMembershipId" />
+                <ScalarProperty Name="MemberId" ColumnName="MemberId" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="MemberOf" ColumnName="MemberOf" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Members">
+            <EntityTypeMapping TypeName="EventTrackerDBModel.Member">
+              <MappingFragment StoreEntitySet="Members">
+                <ScalarProperty Name="MemberId" ColumnName="MemberId" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="DOB" ColumnName="DOB" />
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="MembershipDate" ColumnName="MembershipDate" />
+                <ScalarProperty Name="SpouseMemberId" ColumnName="SpouseMemberId" />
+                <ScalarProperty Name="ParentMemberId" ColumnName="ParentMemberId" />
+                <ScalarProperty Name="SpouseName" ColumnName="SpouseName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Tokens">
-            <EntityTypeMapping TypeName="EventTracker.DBModel.Token">
+            <EntityTypeMapping TypeName="EventTrackerDBModel.Token">
               <MappingFragment StoreEntitySet="Tokens">
                 <ScalarProperty Name="TokenId" ColumnName="TokenId" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
@@ -235,13 +669,27 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="UserEvents">
+            <EntityTypeMapping TypeName="EventTrackerDBModel.UserEvent">
+              <MappingFragment StoreEntitySet="UserEvents">
+                <ScalarProperty Name="UserEventId" ColumnName="UserEventId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="EventCode" ColumnName="EventCode" />
+                <ScalarProperty Name="EventStatus" ColumnName="EventStatus" />
+                <ScalarProperty Name="EventDate" ColumnName="EventDate" />
+                <ScalarProperty Name="EventMessage" ColumnName="EventMessage" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Users">
-            <EntityTypeMapping TypeName="EventTracker.DBModel.User">
+            <EntityTypeMapping TypeName="EventTrackerDBModel.User">
               <MappingFragment StoreEntitySet="Users">
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="MemberId" ColumnName="MemberId" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

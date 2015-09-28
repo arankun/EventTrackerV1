@@ -16,7 +16,7 @@ namespace EventTracker.BusinessServices
         bool DeleteEvent(int eventId);
         //List<DataModel.Generated.Event> GetAttendanceByEventId(int eventId);
 
-        List<Event> GetEventWithAttendance(int eventId);
+        List<Event> GetEventWithAttendanceDetails(int eventId);
         List<EventAttendanceSummary> GetEventWithAttendanceUsingProjection(int eventId);
         List<EventAttendanceSummary> GetEventAttendanceSummary(int eventId);
     }

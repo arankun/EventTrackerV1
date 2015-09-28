@@ -11,7 +11,7 @@ namespace EventTracker.BusinessModel
         public int EventAttendanceId { get; set; }
         public int UserId { get; set; }
 
-        public AppUser Attendee { get; set; }
+        public Member Attendee { get; set; }
         public virtual AppUser LogByUser { get; set; }
         public int? LogBy { get; set; }
 

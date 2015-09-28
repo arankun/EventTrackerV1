@@ -14,7 +14,7 @@ namespace EventTracker.BusinessServices
 {
     public interface IEventAttendanceLogServices
     {
-        int CreateEventAttendance(int eventId, int userId, int logBy);
+        int CreateEventAttendance(int eventId, int memberId, int logBy);
     }
 
     public class EventAttendanceServices : IEventAttendanceLogServices
@@ -26,13 +26,14 @@ namespace EventTracker.BusinessServices
             _unitOfWork = unitOfWork;
         }
 
-        public int CreateEventAttendance(int eventId, int userId, int logBy)
+        public int CreateEventAttendance(int eventId, int memberId, int logBy)
         {
             using (var scope = new TransactionScope())
             {
                 var dbEventAttendance = new DataModel.Generated.EventAttendance()
                 {
-                    UserId = logBy,
+                    MemberId = memberId,
+                    LogBy = logBy,
                     EventId = eventId
                 };
 
@@ -54,7 +55,7 @@ namespace EventTracker.BusinessServices
                     _unitOfWork.EventAttendanceRepository.Context.Entry(item).Reference<DBObject.User>(x => x.User).Load();
                 }
                 Mapper.CreateMap<DBObject.EventAttendance, EventAttendance>();
-                Mapper.CreateMap<DBObject.User, AppUser>();
+                Mapper.CreateMap<DBObject.User, Member>();
                 var events = Mapper.Map<List<DBObject.EventAttendance>, List<EventAttendance>>(list);
                 return events;
             }

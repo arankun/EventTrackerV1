@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Transactions;
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using EventTracker.BusinessModel;
 using EventTracker.DataModel.UnitOfWork;
 using DBObject = EventTracker.DataModel.Generated;
@@ -116,13 +115,13 @@ namespace EventTracker.BusinessServices
             return null;
         }
 
-        public List<Event> GetEventWithAttendance(int eventId)
+        public List<Event> GetEventWithAttendanceDetails(int eventId)
         {
             using (var context = _unitOfWork.DbContext)
             {
                 var eventAttendances = (from e in context.Events
                                         join a in context.EventAttendances on e.EventId equals a.EventId
-                                        join u in context.Users on a.UserId equals u.UserId
+                                        join u in context.Members on a.MemberId equals u.MemberId
                                         join l in context.Users on a.LogBy equals l.UserId into inJoin
                                         from outJoin in inJoin.DefaultIfEmpty()
                                         where e.EventId == eventId
@@ -136,16 +135,17 @@ namespace EventTracker.BusinessServices
                                                 new EventAttendance()
                                                 {
                                                     EventAttendanceId = a.EventAttendanceId,
-                                                    Attendee = new AppUser()
+                                                    Attendee = new Member()
                                                     {
-                                                        UserId = u.UserId,
-                                                        Name =  u.Name
+                                                        MemberId = u.MemberId,
+                                                        FirstName = u.FirstName,
+                                                        LastName = u.LastName
                                                     },
                                                     LogBy = (int?)outJoin.UserId,
                                                     LogByUser = (outJoin.Equals(null)?null:new AppUser()
                                                     {
                                                         UserId = outJoin.UserId,
-                                                        Name = outJoin.Name
+                                                        Name = outJoin.UserName
                                                     })
                                                 }
 
@@ -160,31 +160,19 @@ namespace EventTracker.BusinessServices
 
         public List<EventAttendanceSummary> GetEventAttendanceSummary(int eventId)
         {
-//            from r in ctx.Rs
-//join p in ctx.Ps.DefaultIfEmpty() on r.RK equals p.RK
-//group r by r.QK into gr
-//select new { QK = (int)gr.Key, Num = gr.Count(x => x.RK != null) }
-
-  //select e.eventid, e.eventname, u.Name, count(*) as user_count
-  //from events e join EventAttendances ev
-  //on e.eventid=ev.eventid
-  //join users u on ev.userid=u.userid
-  //where e.eventid=1
-  //group by e.eventid, e.EventName, u.Name
-
             using (var context = _unitOfWork.DbContext)
             {
                 var eventAttendances = (from a in context.EventAttendances
                                         join e in context.Events on a.EventId equals e.EventId
-                                        join u in context.Users on a.UserId equals u.UserId
+                                        join u in context.Members on a.MemberId equals u.MemberId
                                         where e.EventId == eventId
-                                        group a by new { e.EventId, e.EventName, e.EventDate, u.Name } into g
+                                        group a by new { e.EventId, e.EventName, e.EventDate, u.LastName, u.FirstName } into g
                                         select new EventAttendanceSummary
                                         {
                                             EventId = g.Key.EventId,
                                             EventName = g.Key.EventName,
                                             EventDate = g.Key.EventDate,
-                                            AttendeeName = g.Key.Name,
+                                            AttendeeName = g.Key.LastName + ", " + g.Key.FirstName,
                                             AttendeeLogCount = g.Count()
                                         }).ToList();
 

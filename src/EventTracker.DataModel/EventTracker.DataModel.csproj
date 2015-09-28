@@ -74,10 +74,25 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>EventTracker.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Generated\HouseHold.cs">
+      <DependentUpon>EventTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\HouseHoldMember.cs">
+      <DependentUpon>EventTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\Member.cs">
+      <DependentUpon>EventTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\MemberMembership.cs">
+      <DependentUpon>EventTracker.tt</DependentUpon>
+    </Compile>
     <Compile Include="Generated\Token.cs">
       <DependentUpon>EventTracker.tt</DependentUpon>
     </Compile>
     <Compile Include="Generated\User.cs">
+      <DependentUpon>EventTracker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\UserEvent.cs">
       <DependentUpon>EventTracker.tt</DependentUpon>
     </Compile>
     <Compile Include="GenericRepository\GenericRepository.cs" />
