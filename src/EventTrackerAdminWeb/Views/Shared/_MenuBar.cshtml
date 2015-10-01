@@ -1,0 +1,24 @@
+﻿@using EventTracker.BusinessModel.Menus
+@model IEnumerable<EventTracker.BusinessModel.Menus.MenuItem>
+
+<ul class="nav navbar-nav">
+    <li class="active"><a href="#">Home</a></li>
+    @foreach (var item in Model) {
+        if (item.SubMenuItems!=null && item.SubMenuItems.Any()) {
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="">@item.Name <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        @foreach (var subMenuItem in item.SubMenuItems) {
+                            <li><a href="@Url.Content("~/"+@subMenuItem.NavigateUrl)">@subMenuItem.Name</a></li>
+                        }
+                    </ul>
+                </li>
+        }
+        else {
+            <li><a href="@Url.Content("~/"+@item.NavigateUrl)">@item.Name</a></li>
+        }
+    }
+</ul>
+
+
+

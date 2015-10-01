@@ -1,0 +1,39 @@
+﻿@using System.Web.Optimization
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/jquery")
+    @Styles.Render("~/Content/jqueryui")
+    @Styles.Render("~/Content/jqueryval")
+    @Styles.Render("~/Content/modernizr")
+    @Styles.Render("~/Content/bootstrap")
+    @Styles.Render("~/Content/highchart")
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/themes/base/css")
+    @RenderSection("scripts", required: false)
+    
+
+</head>
+<body>
+    <div class="navbar-collapse collapse navbar-fixed-top">
+        <div class="container">
+            <ul class="nav nav-pills navbar-right">
+                <li>@Html.ActionLink("Change Password", "ChangePassword", "Home")</li>
+                <li>@Html.ActionLink("Logout", "Logout", "Home")</li>
+            </ul>
+        </div>
+
+        @{Html.RenderAction("GetMenuItems", "MenuBar");}
+
+        <div class="container body-content">
+            @RenderBody()
+        <hr />  
+            <footer></footer>
+    </div>
+
+</div>
+</body>
+</html>

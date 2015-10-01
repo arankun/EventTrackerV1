@@ -1,0 +1,53 @@
+﻿@using System.Web.Optimization
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/jquery")
+    @Styles.Render("~/Content/jqueryui")
+    @Styles.Render("~/Content/jqueryval")
+    @Styles.Render("~/Content/modernizr")
+    @Styles.Render("~/Content/bootstrap")
+    @Styles.Render("~/Content/highchart")
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/themes/base/css")
+    @RenderSection("scripts", required: false)
+    
+
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+           <!-- <a class="navbar-brand" href="#">Event Management</a>-->
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            @{Html.RenderAction("GetMenuItems", "MenuBar");}
+
+
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                <li>@Html.ActionLink("Change Password", "ChangePassword", "Home")</li>
+                <li>@Html.ActionLink("Logout", "Logout", "Home")</li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    @RenderBody()
+</div>
+
+
+
+</body>
+</html>
