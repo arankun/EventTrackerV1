@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventTrackerAPI", "EventTrackerAPI\EventTrackerAPI.csproj", "{9E05F703-74FB-48FB-B9F5-FE211DB8E4EB}"
 EndProject
@@ -18,6 +18,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{0C234BF7-79DD-4E2F-AD06-53EB499C0036}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventTracker.Resolver", "EventTracker.Resolver\EventTracker.Resolver.csproj", "{BF4932D7-A685-4AC1-B4D4-4FE345A0D555}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventTrackerAdminWeb", "EventTrackerAdminWeb\EventTrackerAdminWeb.csproj", "{D6D54003-DB8A-4215-89FE-9FD70019E871}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{BF4932D7-A685-4AC1-B4D4-4FE345A0D555}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF4932D7-A685-4AC1-B4D4-4FE345A0D555}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF4932D7-A685-4AC1-B4D4-4FE345A0D555}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6D54003-DB8A-4215-89FE-9FD70019E871}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6D54003-DB8A-4215-89FE-9FD70019E871}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6D54003-DB8A-4215-89FE-9FD70019E871}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6D54003-DB8A-4215-89FE-9FD70019E871}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

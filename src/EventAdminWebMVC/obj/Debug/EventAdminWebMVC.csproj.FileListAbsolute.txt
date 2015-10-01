@@ -1,0 +1,1 @@
+C:\zart-git\EventTrackerV1\src\EventAdminWebMVC\obj\Debug\EventAdminWebMVC.csprojResolveAssemblyReference.cache
