@@ -22,7 +22,6 @@ namespace EventTracker.DataModel.Generated
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            //throw new UnintentionalCodeFirstException();
         }
     
         public virtual DbSet<EventAttendance> EventAttendances { get; set; }

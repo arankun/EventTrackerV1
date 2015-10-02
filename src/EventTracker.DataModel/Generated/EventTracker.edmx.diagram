@@ -25,6 +25,7 @@
         <AssociationConnector Association="EventTrackerDBModel.FK_Tokens_User" ManuallyRouted="false" />
         <AssociationConnector Association="EventTrackerDBModel.FK_UserEvents_User" ManuallyRouted="false" />
         <AssociationConnector Association="EventTrackerDBModel.FK_UserEvents_User1" />
+        <AssociationConnector Association="EventTrackerDBModel.FK_Members_FatherMember" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

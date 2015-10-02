@@ -47,3 +47,4 @@ Temporary Items
 /src/EventTracker.BusinessServices/obj
 /src/packages
 /src/EventTrackerAPI/obj
+/src/EventTrackerAPI/bin

@@ -17,5 +17,7 @@ namespace EventTracker.BusinessModel.Membership
 
         [HiddenInput(DisplayValue = false)]
         public Member Spouse { get; set; }
+
+        public string Household { get; set; }
     }
 }

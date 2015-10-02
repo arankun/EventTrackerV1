@@ -7,7 +7,7 @@ using System.Web.Mvc;
 using AutoMapper;
 using EventTracker.BusinessModel.Membership;
 using EventTracker.BusinessServices;
-
+using PagedList;
 namespace EventTrackerAdminWeb.Controllers
 {
     public class MembershipController : Controller
@@ -20,10 +20,28 @@ namespace EventTrackerAdminWeb.Controllers
         }
 
         // GET: Membership
-        public ActionResult Index()
+        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            
-            var members = _services.GetMembers(1, 10);
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "LastName" : "";
+            ViewBag.DateSortParm = sortOrder == "MemberOf" ? "memberOf_desc" : "MemberOf";
+
+            if (searchString != null) {
+                page = 1;
+            }
+            else {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
+            int pageCount;
+            //AT:ORIG var members = _services.GetMembers(pageNumber, pageSize, out pageCount).ToPagedList(pageNumber, pageSize);
+            var members = _services.GetMembers(pageNumber, pageSize);
+            //var members = _services.GetMembers(pageNumber, pageSize, out pageCount);//.ToPagedList(1, 1);
+            //ViewBag.PageCount = pageCount;
+            //return View(students.ToPagedList(pageNumber, pageSize));
             return View(members);
         }
 

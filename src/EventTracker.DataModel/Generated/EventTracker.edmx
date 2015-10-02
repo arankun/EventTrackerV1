@@ -43,6 +43,7 @@
           <Property Name="State" Type="varchar" MaxLength="50" />
           <Property Name="StartDate" Type="datetime" />
           <Property Name="EndDate" Type="datetime" />
+          <Property Name="Name" Type="varchar" MaxLength="30" />
         </EntityType>
         <EntityType Name="MemberMemberships">
           <Key>
@@ -67,8 +68,9 @@
           <Property Name="Email" Type="varchar" MaxLength="50" />
           <Property Name="MembershipDate" Type="datetime" />
           <Property Name="SpouseMemberId" Type="int" />
-          <Property Name="ParentMemberId" Type="int" />
           <Property Name="SpouseName" Type="varchar" MaxLength="50" />
+          <Property Name="FatherMemberId" Type="int" />
+          <Property Name="MotherMemberId" Type="int" />
         </EntityType>
         <EntityType Name="Tokens">
           <Key>
@@ -186,6 +188,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Members_FatherMember">
+          <End Role="Members" Type="Self.Members" Multiplicity="1" />
+          <End Role="Members1" Type="Self.Members" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Members">
+              <PropertyRef Name="MemberId" />
+            </Principal>
+            <Dependent Role="Members1">
+              <PropertyRef Name="MemberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Tokens_User">
           <End Role="Users" Type="Self.Users" Multiplicity="1" />
           <End Role="Tokens" Type="Self.Tokens" Multiplicity="*" />
@@ -260,6 +274,10 @@
             <End Role="Members" EntitySet="Members" />
             <End Role="MemberMemberships" EntitySet="MemberMemberships" />
           </AssociationSet>
+          <AssociationSet Name="FK_Members_FatherMember" Association="Self.FK_Members_FatherMember">
+            <End Role="Members" EntitySet="Members" />
+            <End Role="Members1" EntitySet="Members" />
+          </AssociationSet>
           <AssociationSet Name="FK_Tokens_User" Association="Self.FK_Tokens_User">
             <End Role="Users" EntitySet="Users" />
             <End Role="Tokens" EntitySet="Tokens" />
@@ -323,6 +341,7 @@
           <Property Name="EndDate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="HouseHoldMembers" Relationship="Self.FK_HouseHoldMembers_HouseHold" FromRole="HouseHolds" ToRole="HouseHoldMembers" />
           <NavigationProperty Name="Member" Relationship="Self.FK_HouseHolds_LeaderMemberId" FromRole="HouseHolds" ToRole="Members" />
+          <Property Name="Name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="MemberMembership">
           <Key>
@@ -348,13 +367,16 @@
           <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="MembershipDate" Type="DateTime" Precision="3" />
           <Property Name="SpouseMemberId" Type="Int32" />
-          <Property Name="ParentMemberId" Type="Int32" />
           <Property Name="SpouseName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="EventAttendances" Relationship="Self.FK_EventAttendance_Member" FromRole="Members" ToRole="EventAttendances" />
           <NavigationProperty Name="HouseHoldMembers" Relationship="Self.FK_HouseHoldMembers_Member" FromRole="Members" ToRole="HouseHoldMembers" />
           <NavigationProperty Name="HouseHolds" Relationship="Self.FK_HouseHolds_LeaderMemberId" FromRole="Members" ToRole="HouseHolds" />
           <NavigationProperty Name="MemberMemberships" Relationship="Self.FK_MemberMemberships_Member" FromRole="Members" ToRole="MemberMemberships" />
           <NavigationProperty Name="Users" Relationship="Self.FK_Users_Members" FromRole="Members" ToRole="Users" />
+          <Property Name="FatherMemberId" Type="Int32" />
+          <Property Name="MotherMemberId" Type="Int32" />
+          <NavigationProperty Name="Members1" Relationship="EventTrackerDBModel.FK_Members_FatherMember" FromRole="Member" ToRole="Member1" />
+          <NavigationProperty Name="Member1" Relationship="EventTrackerDBModel.FK_Members_FatherMember" FromRole="Member1" ToRole="Member" />
         </EntityType>
         <EntityType Name="Token">
           <Key>
@@ -568,6 +590,10 @@
             <End Role="User" EntitySet="Users" />
             <End Role="UserEvent" EntitySet="UserEvents" />
           </AssociationSet>
+          <AssociationSet Name="FK_Members_FatherMember" Association="EventTrackerDBModel.FK_Members_FatherMember">
+            <End Role="Member" EntitySet="Members" />
+            <End Role="Member1" EntitySet="Members" />
+          </AssociationSet>
         </EntityContainer>
         <Association Name="FK_UserEvents_User1">
           <End Type="EventTrackerDBModel.User" Role="User" Multiplicity="1" />
@@ -578,6 +604,18 @@
             </Principal>
             <Dependent Role="UserEvent">
               <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Members_FatherMember">
+          <End Type="EventTrackerDBModel.Member" Role="Member" Multiplicity="1" />
+          <End Type="EventTrackerDBModel.Member" Role="Member1" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Member">
+              <PropertyRef Name="MemberId" />
+            </Principal>
+            <Dependent Role="Member1">
+              <PropertyRef Name="MemberId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -621,6 +659,7 @@
           <EntitySetMapping Name="HouseHolds">
             <EntityTypeMapping TypeName="EventTrackerDBModel.HouseHold">
               <MappingFragment StoreEntitySet="HouseHolds">
+                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="HouseHoldId" ColumnName="HouseHoldId" />
                 <ScalarProperty Name="HouseHoldLeaderMemberId" ColumnName="HouseHoldLeaderMemberId" />
                 <ScalarProperty Name="Area" ColumnName="Area" />
@@ -644,6 +683,8 @@
           <EntitySetMapping Name="Members">
             <EntityTypeMapping TypeName="EventTrackerDBModel.Member">
               <MappingFragment StoreEntitySet="Members">
+                <ScalarProperty Name="MotherMemberId" ColumnName="MotherMemberId" />
+                <ScalarProperty Name="FatherMemberId" ColumnName="FatherMemberId" />
                 <ScalarProperty Name="MemberId" ColumnName="MemberId" />
                 <ScalarProperty Name="FirstName" ColumnName="FirstName" />
                 <ScalarProperty Name="LastName" ColumnName="LastName" />
@@ -653,7 +694,6 @@
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="MembershipDate" ColumnName="MembershipDate" />
                 <ScalarProperty Name="SpouseMemberId" ColumnName="SpouseMemberId" />
-                <ScalarProperty Name="ParentMemberId" ColumnName="ParentMemberId" />
                 <ScalarProperty Name="SpouseName" ColumnName="SpouseName" />
               </MappingFragment>
             </EntityTypeMapping>

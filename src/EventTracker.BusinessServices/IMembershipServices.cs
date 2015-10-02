@@ -13,7 +13,8 @@ namespace EventTracker.BusinessServices
         int AddSpouseOfMember(int spouseMemberId, NewMember newMember);
         int AddKfcMember(int parentId, NewMember newMember);
         Member GetMember(int memberId);
-        IEnumerable<Member> GetMembers(int pageIndex, int pageSize);
+        IEnumerable<Member> GetMembers(int pageIndex, int pageSize, out int numberOfPages);
+        IEnumerable<Member> GetMembers(int pageIndex, int pageSizes);
         void UpdateMember(Member aMember);
     }
 }
