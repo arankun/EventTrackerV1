@@ -18,7 +18,7 @@ namespace EventTrackerAdminWeb.Controllers
             _service = service;
         }
 
-        //[ChildActionOnly]
+        [ChildActionOnly]
         public PartialViewResult GetMenuItems()
         {
             var menus = _service.GetUserMenus();

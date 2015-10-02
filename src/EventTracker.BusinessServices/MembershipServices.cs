@@ -1,11 +1,12 @@
 ﻿#region directives
 
 using System;
+using System.Collections.Generic;
 using System.Transactions;
 using AutoMapper;
 using EventTracker.BusinessModel.Membership;
 using EventTracker.DataModel.UnitOfWork;
-
+using System.Linq;
 #endregion
 
 namespace EventTracker.BusinessServices
@@ -36,6 +37,28 @@ namespace EventTracker.BusinessServices
                 _unitOfWork.Save();
                 scope.Complete();
                 return dbMember.MemberId;
+            }
+        }
+
+        public void UpdateMember(Member aMember) {
+            using (var scope = new TransactionScope()) {
+                //var dbMember = new DataModel.Generated.Member() {
+                //    FirstName = aMember.FirstName,
+                //    LastName = aMember.LastName,
+                //    DOB = aMember.DateOfBirth,
+                //    Gender = aMember.Gender.ToString(),
+                //    Phone = aMember.Phone,
+                //    Email = aMember.Email
+                //};
+
+                Mapper.CreateMap<Member, DataModel.Generated.Member > ()
+    .ForMember(dest => dest.DOB,
+        opts => opts.MapFrom(src => src.DateOfBirth));
+                var dbMember = Mapper.Map<Member, DataModel.Generated.Member>(aMember);
+
+                _unitOfWork.MemberRepository.Update(dbMember);
+                _unitOfWork.Save();
+                scope.Complete();
             }
         }
 
@@ -111,5 +134,30 @@ namespace EventTracker.BusinessServices
             }
             return null;
         }
+
+        public IEnumerable<Member> GetMembers(int pageIndex = 0, int pageSize = 10)
+        {
+            using (var context = _unitOfWork.DbContext)
+            {
+                var members = (from m in context.Members
+                    join mmTemp in context.MemberMemberships on m.MemberId equals mmTemp.MemberId into tempJoin
+                    from mm in tempJoin.DefaultIfEmpty()
+                    orderby m.LastName, m.SpouseMemberId descending, m.ParentMemberId
+                    select new Member
+                    {
+                        MemberId = m.MemberId,
+                        LastName = m.LastName,
+                        FirstName = m.FirstName,
+                        MemberOf = mm.MemberOf,
+                        Email = m.Email,
+                        Phone = m.Phone,
+                        DateOfBirth = m.DOB.Value
+                    }).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
+                return members;
+            }
+            return null;
+        }
+
+
     }
 }

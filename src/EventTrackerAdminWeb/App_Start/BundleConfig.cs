@@ -20,9 +20,12 @@ namespace EventTrackerAdminWeb
                         "~/Scripts/modernizr-*"));
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                      "~/Scripts/bootstrap.js",
-                      "~/Scripts/bootstrap-datetimepicker.min.js",
+                      "~/Scripts/bootstrap.*",
                       "~/Scripts/respond.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/bootstrap-datepicker").Include(
+                      "~/Scripts/bootstrap-datepicker*",
+                      "~/Scripts/locales/bootstrap-datepicker.js*"));
 
             bundles.Add(new ScriptBundle("~/bundles/highchart").Include(
             "~/Scripts/Highcharts-4.0.1/js/highcharts.js"));
@@ -30,10 +33,7 @@ namespace EventTrackerAdminWeb
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
-                      "~/Content/bootstrap-datetimepicker.min.css",
-                      "~/Content/Site.css",
-                      "~/Content/chsa.css"));
-
+                      "~/Content/bootstrap-datepicker*"));
 
             bundles.Add(new StyleBundle("~/Content/themes/base/css").Include(
                       "~/Content/themes/base/jquery.ui.core.css",

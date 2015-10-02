@@ -2,15 +2,17 @@
 @model IEnumerable<EventTracker.BusinessModel.Menus.MenuItem>
 
 <ul class="nav navbar-nav">
-    <li class="active"><a href="#">Home</a></li>
+    <li><a href="#">Home</a></li>
     @foreach (var item in Model) {
         if (item.SubMenuItems!=null && item.SubMenuItems.Any()) {
                 <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="">@item.Name <span class="caret"></span></a>
+                    <a class="dropdown-toggle" data-toggle="dropdown"   aria-haspopup="true" aria-expanded="false" href="@item.NavigateUrl">@item.Name <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         @foreach (var subMenuItem in item.SubMenuItems) {
-                            <li><a href="@Url.Content("~/"+@subMenuItem.NavigateUrl)">@subMenuItem.Name</a></li>
+                            <li><a href="@Url.Content("~/"+@subMenuItem.NavigateUrl)" title="@subMenuItem.Name">@subMenuItem.Name</a></li>
                         }
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">Separated link</a></li>
                     </ul>
                 </li>
         }

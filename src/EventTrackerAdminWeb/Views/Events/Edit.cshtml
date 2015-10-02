@@ -1,0 +1,53 @@
+﻿@using AutoMapper.Internal
+@model EventTracker.BusinessModel.Event
+
+@{
+    ViewBag.Title = "Edit :" + @Model.EventName;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="panel">
+    <div class="panel-heading">
+        <h3>Edit @Model.EventName</h3>
+    </div>
+
+    @using (Html.BeginForm("Edit", "Events")) {
+        <div class="panel-body">
+            @Html.HiddenFor(m => m.EventId)
+            
+            @foreach (var property in ViewData.ModelMetadata.Properties) {
+
+                if (property.PropertyName != "EventId" && property.PropertyName != "EventAttendances") {
+                    <div class="form-group">
+                        <label>@(property.DisplayName ?? property.PropertyName)</label>
+                        @if (property.PropertyName == "Description") {
+                            @Html.TextArea(property.PropertyName, null,
+                                new { @class = "form-control", rows = 4 })
+                        }
+                        else if (property.PropertyName == "EventDate") {
+                            <div class="input-group date">
+                                @Html.TextBoxFor(model => Model.EventDate, new { @class = "form-control", id = "EventDate", @placeholder = "mm/dd/yyyy", @title = "Event Date" })
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-th"></span>
+                                </div>
+                            </div>
+                        }
+                        else {
+                            @Html.TextBox(property.PropertyName, null,
+                                new { @class = "form-control" })
+                        }
+                        @Html.ValidationMessage(property.PropertyName)
+                    </div>
+                }
+            }
+        </div>
+
+        <div class="panel-footer">
+            <input type="submit" value="Save" class="btn btn-primary" />
+            @Html.ActionLink("Cancel and return to List", "Index", null, new {
+           @class = "btn btn-default"
+       })
+        </div>
+    }
+</div>
+

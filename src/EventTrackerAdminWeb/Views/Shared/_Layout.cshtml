@@ -1,49 +1,66 @@
-﻿@using System.Web.Optimization
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
-    @Styles.Render("~/Content/jquery")
-    @Styles.Render("~/Content/jqueryui")
-    @Styles.Render("~/Content/jqueryval")
-    @Styles.Render("~/Content/modernizr")
-    @Styles.Render("~/Content/bootstrap")
-    @Styles.Render("~/Content/highchart")
     @Styles.Render("~/Content/css")
     @Styles.Render("~/Content/themes/base/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/bootstrap-datepicker")
+
     @RenderSection("scripts", required: false)
     
+    @*
 
+        <script src="~/Scripts/modernizr-2.8.3.js"></script>
+        <script src="~/Scripts/jquery-2.1.4.js"></script>
+        <script src="/Scripts/bootstrap.js"></script>
+        <script src="/Scripts/bootstrap-datetimepicker.min.js"></script>
+        <script src="/Scripts/respond.js"></script>
+
+        <script src="/Scripts/jquery.validate.js"></script>
+        <script src="/Scripts/jquery.validate.unobtrusive.js"></script>
+
+        <script src="/Scripts/jquery-ui-1.11.4.js"></script>
+
+
+    *@
 </head>
 <body>
 
-<nav class="navbar navbar-inverse">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-           <!-- <a class="navbar-brand" href="#">Event Management</a>-->
-        </div>
-        <div class="collapse navbar-collapse" id="myNavbar">
-            @{Html.RenderAction("GetMenuItems", "MenuBar");}
+    <div class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <!-- <a class="navbar-brand" href="#">Event Management</a>-->
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                @{Html.RenderAction("GetMenuItems", "MenuBar");}
 
 
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-                <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-                <li>@Html.ActionLink("Change Password", "ChangePassword", "Home")</li>
-                <li>@Html.ActionLink("Logout", "Logout", "Home")</li>
-            </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                    <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                    <li>@Html.ActionLink("Change Password", "ChangePassword", "Home")</li>
+                    <li>@Html.ActionLink("Logout", "Logout", "Home")</li>
+                </ul>
+            </div>
         </div>
     </div>
-</nav>
 
 <div class="container">
+    @if (TempData["message"] != null) {
+        <div class="alert alert-success">@TempData["message"]</div>
+    }    
     @RenderBody()
 </div>
 

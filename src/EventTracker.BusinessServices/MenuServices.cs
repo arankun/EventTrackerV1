@@ -19,14 +19,14 @@ namespace EventTracker.BusinessServices
                 Order = 1,
                 SubMenuItems = new List<MenuItem>()
                 {
-                    new MenuItem {Name="Sub Menu Here", NavigateUrl = "SubMenu URL"}
+                    new MenuItem {Name="Past Events", NavigateUrl = "SubMenu URL"}
                 }
             };
 
             var memberMenu = new MenuItem() {
                 Id = 1,
                 Name = "Members",
-                NavigateUrl = "/Members",
+                NavigateUrl = "/Membership",
                 Order = 2
             };
 

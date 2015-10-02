@@ -1,0 +1,70 @@
+﻿@model EventTracker.BusinessModel.Membership.Member
+
+@{
+    ViewBag.Title = "title";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="panel">
+    <div class="panel-heading">
+        <h3>@Model.FullName</h3>
+        @if (Model.SpouseMemberId > 0) {
+            @Html.Label("Spouse", "Spouse Name: ")@Html.LabelForModel(Model.Spouse.FullName)
+        }
+    </div>
+
+    @using (Html.BeginForm("Edit", "Membership")) {
+        <div class="panel-body">
+            @Html.HiddenFor(m => m.MemberId)
+
+            @foreach (var property in ViewData.ModelMetadata.Properties) {
+
+                switch (property.PropertyName) {
+                    case "MemberId":
+                        break;
+                    case "FullName":
+                        break;
+                    case "SpouseMemberId":
+                        break;
+                    case "ParentMemberId":
+                        break;
+                    case "Name":
+                        break;
+                    case "Spouse":
+                        break;
+                    case "MemberOf":
+                        break;
+                    default:
+                        <div class="form-group">
+                            <label>@(property.DisplayName ?? property.PropertyName)</label>
+                            @if (property.PropertyName == "DateOfBirth")
+                            {
+                                <div class="input-group date">
+                                    @Html.TextBoxFor(model => Model.DateOfBirth, new {@class = "form-control", id = "EventDate", @placeholder = "mm/dd/yyyy", @title = "Event Date"})
+                                    <div class="input-group-addon">
+                                        <span class="glyphicon glyphicon-th"></span>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                @Html.TextBox(property.PropertyName, null,
+                                    new {@class = "form-control"})
+                            }
+                            @Html.ValidationMessage(property.PropertyName)
+                        </div>
+                        break;
+                }
+                @Html.ValidationMessage(property.PropertyName)
+
+
+            }
+        </div>
+
+        <div class="panel-footer">
+            <input type="submit" value="Save" class="btn btn-primary" />
+            @Html.ActionLink("Cancel and return to List", "Index", null, new {
+           @class = "btn btn-default"
+       })
+        </div>
+    }
+</div>
