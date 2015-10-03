@@ -45,6 +45,7 @@ namespace EventTrackerAdminWeb.Controllers
             return View(members);
         }
 
+
         public ActionResult Edit(int memberid)
         {
             var member = _services.GetMember(memberid);
@@ -80,7 +81,7 @@ namespace EventTrackerAdminWeb.Controllers
 
         public ActionResult Delete()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         public ActionResult Create()

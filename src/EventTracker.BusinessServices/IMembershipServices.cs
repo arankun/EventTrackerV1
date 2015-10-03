@@ -1,6 +1,7 @@
 ﻿#region directives
 
 using System.Collections.Generic;
+using EventTracker.BusinessModel;
 using EventTracker.BusinessModel.Membership;
 
 #endregion
@@ -16,5 +17,6 @@ namespace EventTracker.BusinessServices
         IEnumerable<Member> GetMembers(int pageIndex, int pageSize, out int numberOfPages);
         IEnumerable<Member> GetMembers(int pageIndex, int pageSizes);
         void UpdateMember(Member aMember);
+        Common.PagedList GetMembers(SearchParameter searchParam);
     }
 }

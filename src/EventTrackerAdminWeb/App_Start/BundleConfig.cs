@@ -23,6 +23,13 @@ namespace EventTrackerAdminWeb
                       "~/Scripts/bootstrap.*",
                       "~/Scripts/respond.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/angularjs").Include(
+                                 "~/Scripts/angular.js",
+                                 "~/Scripts/angular-route.js",
+                                 "~/Scripts/angular-ui-router.js",
+                                 "~/Scripts/angular-sanitizer.js"
+                                 ));
+
             bundles.Add(new ScriptBundle("~/bundles/bootstrap-datepicker").Include(
                       "~/Scripts/bootstrap-datepicker*",
                       "~/Scripts/locales/bootstrap-datepicker.js*"));
@@ -39,6 +46,12 @@ namespace EventTrackerAdminWeb
                       "~/Content/themes/base/jquery.ui.core.css",
                       "~/Content/themes/base/jquery.ui.autocomplete.css",
                       "~/Content/themes/base/jquery.ui.theme.css"));
+
+            bundles.Add(new ScriptBundle("~/bundles/app").Include(
+                          "~/app/app.js",
+                          "~/app/controllers/customer.js",
+                          "~/app/services/customer.js"
+                          ));
         }
     }
 }

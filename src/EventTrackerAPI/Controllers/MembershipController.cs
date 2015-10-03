@@ -1,8 +1,11 @@
 ﻿#region directives
 
+using System.Security.AccessControl;
 using System.Web.Http;
+using EventTracker.BusinessModel;
 using EventTracker.BusinessModel.Membership;
 using EventTracker.BusinessServices;
+using EventTracker.BusinessServices.Common;
 
 #endregion
 
@@ -23,6 +26,22 @@ namespace EventTrackerAPI.Controllers
         public Member GetMember(int memberId)
         {
             return _services.GetMember(memberId);
+        }
+
+
+        [HttpGet]
+        [Route("getmembers")]
+        public PagedList GetMembers(string searchtext, int page = 1, int pageSize = 10, string sortBy = "lastname", string sortDirection = "asc")
+        {
+            var searchParam = new SearchParameter()
+            {
+                SearchText = searchtext,
+                PageNumber = page,
+                PageSize = 10,
+                SortBy = sortBy,
+                SortDirection = sortDirection
+            };
+            return _services.GetMembers(searchParam);
         }
 
         [HttpPost]

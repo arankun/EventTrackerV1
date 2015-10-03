@@ -8,6 +8,7 @@ using EventTracker.BusinessModel.Membership;
 using EventTracker.DataModel.UnitOfWork;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
+using EventTracker.BusinessModel;
 using PagedList;
 #endregion
 
@@ -44,23 +45,79 @@ namespace EventTracker.BusinessServices
 
         public void UpdateMember(Member aMember) {
             using (var scope = new TransactionScope()) {
-                //var dbMember = new DataModel.Generated.Member() {
-                //    FirstName = aMember.FirstName,
-                //    LastName = aMember.LastName,
-                //    DOB = aMember.DateOfBirth,
-                //    Gender = aMember.Gender.ToString(),
-                //    Phone = aMember.Phone,
-                //    Email = aMember.Email
-                //};
+                var dbMember = new DataModel.Generated.Member() {
+                    FirstName = aMember.FirstName,
+                    LastName = aMember.LastName,
+                    DOB = aMember.DateOfBirth,
+                    Gender = aMember.Gender.ToString(),
+                    Phone = aMember.Phone,
+                    Email = aMember.Email
+                };
 
-                Mapper.CreateMap<Member, DataModel.Generated.Member > ()
-    .ForMember(dest => dest.DOB,
-        opts => opts.MapFrom(src => src.DateOfBirth));
-                var dbMember = Mapper.Map<Member, DataModel.Generated.Member>(aMember);
+                //AT: We need to do manual mapping above. We can use code below but need to add the Ignore fields that we don't want updated
+                //            Mapper.CreateMap<Member, DataModel.Generated.Member > ()
+                //.ForMember(dest => dest.DOB,
+                //    opts => opts.MapFrom(src => src.DateOfBirth));
+                //            var dbMember = Mapper.Map<Member, DataModel.Generated.Member>(aMember);
 
                 _unitOfWork.MemberRepository.Update(dbMember);
                 _unitOfWork.Save();
                 scope.Complete();
+            }
+        }
+
+        public Common.PagedList GetMembers(SearchParameter param)
+        {
+            var pagedRecord = new Common.PagedList();
+            using (var context = _unitOfWork.DbContext)
+            {
+                Func<Member, Object> orderByFunc = null;
+                if (param.SortBy == "Lastname")
+                    orderByFunc = item => item.Name;
+                else if (param.SortBy == "Firstname")
+                    orderByFunc = item => item.FirstName;
+                else 
+                    orderByFunc = item => item.LastName;
+
+                pagedRecord.Content = (from m in context.Members
+                    join mmTemp in context.MemberMemberships on m.MemberId equals mmTemp.MemberId into tempJoin
+                    from mm in tempJoin.DefaultIfEmpty()
+                    join hhmTemp in context.HouseHoldMembers on m.MemberId equals hhmTemp.MemberId into hhmTempJoin
+                    from hhm in hhmTempJoin.DefaultIfEmpty()
+                    join hhTemp in context.HouseHolds on hhm.HouseHoldId equals hhTemp.HouseHoldId into hhTempJoin
+                    from hh in hhTempJoin.DefaultIfEmpty()
+                    where mm.EndDate == null 
+                    select new Member
+                    {
+                        MemberId = m.MemberId,
+                        LastName = m.LastName,
+                        FirstName = m.FirstName,
+                        MemberOf = mm.MemberOf,
+                        Email = m.Email,
+                        Phone = m.Phone,
+                        DateOfBirth = m.DOB.Value,
+                        Household = hh.Name
+                    }).Where(x => param.SearchText == null ||
+                        ((x.LastName.Contains(param.SearchText)) 
+                    )).OrderBy(orderByFunc)
+                    .Skip((param.PageNumber - 1) * param.PageSize)
+                    .Take(param.PageSize)
+                    .ToList();
+
+                pagedRecord.TotalRecords = (from m in context.Members
+                    join mmTemp in context.MemberMemberships on m.MemberId equals mmTemp.MemberId into tempJoin
+                    from mm in tempJoin.DefaultIfEmpty()
+                    join hhmTemp in context.HouseHoldMembers on m.MemberId equals hhmTemp.MemberId into hhmTempJoin
+                    from hhm in hhmTempJoin.DefaultIfEmpty()
+                    join hhTemp in context.HouseHolds on hhm.HouseHoldId equals hhTemp.HouseHoldId into hhTempJoin
+                    from hh in hhTempJoin.DefaultIfEmpty()
+                    where mm.EndDate == null
+                    select m).Count();
+
+                pagedRecord.CurrentPage = param.PageNumber;
+                pagedRecord.PageSize = param.PageSize ;
+
+                return pagedRecord;
             }
         }
 
@@ -121,7 +178,6 @@ namespace EventTracker.BusinessServices
             }
         }
 
-
         public Member GetMember(int memberId)
         {
             var dbMember = _unitOfWork.MemberRepository.Get(u => u.MemberId == memberId);
@@ -151,13 +207,14 @@ namespace EventTracker.BusinessServices
 //on hh.HouseHoldId = hhm.HouseHoldId
 //where mm.EndDate is null
 //order by m.LastName, mm.MemberId desc
-                var members = (from m in context.Members
+                var pagedList = (from m in context.Members
                     join mmTemp in context.MemberMemberships on m.MemberId equals mmTemp.MemberId into tempJoin
                     from mm in tempJoin.DefaultIfEmpty()
-                    join hhmTemp in context.HouseHoldMembers on m.MemberId equals hhmTemp.HouseHoldMemberId into hhmTempJoin
+                    join hhmTemp in context.HouseHoldMembers on m.MemberId equals hhmTemp.MemberId into hhmTempJoin
                     from hhm in hhmTempJoin.DefaultIfEmpty()
                     join hhTemp in context.HouseHolds on hhm.HouseHoldId equals hhTemp.HouseHoldId into hhTempJoin
                     from hh in hhTempJoin.DefaultIfEmpty()
+                               where mm.EndDate == null
                     orderby m.LastName, m.SpouseMemberId descending, m.FatherMemberId, m.MotherMemberId
                     select new Member
                     {
@@ -170,6 +227,7 @@ namespace EventTracker.BusinessServices
                         DateOfBirth = m.DOB.Value,
                         Household = hh.Name
                     }).ToPagedList(pageIndex, pageSize);
+                //var pagedList = members.ToPagedList(pageIndex, pageSize);
 
                 //int totalCount = from item in _dc.Items
                 //                 where item.Description.
@@ -181,10 +239,11 @@ namespace EventTracker.BusinessServices
                 //    join mmTemp in context.MemberMemberships on m.MemberId equals mmTemp.MemberId into tempJoin
                 //    from mm in tempJoin.DefaultIfEmpty()
                 //                  select m.MemberId).Count();
-                return members;
+                return pagedList;
             }
         }
 
+        //AT: This is a different implementation of paging. Consider this for performance
         public IEnumerable<Member> GetMembers(int pageIndex, int pageSize, out int numberOfPages) {
             using (var context = _unitOfWork.DbContext) {
                 var members = (from m in context.Members
@@ -204,12 +263,6 @@ namespace EventTracker.BusinessServices
                                    DateOfBirth = m.DOB.Value,
                                    Household = hh.Name
                                }).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
-
-                //int totalCount = from item in _dc.Items
-                //                 where item.Description.
-                //                 Contains(description).Count();
-
-                //int numberOfPages = (int)(totalCount / pageSize);
 
                 int totalCount = (from m in context.Members
                                   join mmTemp in context.MemberMemberships on m.MemberId equals mmTemp.MemberId into tempJoin
