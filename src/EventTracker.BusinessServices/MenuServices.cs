@@ -19,7 +19,7 @@ namespace EventTracker.BusinessServices
                 Order = 1,
                 SubMenuItems = new List<MenuItem>()
                 {
-                    new MenuItem {Name="Past Events", NavigateUrl = "SubMenu URL"}
+                    new MenuItem {Name="Current/Future Events", NavigateUrl = "/Events"}
                 }
             };
 
@@ -30,7 +30,14 @@ namespace EventTracker.BusinessServices
                 Order = 2
             };
 
-            var menuList = new List<MenuItem>() {eventMenu, memberMenu};
+            var memberMenuAngularJs = new MenuItem() {
+                Id = 1,
+                Name = "Members Ajs",
+                NavigateUrl = "#/members",
+                Order = 2
+            };
+
+            var menuList = new List<MenuItem>() {eventMenu, memberMenu, memberMenuAngularJs };
             return menuList;
         }
 

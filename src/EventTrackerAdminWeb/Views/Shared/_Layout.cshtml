@@ -6,15 +6,11 @@
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
     @Styles.Render("~/Content/themes/base/css")
-    @Scripts.Render("~/bundles/modernizr")
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/jqueryval")
-    @Scripts.Render("~/bundles/jqueryui")
-    @Scripts.Render("~/bundles/bootstrap")
-    @Scripts.Render("~/bundles/bootstrap-datepicker")
 
-    @RenderSection("scripts", required: false)
-    
+
+
+
+
     @*
 
         <script src="~/Scripts/modernizr-2.8.3.js"></script>
@@ -43,28 +39,52 @@
                 </button>
                 <!-- <a class="navbar-brand" href="#">Event Management</a>-->
             </div>
-            <div class="collapse navbar-collapse" id="myNavbar">
-                @{Html.RenderAction("GetMenuItems", "MenuBar");}
+            
+        <div class="collapse navbar-collapse" id="myNavbar">
+            @{Html.RenderAction("GetMenuItems", "MenuBar");}
 
-
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-                    <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-                    <li>@Html.ActionLink("Change Password", "ChangePassword", "Home")</li>
-                    <li>@Html.ActionLink("Logout", "Logout", "Home")</li>
-                </ul>
-            </div>
+            
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                <li>@Html.ActionLink("Change Password", "ChangePassword", "Home")</li>
+                <li>@Html.ActionLink("Logout", "Logout", "Home")</li>
+            </ul>
+        </div>
+@*
+    <div id="navbar-main" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+            <li><a href="#/members">Members</a></li>
+            <li><a href="#/events">Events</a></li>
+            <li><a href="#/customers">Customers</a></li>
+        </ul>
+    </div> *@
         </div>
     </div>
 
-<div class="container">
-    @if (TempData["message"] != null) {
-        <div class="alert alert-success">@TempData["message"]</div>
-    }    
-    @RenderBody()
-</div>
+    <div class="container">
+        @if (TempData["message"] != null) {
+            <div class="alert alert-success">@TempData["message"]</div>
+        }
+        @RenderBody()
+    </div>
 
+    <footer>
+        <div class="content-wrapper">
+            <div class="container">
+                <p>&copy; @DateTime.Now.Year </p>
+            </div>
+        </div>
+    </footer>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/bootstrap-datepicker")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/angularjs")
 
-
+    @Scripts.Render("~/bundles/app")
+    @RenderSection("scripts", required: false)
 </body>
 </html>

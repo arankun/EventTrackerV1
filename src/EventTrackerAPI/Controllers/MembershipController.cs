@@ -31,7 +31,7 @@ namespace EventTrackerAPI.Controllers
 
         [HttpGet]
         [Route("getmembers")]
-        public PagedList GetMembers(string searchtext, int page = 1, int pageSize = 10, string sortBy = "lastname", string sortDirection = "asc")
+        public PagedList GetMembers(string searchtext = "", int page = 1, int pageSize = 10, string sortBy = "lastname", string sortDirection = "asc")
         {
             var searchParam = new SearchParameter()
             {

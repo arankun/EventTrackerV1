@@ -25,9 +25,12 @@ namespace EventTrackerAdminWeb
 
             bundles.Add(new ScriptBundle("~/bundles/angularjs").Include(
                                  "~/Scripts/angular.js",
+                                 "~/Scripts/angular-ui/*.js",
                                  "~/Scripts/angular-route.js",
                                  "~/Scripts/angular-ui-router.js",
-                                 "~/Scripts/angular-sanitizer.js"
+                                 "~/Scripts/angular-sanitizer.js",
+                                 "~/Scripts/ng-grid.js",
+                                 "~/Scripts/ng-grid-flexible-height.js"
                                  ));
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap-datepicker").Include(
@@ -42,14 +45,31 @@ namespace EventTrackerAdminWeb
                       "~/Content/bootstrap.css",
                       "~/Content/bootstrap-datepicker*"));
 
+            bundles.Add(new StyleBundle("~/Content/css").Include(
+                        "~/Content/bootstrap.css",
+                        "~/Content/bootstrap-theme.css",
+                        "~/Content/bootstrap-datepicker.css",
+                        "~/Content/ng-grid.css"));
+
             bundles.Add(new StyleBundle("~/Content/themes/base/css").Include(
-                      "~/Content/themes/base/jquery.ui.core.css",
-                      "~/Content/themes/base/jquery.ui.autocomplete.css",
-                      "~/Content/themes/base/jquery.ui.theme.css"));
+                        "~/Content/themes/base/jquery.ui.core.css",
+                        "~/Content/themes/base/jquery.ui.resizable.css",
+                        "~/Content/themes/base/jquery.ui.selectable.css",
+                        "~/Content/themes/base/jquery.ui.accordion.css",
+                        "~/Content/themes/base/jquery.ui.autocomplete.css",
+                        "~/Content/themes/base/jquery.ui.button.css",
+                        "~/Content/themes/base/jquery.ui.dialog.css",
+                        "~/Content/themes/base/jquery.ui.slider.css",
+                        "~/Content/themes/base/jquery.ui.tabs.css",
+                        "~/Content/themes/base/jquery.ui.datepicker.css",
+                        "~/Content/themes/base/jquery.ui.progressbar.css",
+                        "~/Content/themes/base/jquery.ui.theme.css"));
 
             bundles.Add(new ScriptBundle("~/bundles/app").Include(
                           "~/app/app.js",
+                          "~/app/controllers/membershipController.js",
                           "~/app/controllers/customer.js",
+                          "~/app/services/membershipServices.js",
                           "~/app/services/customer.js"
                           ));
         }

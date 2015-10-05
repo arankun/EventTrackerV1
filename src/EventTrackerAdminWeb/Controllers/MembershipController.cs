@@ -81,7 +81,8 @@ namespace EventTrackerAdminWeb.Controllers
 
         public ActionResult Delete()
         {
-            //throw new NotImplementedException();
+            //AT:TODO
+            return View("Edit", new Member());
         }
 
         public ActionResult Create()
