@@ -7,25 +7,6 @@
     @Styles.Render("~/Content/css")
     @Styles.Render("~/Content/themes/base/css")
 
-
-
-
-
-    @*
-
-        <script src="~/Scripts/modernizr-2.8.3.js"></script>
-        <script src="~/Scripts/jquery-2.1.4.js"></script>
-        <script src="/Scripts/bootstrap.js"></script>
-        <script src="/Scripts/bootstrap-datetimepicker.min.js"></script>
-        <script src="/Scripts/respond.js"></script>
-
-        <script src="/Scripts/jquery.validate.js"></script>
-        <script src="/Scripts/jquery.validate.unobtrusive.js"></script>
-
-        <script src="/Scripts/jquery-ui-1.11.4.js"></script>
-
-
-    *@
 </head>
 <body ng-app="app">
 
@@ -39,18 +20,22 @@
                 </button>
                 <!-- <a class="navbar-brand" href="#">Event Management</a>-->
             </div>
-            
-        <div class="collapse navbar-collapse" id="myNavbar">
-            @{Html.RenderAction("GetMenuItems", "MenuBar");}
 
-            
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-                <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-                <li>@Html.ActionLink("Change Password", "ChangePassword", "Home")</li>
-                <li>@Html.ActionLink("Logout", "Logout", "Home")</li>
-            </ul>
-        </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                @{Html.RenderAction("GetMenuItems", "MenuBar");}
+
+
+                <ul class="nav navbar-nav navbar-right">
+                    @if (User.Identity.IsAuthenticated) {
+                        <li>@Html.ActionLink("Change Password", "ChangePassword", "Home")</li>
+                        <li>@Html.ActionLink("Logout", "Logout", "Home")</li>
+                    }
+                    else {
+                        <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                        <li><a href="@Url.Action("Index", "Account")"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                    }
+                </ul>
+            </div>
 @*
     <div id="navbar-main" class="navbar-collapse collapse">
         <ul class="nav navbar-nav">

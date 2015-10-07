@@ -1,5 +1,8 @@
-﻿using System.ComponentModel;
+﻿#region directives
+
 using System.Web.Mvc;
+
+#endregion
 
 namespace EventTracker.BusinessModel.Membership
 {
@@ -7,17 +10,24 @@ namespace EventTracker.BusinessModel.Membership
     {
         [HiddenInput(DisplayValue = false)]
         public int MemberId { get; set; }
+
         public string MemberOf { get; set; }
 
         [HiddenInput(DisplayValue = false)]
-        public int SpouseMemberId { get; set; }
+        public int? SpouseMemberId { get; set; }
+
+        [HiddenInput(DisplayValue = false)]
+        public string SpouseName { get; set; }
 
         [HiddenInput(DisplayValue = false)]
         public int ParentMemberId { get; set; }
 
-        [HiddenInput(DisplayValue = false)]
-        public Member Spouse { get; set; }
+        //public string Household { get; set; }
 
-        public string Household { get; set; }
+        [HiddenInput(DisplayValue = false)]
+        public int? HouseHoldId { get; set; }
+
+        public string HouseholdName { get; set; }
+
     }
 }

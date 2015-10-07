@@ -1,16 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO.MemoryMappedFiles;
-using System.Linq;
-using System.Web;
+﻿#region directives
+
+using System;
 using System.Web.Mvc;
 using AutoMapper;
 using EventTracker.BusinessModel.Membership;
-using EventTracker.BusinessServices;
-using PagedList;
+using EventTracker.BusinessServices.Membership;
+using EventTrackerAdminWeb.Filter;
+
+#endregion
+
 namespace EventTrackerAdminWeb.Controllers
 {
-    public class MembershipController : Controller
+    //[CustomAuthorize(Roles = "Admin")]
+    public class MembershipController : BaseController
     {
         private readonly IMembershipServices _services;
 
@@ -19,7 +21,7 @@ namespace EventTrackerAdminWeb.Controllers
             _services = services;
         }
 
-        // GET: Membership
+        [HttpGet]
         public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
             ViewBag.CurrentSort = sortOrder;
@@ -34,8 +36,8 @@ namespace EventTrackerAdminWeb.Controllers
             }
 
             ViewBag.CurrentFilter = searchString;
-            int pageSize = 10;
-            int pageNumber = (page ?? 1);
+            var pageSize = 10;
+            var pageNumber = (page ?? 1);
             int pageCount;
             //AT:ORIG var members = _services.GetMembers(pageNumber, pageSize, out pageCount).ToPagedList(pageNumber, pageSize);
             var members = _services.GetMembers(pageNumber, pageSize);
@@ -45,15 +47,25 @@ namespace EventTrackerAdminWeb.Controllers
             return View(members);
         }
 
-
+        [HttpGet]
         public ActionResult Edit(int memberid)
         {
             var member = _services.GetMember(memberid);
-            if (member.SpouseMemberId > 0)
-            {
-                var spouse = _services.GetMember(member.SpouseMemberId);
-                member.Spouse = spouse;
-            }
+
+            //AT: Need to do this at service level
+            //if (member.SpouseMemberId.HasValue)
+            //{
+            //    var spouse = _services.GetMember(member.SpouseMemberId.Value);
+            //    member.Spouse = spouse;
+            //}
+
+            //var hh = _services.GetHouseHold(member.MemberId);
+            //if (hh != null)
+            //{
+            //    member.HouseHoldId = hh.HouseHoldId;
+            //    member.HouseholdName = hh.Name;
+            //}
+
             return View(member);
         }
 
@@ -88,6 +100,11 @@ namespace EventTrackerAdminWeb.Controllers
         public ActionResult Create()
         {
             return View("Edit", new Member());
+        }
+
+        public ActionResult EditHousehold(int? householdid)
+        {
+            return PartialView("_EditMemberHouseHold", new HouseHold());
         }
     }
 }

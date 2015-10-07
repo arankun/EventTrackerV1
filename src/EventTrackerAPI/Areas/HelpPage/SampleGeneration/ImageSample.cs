@@ -1,4 +1,8 @@
+#region directives
+
 using System;
+
+#endregion
 
 namespace EventTrackerAPI.Areas.HelpPage
 {
@@ -24,7 +28,7 @@ namespace EventTrackerAPI.Areas.HelpPage
 
         public override bool Equals(object obj)
         {
-            ImageSample other = obj as ImageSample;
+            var other = obj as ImageSample;
             return other != null && Src == other.Src;
         }
 

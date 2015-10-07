@@ -1,6 +1,10 @@
+#region directives
+
 using System.Linq;
 using System.Web.Mvc;
 using Microsoft.Practices.Unity.Mvc;
+
+#endregion
 
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(EventTrackerAdminWeb.App_Start.UnityWebActivator), "Start")]
 [assembly: WebActivatorEx.ApplicationShutdownMethod(typeof(EventTrackerAdminWeb.App_Start.UnityWebActivator), "Shutdown")]

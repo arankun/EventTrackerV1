@@ -2,17 +2,17 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Transactions;
 using AutoMapper;
+using EventTracker.BusinessModel;
 using EventTracker.BusinessModel.Membership;
 using EventTracker.DataModel.UnitOfWork;
-using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using EventTracker.BusinessModel;
 using PagedList;
+
 #endregion
 
-namespace EventTracker.BusinessServices
+namespace EventTracker.BusinessServices.Membership
 {
     public class MembershipServices : IMembershipServices
     {
@@ -71,7 +71,7 @@ namespace EventTracker.BusinessServices
             var pagedRecord = new Common.PagedList();
             using (var context = _unitOfWork.DbContext)
             {
-                Func<Member, Object> orderByFunc = null;
+                Func<Member, object> orderByFunc = null;
                 if (param.SortBy == "Lastname")
                     orderByFunc = item => item.Name;
                 else if (param.SortBy == "Firstname")
@@ -96,7 +96,7 @@ namespace EventTracker.BusinessServices
                         Email = m.Email,
                         Phone = m.Phone,
                         DateOfBirth = m.DOB.Value,
-                        Household = hh.Name
+                        HouseholdName = hh.Name
                     }).Where(x => param.SearchText == null ||
                         ((x.LastName.Contains(param.SearchText)) 
                     )).OrderBy(orderByFunc)
@@ -119,6 +119,30 @@ namespace EventTracker.BusinessServices
 
                 return pagedRecord;
             }
+        }
+
+        public IEnumerable<HouseHold> GetHouseHolds()
+        {
+            var list = _unitOfWork.HouseHoldRepository.GetAll().ToList();
+            if (list.Any()) {
+                Mapper.CreateMap<DataModel.Generated.HouseHold, HouseHold>();
+                var modelList = Mapper.Map<List<DataModel.Generated.HouseHold>, List<HouseHold>>(list);
+                return modelList;
+            }
+            return null;
+        }
+
+        public HouseHold GetHouseHold(int houseHoldId)
+        {
+            var dbEntity = _unitOfWork.HouseHoldRepository.Get(u => u.HouseHoldId == houseHoldId);
+            if (dbEntity != null && dbEntity.HouseHoldId > 0) {
+                //AT: Custom mapping a field
+                Mapper.CreateMap<DataModel.Generated.HouseHold, HouseHold>();
+                var model = Mapper.Map<DataModel.Generated.HouseHold, HouseHold>(dbEntity);
+
+                return model;
+            }
+            return null;
         }
 
         public int AddSpouseOfMember(int spouseMemberId, NewMember newMember)
@@ -178,17 +202,59 @@ namespace EventTracker.BusinessServices
             }
         }
 
-        public Member GetMember(int memberId)
-        {
-            var dbMember = _unitOfWork.MemberRepository.Get(u => u.MemberId == memberId);
-            if (dbMember != null && dbMember.MemberId > 0)
-            {
-                //AT: Custom mapping a field
-                Mapper.CreateMap<DataModel.Generated.Member, Member>()
-                    .ForMember(dest => dest.DateOfBirth,
-                        opts => opts.MapFrom(src => src.DOB));
-                var aMember = Mapper.Map<DataModel.Generated.Member, Member>(dbMember);
-                return aMember;
+        //public Member GetMember_ORIG(int memberId) {
+        //    var dbMember = _unitOfWork.MemberRepository.Get(u => u.MemberId == memberId);
+        //    if (dbMember != null && dbMember.MemberId > 0) {
+        //        //AT: Custom mapping a field
+        //        Mapper.CreateMap<DataModel.Generated.Member, Member>()
+        //            .ForMember(dest => dest.DateOfBirth,
+        //                opts => opts.MapFrom(src => src.DOB));
+        //        var aMember = Mapper.Map<DataModel.Generated.Member, Member>(dbMember);
+
+        //        if (aMember.SpouseMemberId.HasValue) {
+        //            var dbSpouse = _unitOfWork.MemberRepository.Get(u => u.MemberId == aMember.SpouseMemberId.Value);
+        //            var spouse = Mapper.Map<DataModel.Generated.Member, Member>(dbSpouse);
+        //            aMember.Spouse = spouse;
+        //        }
+
+        //        var hh = _unitOfWork.HouseHoldMemberRepository.Get(m => m.MemberId == aMember.MemberId);
+        //        if (hh != null && hh.HouseHoldMemberId>0) {
+        //            aMember.HouseHoldId = hh.HouseHoldId;
+        //            aMember.HouseholdName = "TODO";
+        //        }
+
+        //        return aMember;
+        //    }
+        //    return null;
+        //}
+
+        public Member GetMember(int memberId) {
+            using (var context = _unitOfWork.DbContext) {
+                var member = (from m in context.Members
+                              join mmTemp in context.MemberMemberships on m.MemberId equals mmTemp.MemberId into tempJoin
+                                 from mm in tempJoin.DefaultIfEmpty()
+                                 join hhmTemp in context.HouseHoldMembers on m.MemberId equals hhmTemp.MemberId into hhmTempJoin
+                                 from hhm in hhmTempJoin.DefaultIfEmpty()
+                                 join hhTemp in context.HouseHolds on hhm.HouseHoldId equals hhTemp.HouseHoldId into hhTempJoin
+                                 from hh in hhTempJoin.DefaultIfEmpty()
+                              join mSpouseTemp in context.Members on m.SpouseMemberId equals mSpouseTemp.MemberId into tempSpouseJoin
+                              from mSpouse in tempSpouseJoin.DefaultIfEmpty()
+                              where mm.EndDate == null && m.MemberId == memberId
+                              select new Member {
+                                     MemberId = m.MemberId,
+                                     LastName = m.LastName,
+                                     FirstName = m.FirstName,
+                                     MemberOf = mm.MemberOf,
+                                     Email = m.Email,
+                                     Phone = m.Phone,
+                                     DateOfBirth = m.DOB.Value,
+                                     HouseholdName = hh.Name,
+                                     SpouseMemberId = m.SpouseMemberId,
+                                     SpouseName = mSpouse.FirstName,
+                                     HouseHoldId = hh.HouseHoldId
+                                 }).FirstOrDefault();
+
+                return member;
             }
             return null;
         }
@@ -197,16 +263,6 @@ namespace EventTracker.BusinessServices
         {
             using (var context = _unitOfWork.DbContext)
             {
-//                select m.*, hh.Name
-//                from  Members m
-//left join  MemberMemberships mm
-// on m.MemberId = mm.MemberId
-//left join  HouseHoldMembers hhm
-//on m.MemberId = hhm.MemberId
-//left join HouseHolds hh
-//on hh.HouseHoldId = hhm.HouseHoldId
-//where mm.EndDate is null
-//order by m.LastName, mm.MemberId desc
                 var pagedList = (from m in context.Members
                     join mmTemp in context.MemberMemberships on m.MemberId equals mmTemp.MemberId into tempJoin
                     from mm in tempJoin.DefaultIfEmpty()
@@ -225,20 +281,9 @@ namespace EventTracker.BusinessServices
                         Email = m.Email,
                         Phone = m.Phone,
                         DateOfBirth = m.DOB.Value,
-                        Household = hh.Name
+                        HouseholdName = hh.Name
                     }).ToPagedList(pageIndex, pageSize);
-                //var pagedList = members.ToPagedList(pageIndex, pageSize);
 
-                //int totalCount = from item in _dc.Items
-                //                 where item.Description.
-                //                 Contains(description).Count();
-
-                //int numberOfPages = (int)(totalCount / pageSize);
-
-                //int totalCount = (from m in context.Members
-                //    join mmTemp in context.MemberMemberships on m.MemberId equals mmTemp.MemberId into tempJoin
-                //    from mm in tempJoin.DefaultIfEmpty()
-                //                  select m.MemberId).Count();
                 return pagedList;
             }
         }
@@ -261,10 +306,10 @@ namespace EventTracker.BusinessServices
                                    Email = m.Email,
                                    Phone = m.Phone,
                                    DateOfBirth = m.DOB.Value,
-                                   Household = hh.Name
+                                   HouseholdName = hh.Name
                                }).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
 
-                int totalCount = (from m in context.Members
+                var totalCount = (from m in context.Members
                                   join mmTemp in context.MemberMemberships on m.MemberId equals mmTemp.MemberId into tempJoin
                                   from mm in tempJoin.DefaultIfEmpty()
                                   select m.MemberId).Count();

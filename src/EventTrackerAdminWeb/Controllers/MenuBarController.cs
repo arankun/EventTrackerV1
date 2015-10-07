@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Linq;
-using System.Web;
+﻿#region directives
+
+using System;
 using System.Web.Mvc;
-using EventTracker.BusinessModel.Menus;
 using EventTracker.BusinessServices;
+
+#endregion
 
 namespace EventTrackerAdminWeb.Controllers
 {

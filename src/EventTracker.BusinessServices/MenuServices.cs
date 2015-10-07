@@ -1,5 +1,9 @@
-﻿using System.Collections.Generic;
+﻿#region directives
+
+using System.Collections.Generic;
 using EventTracker.BusinessModel.Menus;
+
+#endregion
 
 namespace EventTracker.BusinessServices
 {
@@ -27,7 +31,12 @@ namespace EventTracker.BusinessServices
                 Id = 1,
                 Name = "Members",
                 NavigateUrl = "/Membership",
-                Order = 2
+                Order = 2,
+                SubMenuItems = new List<MenuItem>()
+                {
+                    new MenuItem {Name="All", NavigateUrl = "/Membership"},
+                    new MenuItem {Name="KFC", NavigateUrl = "/Membership/getKFC"}
+                }
             };
 
             var memberMenuAngularJs = new MenuItem() {
@@ -40,6 +49,5 @@ namespace EventTracker.BusinessServices
             var menuList = new List<MenuItem>() {eventMenu, memberMenu, memberMenuAngularJs };
             return menuList;
         }
-
     }
 }

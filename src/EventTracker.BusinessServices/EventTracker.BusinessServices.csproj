@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>EventTracker.BusinessServices</RootNamespace>
     <AssemblyName>EventTracker.BusinessServices</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -54,16 +55,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Authentication\AuthenticationService.cs" />
+    <Compile Include="Authentication\IAuthenticationService.cs" />
     <Compile Include="Common\PagedList.cs" />
     <Compile Include="DependencyResolver.cs" />
     <Compile Include="EventAttendanceServices.cs" />
     <Compile Include="IEventServices.cs" />
     <Compile Include="EventServices.cs" />
-    <Compile Include="IMembershipServices.cs" />
     <Compile Include="IMenuServices.cs" />
     <Compile Include="ITokenServices.cs" />
     <Compile Include="IUserServices.cs" />
-    <Compile Include="MembershipServices.cs" />
+    <Compile Include="Membership\HouseHoldServices.cs" />
+    <Compile Include="Membership\IMembershipServices.cs" />
+    <Compile Include="Membership\MembershipServices.cs" />
     <Compile Include="MenuServices.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryableExtensions.cs" />

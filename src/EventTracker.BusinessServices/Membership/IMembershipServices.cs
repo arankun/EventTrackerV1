@@ -6,7 +6,7 @@ using EventTracker.BusinessModel.Membership;
 
 #endregion
 
-namespace EventTracker.BusinessServices
+namespace EventTracker.BusinessServices.Membership
 {
     public interface IMembershipServices
     {
@@ -18,5 +18,8 @@ namespace EventTracker.BusinessServices
         IEnumerable<Member> GetMembers(int pageIndex, int pageSizes);
         void UpdateMember(Member aMember);
         Common.PagedList GetMembers(SearchParameter searchParam);
+
+        IEnumerable<HouseHold> GetHouseHolds();
+        HouseHold GetHouseHold(int memberId);
     }
 }

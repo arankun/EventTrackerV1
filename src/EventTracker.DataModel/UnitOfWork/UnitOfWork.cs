@@ -18,14 +18,11 @@ namespace EventTracker.DataModel.UnitOfWork
     {
         public UnitOfWork()
         {
-            _dbContext = new EventTrackerDBContext();
-            _dbContext.Configuration.LazyLoadingEnabled = false;
+            DbContext = new EventTrackerDBContext();
+            DbContext.Configuration.LazyLoadingEnabled = false;
         }
 
-        public EventTrackerDBContext DbContext
-        {
-            get { return _dbContext; }
-        }
+        public EventTrackerDBContext DbContext { get; } = null;
 
         #region Public member methods...
 
@@ -36,7 +33,7 @@ namespace EventTracker.DataModel.UnitOfWork
         {
             try
             {
-                _dbContext.SaveChanges();
+                DbContext.SaveChanges();
             }
             catch (DbEntityValidationException e)
             {
@@ -63,11 +60,12 @@ namespace EventTracker.DataModel.UnitOfWork
 
         #region Private member variables...
 
-        private readonly EventTrackerDBContext _dbContext = null;
         private GenericRepository<User> _userRepository;
         private GenericRepository<Event> _productRepository;
         private GenericRepository<Token> _tokenRepository;
         private GenericRepository<EventAttendance> _eventAttendanceRepository;
+        private GenericRepository<HouseHold> _householdRepository;
+        private GenericRepository<HouseHoldMember> _householdMemberRepository;
 
         #endregion
 
@@ -81,7 +79,7 @@ namespace EventTracker.DataModel.UnitOfWork
             get
             {
                 if (_productRepository == null)
-                    _productRepository = new GenericRepository<Event>(_dbContext);
+                    _productRepository = new GenericRepository<Event>(DbContext);
                 return _productRepository;
             }
         }
@@ -94,7 +92,7 @@ namespace EventTracker.DataModel.UnitOfWork
             get
             {
                 if (_userRepository == null)
-                    _userRepository = new GenericRepository<User>(_dbContext);
+                    _userRepository = new GenericRepository<User>(DbContext);
                 return _userRepository;
             }
         }
@@ -107,7 +105,7 @@ namespace EventTracker.DataModel.UnitOfWork
             get
             {
                 if (_tokenRepository == null)
-                    _tokenRepository = new GenericRepository<Token>(_dbContext);
+                    _tokenRepository = new GenericRepository<Token>(DbContext);
                 return _tokenRepository;
             }
         }
@@ -117,7 +115,7 @@ namespace EventTracker.DataModel.UnitOfWork
             get
             {
                 if (_eventAttendanceRepository == null)
-                    _eventAttendanceRepository = new GenericRepository<EventAttendance>(_dbContext);
+                    _eventAttendanceRepository = new GenericRepository<EventAttendance>(DbContext);
                 return _eventAttendanceRepository;
             }
         }
@@ -127,7 +125,7 @@ namespace EventTracker.DataModel.UnitOfWork
             get
             {
                 if (_memberRepository == null)
-                    _memberRepository = new GenericRepository<Member>(_dbContext);
+                    _memberRepository = new GenericRepository<Member>(DbContext);
                 return _memberRepository;
             }
         }
@@ -137,11 +135,30 @@ namespace EventTracker.DataModel.UnitOfWork
             get
             {
                 if (_memberMembershipRepository == null)
-                    _memberMembershipRepository = new GenericRepository<MemberMembership>(_dbContext);
+                    _memberMembershipRepository = new GenericRepository<MemberMembership>(DbContext);
                 return _memberMembershipRepository;
             }
         }
 
+        public GenericRepository<HouseHold> HouseHoldRepository
+        {
+            get {
+                if (_householdRepository == null)
+                    _householdRepository = new GenericRepository<HouseHold>(DbContext);
+                return _householdRepository;
+            }
+
+        }
+
+        public GenericRepository<HouseHoldMember> HouseHoldMemberRepository {
+            get {
+                if (_householdMemberRepository == null)
+                    _householdMemberRepository = new GenericRepository<HouseHoldMember>(DbContext);
+                return _householdMemberRepository;
+            }
+
+        }
+        
         #endregion
 
         #region Implementing IDiosposable...
@@ -165,7 +182,7 @@ namespace EventTracker.DataModel.UnitOfWork
                 if (disposing)
                 {
                     Debug.WriteLine("UnitOfWork is being disposed");
-                    _dbContext.Dispose();
+                    DbContext.Dispose();
                 }
             }
             disposed = true;

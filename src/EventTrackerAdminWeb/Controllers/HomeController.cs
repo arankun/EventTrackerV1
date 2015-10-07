@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿#region directives
+
 using System.Web.Mvc;
-using System.Web.Security;
+
+#endregion
 
 namespace EventTrackerAdminWeb.Controllers
 {

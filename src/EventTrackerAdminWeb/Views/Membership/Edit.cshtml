@@ -8,7 +8,10 @@
     <div class="panel-heading">
         <h3>@Model.FullName</h3>
         @if (Model.SpouseMemberId > 0) {
-            @Html.Label("Spouse", "Spouse Name: ")@Html.LabelForModel(Model.Spouse.FullName)
+            @Html.ActionLink("Spouse: " + @Model.SpouseName, "Edit", new { memberId = @Model.SpouseMemberId }, new { @class = "btn btn-primary" })
+         }
+        @if (Model.HouseHoldId.HasValue) {
+            @Html.ActionLink("Household: " + @Model.HouseholdName, "EditHousehold", new { householdid = @Model.HouseHoldId }, new { @class = "btn btn-primary" })
         }
     </div>
 
@@ -29,15 +32,16 @@
                         break;
                     case "Name":
                         break;
-                    case "Spouse":
+                    case "SpouseName":
                         break;
                     case "MemberOf":
                         break;
+                    case "HouseHoldId":
+                        break;
                     default:
                         <div class="form-group">
-                            <label>@(property.DisplayName ?? property.PropertyName)</label>
-                            @if (property.PropertyName == "DateOfBirth")
-                            {
+                            @if (property.PropertyName == "DateOfBirth") {
+                                <label>@(property.DisplayName ?? property.PropertyName)</label>
                                 <div class="input-group date">
                                     @Html.TextBoxFor(model => Model.DateOfBirth, new {@class = "form-control", id = "EventDate", @placeholder = "mm/dd/yyyy", @title = "Event Date"})
                                     <div class="input-group-addon">
@@ -45,8 +49,13 @@
                                     </div>
                                 </div>
                             }
-                            else
-                            {
+                            else if (property.PropertyName == "HouseholdName") {
+                                if (@Model.HouseHoldId.HasValue) {
+                                    @Html.ActionLink("Household: " + @Model.HouseholdName, "EditHousehold", new { householdid = @Model.HouseHoldId }, new { @class = "btn btn-primary" })
+                                }
+                            }
+                            else {
+                                <label>@(property.DisplayName ?? property.PropertyName)</label>
                                 @Html.TextBox(property.PropertyName, null,
                                     new {@class = "form-control"})
                             }

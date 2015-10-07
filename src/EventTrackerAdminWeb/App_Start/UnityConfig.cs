@@ -1,8 +1,10 @@
+#region directives
+
 using System;
 using EventTracker.Resolver;
 using Microsoft.Practices.Unity;
-using Microsoft.Practices.Unity.Configuration;
-using Microsoft.Practices.Unity.Mvc;
+
+#endregion
 
 namespace EventTrackerAdminWeb.App_Start
 {
@@ -11,23 +13,6 @@ namespace EventTrackerAdminWeb.App_Start
     /// </summary>
     public class UnityConfig
     {
-        #region Unity Container
-        private static Lazy<IUnityContainer> container = new Lazy<IUnityContainer>(() =>
-        {
-            var container = new UnityContainer();
-            RegisterTypes(container);
-            return container;
-        });
-
-        /// <summary>
-        /// Gets the configured Unity container.
-        /// </summary>
-        public static IUnityContainer GetConfiguredContainer()
-        {
-            return container.Value;
-        }
-        #endregion
-
         /// <summary>Registers the type mappings with the Unity container.</summary>
         /// <param name="container">The unity container to configure.</param>
         /// <remarks>There is no need to register concrete types such as controllers or API controllers (unless you want to 
@@ -44,5 +29,24 @@ namespace EventTrackerAdminWeb.App_Start
             ComponentLoader.LoadContainer(container, ".\\bin", "EventTracker.Business*.dll");
 
         }
+
+        #region Unity Container
+
+        private static Lazy<IUnityContainer> container = new Lazy<IUnityContainer>(() =>
+        {
+            var container = new UnityContainer();
+            RegisterTypes(container);
+            return container;
+        });
+
+        /// <summary>
+        /// Gets the configured Unity container.
+        /// </summary>
+        public static IUnityContainer GetConfiguredContainer()
+        {
+            return container.Value;
+        }
+
+        #endregion
     }
 }

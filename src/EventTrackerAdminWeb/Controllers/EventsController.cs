@@ -1,14 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿#region directives
+
 using System.Web.Mvc;
 using EventTracker.BusinessModel;
 using EventTracker.BusinessServices;
+using EventTrackerAdminWeb.Filter;
+
+#endregion
 
 namespace EventTrackerAdminWeb.Controllers
 {
-    public class EventsController : Controller
+    //[CustomAuthorize]
+    public class EventsController : BaseController
     {
         private readonly IEventServices _services;
 

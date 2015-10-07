@@ -1,4 +1,8 @@
-﻿using System.Web.Optimization;
+﻿#region directives
+
+using System.Web.Optimization;
+
+#endregion
 
 namespace EventTrackerAdminWeb
 {

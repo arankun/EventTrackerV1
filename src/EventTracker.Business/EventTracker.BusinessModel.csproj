@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>EventTracker.BusinessModel</RootNamespace>
     <AssemblyName>EventTracker.Business</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -69,10 +70,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppUser.cs" />
+    <Compile Include="Authentication\BaseViewPage.cs" />
+    <Compile Include="Authentication\CustomPrincipal.cs" />
+    <Compile Include="Authentication\CustomPrincipalSerializeModel.cs" />
+    <Compile Include="Authentication\LoginViewModel.cs" />
+    <Compile Include="Authentication\Role.cs" />
     <Compile Include="Membership\BaseMember.cs" />
     <Compile Include="EventAttendance.cs" />
     <Compile Include="Event.cs" />
     <Compile Include="EventAttendanceSummary.cs" />
+    <Compile Include="Membership\HouseHold.cs" />
     <Compile Include="Membership\NewMember.cs" />
     <Compile Include="Menus\MenuItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

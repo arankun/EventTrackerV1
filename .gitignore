@@ -48,3 +48,6 @@ Temporary Items
 /src/packages
 /src/EventTrackerAPI/obj
 /src/EventTrackerAPI/bin
+/src/EventTrackerAdminWeb/bin
+/src/EventTrackerAdminWeb/obj
+/src/EventTrackerAPI/bin

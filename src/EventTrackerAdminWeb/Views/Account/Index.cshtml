@@ -1,15 +1,64 @@
-﻿@{
+﻿@model EventTracker.BusinessModel.Authentication.LoginViewModel
+
+@{
+    ViewBag.Title = "title";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<div class="container ">
+    <div class="row opa" style="padding-top:125px;">
+        <div class="col-md-5 col-md-offset-3">
+            <div class="panel panel-default">
 
-<div class="container">
-    <div class="panel-body">
-        @using (Html.BeginForm("LoginAuthentication", "Account", FormMethod.Post, new {id = "LoginForm", @class = "form-horizontal", @role = "form"}))
-        {
-            
-        }
+                <div class="panel-body">
 
+                    @using (Html.BeginForm("LoginAuthentication", "Account", FormMethod.Post, new { id = "LoginForm", @class = "form-horizontal", @role = "form" })) {
+                        <div class="form-group">
+
+                            <div class="col-md-10 col-md-offset-2">
+                                <h3>Welcome</h3>
+                            </div>
+                        </div>
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Username, new { @class = "col-sm-3 control-label" })
+                            <div class="col-lg-9">
+                                @Html.TextBoxFor(model => model.Username, new { @class = "form-control", @placeholder = "Login ID", @title = "Login ID" })
+                                @Html.ValidationMessageFor(model => Model.Username, "", new { @class = "text-danger validationMsgs" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Password, new { @class = "col-sm-3 control-label" })
+                            <div class="col-lg-9">
+                                @Html.PasswordFor(model => model.Password, new { @class = "form-control", @placeholder = "Password", @title = "Password" })
+                                @Html.ValidationMessageFor(model => Model.Password, "", new { @class = "text-danger validationMsgs" })
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-10 col-md-offset-7">
+                                @Html.ActionLink("Forgot your Password?", "PasswordRequest")
+                            </div>
+                        </div>
+
+                        <div class="form-group last">
+                            <div class="col-sm-offset-5 col-sm-9">
+                                <input type="submit" value="SIGN IN" class="btn btn-primary btn-group-lg" />
+
+                            </div>
+                        </div>
+
+                    }
+
+
+                </div>
+                <div class="panel-footer">
+                    Event Manager Admin
+                </div>
+            </div>
+        </div>
     </div>
-
 </div>

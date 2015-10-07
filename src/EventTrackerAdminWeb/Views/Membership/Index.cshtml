@@ -1,10 +1,8 @@
-﻿@using Microsoft.Ajax.Utilities
-@*
+﻿@*
 @model System.Collections.Generic.IEnumerable<EventTracker.BusinessModel.Membership.Member>
 *@
+@using PagedList.Mvc
 @model PagedList.IPagedList<EventTracker.BusinessModel.Membership.Member>
-
-@using PagedList.Mvc;
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css"/>
 
 @{
@@ -45,7 +43,7 @@
                     <td class="text-right">@item.Email</td>
                     <td class="text-right">@item.Phone</td>
                     <td class="text-right">@item.MemberOf</td>
-                    <td class="text-right">@item.Household</td>
+                    <td class="text-right">@item.HouseholdName</td>
                     <td class="text-right">@string.Format("{0:MM/dd/yyyy}", item.DateOfBirth)</td>
                     <td class="text-center">
                         @using (Html.BeginForm("Delete", "Membership"))

@@ -1,4 +1,8 @@
+#region directives
+
 using System.Collections.ObjectModel;
+
+#endregion
 
 namespace EventTrackerAPI.Areas.HelpPage.ModelDescriptions
 {

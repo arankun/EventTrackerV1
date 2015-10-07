@@ -1,6 +1,8 @@
 ﻿#region directives
 
 using System.ComponentModel.Composition;
+using EventTracker.BusinessServices.Authentication;
+using EventTracker.BusinessServices.Membership;
 using EventTracker.Resolver;
 
 #endregion
@@ -20,6 +22,7 @@ namespace EventTracker.BusinessServices
             registerComponent.RegisterType<IEventServices, EventServices>();
             registerComponent.RegisterType<IMembershipServices, MembershipServices>();
             registerComponent.RegisterType<IMenuServices, MenuServices>();
+            registerComponent.RegisterType<IAuthenticationService, AuthenticationService>();
 
         }
     }

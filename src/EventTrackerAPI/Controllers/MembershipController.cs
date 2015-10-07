@@ -1,11 +1,10 @@
 ﻿#region directives
 
-using System.Security.AccessControl;
 using System.Web.Http;
 using EventTracker.BusinessModel;
 using EventTracker.BusinessModel.Membership;
-using EventTracker.BusinessServices;
 using EventTracker.BusinessServices.Common;
+using EventTracker.BusinessServices.Membership;
 
 #endregion
 
