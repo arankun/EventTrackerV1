@@ -1,6 +1,7 @@
 ﻿#region directives
 
 using System;
+using System.Data.Entity;
 using System.Diagnostics;
 using EventTracker.DataModel.Generated;
 
@@ -16,7 +17,15 @@ namespace EventTracker.DataModel.Repositories
 
         public EventAttendanceRepository()
         {
-            _dbContext = new EventTrackerDBContext(); ;
+            _dbContext = new EventTrackerDBContext();
+            DbSet  = _dbContext.Set<EventAttendance>();
+            DbSet  = _dbContext.Set<EventAttendance>();
+        }
+
+        internal DbSet<EventAttendance> DbSet { get; private set; }
+
+        public EventAttendance GetByID(object id) {
+            return DbSet.Find(id);
         }
 
         /// <summary>

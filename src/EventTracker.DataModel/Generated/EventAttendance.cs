@@ -19,6 +19,9 @@ namespace EventTracker.DataModel.Generated
         public int MemberId { get; set; }
         public Nullable<int> LogBy { get; set; }
         public System.DateTime LogDate { get; set; }
+        public string IsRegistered { get; set; }
+        public Nullable<int> RegisteredBy { get; set; }
+        public Nullable<System.DateTime> RegisteredDate { get; set; }
     
         public virtual Event Event { get; set; }
         public virtual Member Member { get; set; }

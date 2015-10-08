@@ -3,15 +3,19 @@
 using System;
 using System.Web.Mvc;
 using AutoMapper;
+using EventTracker.BusinessModel.Common;
+using EventTracker.BusinessModel.Criterias;
 using EventTracker.BusinessModel.Membership;
 using EventTracker.BusinessServices.Membership;
 using EventTrackerAdminWeb.Filter;
+using PagedList;
 
 #endregion
 
 namespace EventTrackerAdminWeb.Controllers
 {
     //[CustomAuthorize(Roles = "Admin")]
+    [RoutePrefix("membership")]
     public class MembershipController : BaseController
     {
         private readonly IMembershipServices _services;
@@ -22,6 +26,7 @@ namespace EventTrackerAdminWeb.Controllers
         }
 
         [HttpGet]
+        [Route("members")]
         public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
             ViewBag.CurrentSort = sortOrder;
@@ -39,32 +44,39 @@ namespace EventTrackerAdminWeb.Controllers
             var pageSize = 10;
             var pageNumber = (page ?? 1);
             int pageCount;
-            //AT:ORIG var members = _services.GetMembers(pageNumber, pageSize, out pageCount).ToPagedList(pageNumber, pageSize);
             var members = _services.GetMembers(pageNumber, pageSize);
-            //var members = _services.GetMembers(pageNumber, pageSize, out pageCount);//.ToPagedList(1, 1);
-            //ViewBag.PageCount = pageCount;
-            //return View(students.ToPagedList(pageNumber, pageSize));
             return View(members);
+        }
+
+        [HttpGet]
+        [Route("households")]
+        public ActionResult GetHouseholds(string sortOrder, string currentFilter, string searchString, int? page) {
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "LastName" : "";
+            ViewBag.DateSortParm = sortOrder == "MemberOf" ? "memberOf_desc" : "MemberOf";
+
+            if (searchString != null) {
+                page = 1;
+            }
+            else {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
+            var pageSize = 10;
+            var pageNumber = (page ?? 1);
+            int pageCount;
+
+            var pagingInfo = new PagingInfo() {CurrentPage = 1, ItemsPerPage = 5};
+            var houseHoldCriteria = new HouseHoldCriteria();
+            var houseHolds = _services.GetHouseHolds(houseHoldCriteria, pagingInfo);
+            return View("HouseHolds",houseHolds);
         }
 
         [HttpGet]
         public ActionResult Edit(int memberid)
         {
             var member = _services.GetMember(memberid);
-
-            //AT: Need to do this at service level
-            //if (member.SpouseMemberId.HasValue)
-            //{
-            //    var spouse = _services.GetMember(member.SpouseMemberId.Value);
-            //    member.Spouse = spouse;
-            //}
-
-            //var hh = _services.GetHouseHold(member.MemberId);
-            //if (hh != null)
-            //{
-            //    member.HouseHoldId = hh.HouseHoldId;
-            //    member.HouseholdName = hh.Name;
-            //}
 
             return View(member);
         }
@@ -103,6 +115,11 @@ namespace EventTrackerAdminWeb.Controllers
         }
 
         public ActionResult EditHousehold(int? householdid)
+        {
+            return PartialView("_EditMemberHouseHold", new HouseHold());
+        }
+
+        public ActionResult DeleteHouseHold()
         {
             return PartialView("_EditMemberHouseHold", new HouseHold());
         }

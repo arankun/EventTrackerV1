@@ -36,6 +36,8 @@ namespace EventTracker.DataModel.Generated
         public string SpouseName { get; set; }
         public Nullable<int> FatherMemberId { get; set; }
         public Nullable<int> MotherMemberId { get; set; }
+        public string IsOrgMember { get; set; }
+        public string IsHeadOfFamily { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<EventAttendance> EventAttendances { get; set; }

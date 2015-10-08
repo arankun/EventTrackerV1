@@ -3,9 +3,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Management.Instrumentation;
+using System.Net.Sockets;
+using System.Security.Policy;
 using System.Transactions;
 using AutoMapper;
 using EventTracker.BusinessModel;
+using EventTracker.BusinessModel.Common;
+using EventTracker.BusinessModel.Criterias;
 using EventTracker.BusinessModel.Membership;
 using EventTracker.DataModel.UnitOfWork;
 using PagedList;
@@ -121,15 +126,26 @@ namespace EventTracker.BusinessServices.Membership
             }
         }
 
-        public IEnumerable<HouseHold> GetHouseHolds()
+        public IPagedList<HouseHold> GetHouseHolds(HouseHoldCriteria crit, PagingInfo paging)
         {
-            var list = _unitOfWork.HouseHoldRepository.GetAll().ToList();
-            if (list.Any()) {
-                Mapper.CreateMap<DataModel.Generated.HouseHold, HouseHold>();
-                var modelList = Mapper.Map<List<DataModel.Generated.HouseHold>, List<HouseHold>>(list);
-                return modelList;
+            using (var context = _unitOfWork.DbContext)
+            {
+                var houseHolds = (from hh in context.HouseHolds
+                                  join m in context.Members on hh.HouseHoldLeaderMemberId equals m.MemberId
+                                  where (!crit.HouseHoldId.HasValue || (hh.HouseHoldId == crit.HouseHoldId))
+                                        && (string.IsNullOrEmpty(crit.Area) || (!string.IsNullOrEmpty(crit.Area) && hh.Area == crit.Area))
+                                  orderby hh.Name
+                                  select new HouseHold {
+                                      HouseHoldId = hh.HouseHoldId,
+                                      Name = hh.Name,
+                                      Area = hh.Area,
+                                      State = hh.State,
+                                      HouseHoldLeader = m.FirstName + " "  + m.LastName
+                                  });//.ToPagedList(paging.CurrentPage, paging.ItemsPerPage);
+
+                var pagedList = houseHolds.ToPagedList(paging.CurrentPage, paging.ItemsPerPage);
+                return pagedList;
             }
-            return null;
         }
 
         public HouseHold GetHouseHold(int houseHoldId)
@@ -202,32 +218,6 @@ namespace EventTracker.BusinessServices.Membership
             }
         }
 
-        //public Member GetMember_ORIG(int memberId) {
-        //    var dbMember = _unitOfWork.MemberRepository.Get(u => u.MemberId == memberId);
-        //    if (dbMember != null && dbMember.MemberId > 0) {
-        //        //AT: Custom mapping a field
-        //        Mapper.CreateMap<DataModel.Generated.Member, Member>()
-        //            .ForMember(dest => dest.DateOfBirth,
-        //                opts => opts.MapFrom(src => src.DOB));
-        //        var aMember = Mapper.Map<DataModel.Generated.Member, Member>(dbMember);
-
-        //        if (aMember.SpouseMemberId.HasValue) {
-        //            var dbSpouse = _unitOfWork.MemberRepository.Get(u => u.MemberId == aMember.SpouseMemberId.Value);
-        //            var spouse = Mapper.Map<DataModel.Generated.Member, Member>(dbSpouse);
-        //            aMember.Spouse = spouse;
-        //        }
-
-        //        var hh = _unitOfWork.HouseHoldMemberRepository.Get(m => m.MemberId == aMember.MemberId);
-        //        if (hh != null && hh.HouseHoldMemberId>0) {
-        //            aMember.HouseHoldId = hh.HouseHoldId;
-        //            aMember.HouseholdName = "TODO";
-        //        }
-
-        //        return aMember;
-        //    }
-        //    return null;
-        //}
-
         public Member GetMember(int memberId) {
             using (var context = _unitOfWork.DbContext) {
                 var member = (from m in context.Members
@@ -259,7 +249,32 @@ namespace EventTracker.BusinessServices.Membership
             return null;
         }
 
-        public IEnumerable<Member> GetMembers(int pageIndex, int pageSize)
+        public IEnumerable<Member> GetFamilyMembersByHeadOfFamilyMemberId(int headOfFamilyMemberId)
+        {
+            using (var context = _unitOfWork.DbContext)
+            {
+                var mm = (from m in context.Members
+                    where m.MemberId == headOfFamilyMemberId
+                    select new Member() {MemberId = m.MemberId, LastName = m.LastName, FirstName = m.FirstName})
+                    .Union(from m in context.Members
+                        where m.SpouseMemberId == headOfFamilyMemberId
+                        select new Member() {MemberId = m.MemberId, LastName = m.LastName, FirstName = m.FirstName})
+                    .Union(from mC in context.Members
+                        join mmTemp in context.MemberMemberships on mC.MemberId equals mmTemp.MemberId into tempJoin
+                        from mmTempJoin in tempJoin.DefaultIfEmpty()
+                        join mMo in context.Members on mC.MotherMemberId equals mMo.MemberId into tempJoinMo
+                        from mJoinMo in tempJoin.DefaultIfEmpty()
+                        join mFa in context.Members on mC.FatherMemberId equals mFa.MemberId into tempJoinFa
+                        from mJoinFa in tempJoinFa.DefaultIfEmpty()
+                        where (mC.FatherMemberId == headOfFamilyMemberId || mC.MotherMemberId == headOfFamilyMemberId)
+                              && mmTempJoin.EndDate == null
+                        select new Member() {MemberId = mC.MemberId, LastName = mC.LastName, FirstName = mC.FirstName});
+                var list = mm.ToList();
+                return list;
+            }
+        }
+
+        public IPagedList<Member> GetMembers(int pageIndex, int pageSize)
         {
             using (var context = _unitOfWork.DbContext)
             {
@@ -319,5 +334,6 @@ namespace EventTracker.BusinessServices.Membership
             return null;
         }
 
+        
     }
 }

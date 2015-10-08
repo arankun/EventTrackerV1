@@ -65,6 +65,7 @@
     <Compile Include="IMenuServices.cs" />
     <Compile Include="ITokenServices.cs" />
     <Compile Include="IUserServices.cs" />
+    <Compile Include="Membership\Extensions.cs" />
     <Compile Include="Membership\HouseHoldServices.cs" />
     <Compile Include="Membership\IMembershipServices.cs" />
     <Compile Include="Membership\MembershipServices.cs" />
@@ -91,6 +92,9 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Extensions\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

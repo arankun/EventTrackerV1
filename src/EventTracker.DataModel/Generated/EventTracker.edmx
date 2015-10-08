@@ -14,6 +14,9 @@
           <Property Name="MemberId" Type="int" Nullable="false" />
           <Property Name="LogBy" Type="int" />
           <Property Name="LogDate" Type="datetime" Nullable="false" />
+          <Property Name="IsRegistered" Type="char" MaxLength="1" />
+          <Property Name="RegisteredBy" Type="int" />
+          <Property Name="RegisteredDate" Type="datetime" />
         </EntityType>
         <EntityType Name="Events">
           <Key>
@@ -71,6 +74,8 @@
           <Property Name="SpouseName" Type="varchar" MaxLength="50" />
           <Property Name="FatherMemberId" Type="int" />
           <Property Name="MotherMemberId" Type="int" />
+          <Property Name="IsOrgMember" Type="char" MaxLength="1" />
+          <Property Name="IsHeadOfFamily" Type="char" MaxLength="1" />
         </EntityType>
         <EntityType Name="Tokens">
           <Key>
@@ -307,6 +312,9 @@
           <NavigationProperty Name="Event" Relationship="Self.FK_EventAttendance_Event" FromRole="EventAttendances" ToRole="Events" />
           <NavigationProperty Name="Member" Relationship="Self.FK_EventAttendance_Member" FromRole="EventAttendances" ToRole="Members" />
           <NavigationProperty Name="User" Relationship="Self.FK_EventAttendances_LogBy" FromRole="EventAttendances" ToRole="Users" />
+          <Property Name="IsRegistered" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="RegisteredBy" Type="Int32" />
+          <Property Name="RegisteredDate" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="Event">
           <Key>
@@ -377,6 +385,8 @@
           <Property Name="MotherMemberId" Type="Int32" />
           <NavigationProperty Name="Members1" Relationship="EventTrackerDBModel.FK_Members_FatherMember" FromRole="Member" ToRole="Member1" />
           <NavigationProperty Name="Member1" Relationship="EventTrackerDBModel.FK_Members_FatherMember" FromRole="Member1" ToRole="Member" />
+          <Property Name="IsOrgMember" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="IsHeadOfFamily" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
         </EntityType>
         <EntityType Name="Token">
           <Key>
@@ -628,6 +638,9 @@
           <EntitySetMapping Name="EventAttendances">
             <EntityTypeMapping TypeName="EventTrackerDBModel.EventAttendance">
               <MappingFragment StoreEntitySet="EventAttendances">
+                <ScalarProperty Name="RegisteredDate" ColumnName="RegisteredDate" />
+                <ScalarProperty Name="RegisteredBy" ColumnName="RegisteredBy" />
+                <ScalarProperty Name="IsRegistered" ColumnName="IsRegistered" />
                 <ScalarProperty Name="EventAttendanceId" ColumnName="EventAttendanceId" />
                 <ScalarProperty Name="EventId" ColumnName="EventId" />
                 <ScalarProperty Name="MemberId" ColumnName="MemberId" />
@@ -683,6 +696,8 @@
           <EntitySetMapping Name="Members">
             <EntityTypeMapping TypeName="EventTrackerDBModel.Member">
               <MappingFragment StoreEntitySet="Members">
+                <ScalarProperty Name="IsHeadOfFamily" ColumnName="IsHeadOfFamily" />
+                <ScalarProperty Name="IsOrgMember" ColumnName="IsOrgMember" />
                 <ScalarProperty Name="MotherMemberId" ColumnName="MotherMemberId" />
                 <ScalarProperty Name="FatherMemberId" ColumnName="FatherMemberId" />
                 <ScalarProperty Name="MemberId" ColumnName="MemberId" />

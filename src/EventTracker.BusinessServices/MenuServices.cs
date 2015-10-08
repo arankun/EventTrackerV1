@@ -35,7 +35,8 @@ namespace EventTracker.BusinessServices
                 SubMenuItems = new List<MenuItem>()
                 {
                     new MenuItem {Name="All", NavigateUrl = "/Membership"},
-                    new MenuItem {Name="KFC", NavigateUrl = "/Membership/getKFC"}
+                    new MenuItem {Name="KFC", NavigateUrl = "/Membership/getKFC"},
+                    new MenuItem {Name="Households", NavigateUrl = "/Membership/Households"}
                 }
             };
 

@@ -391,6 +391,7 @@
     <Content Include="Views\Error\AccessDenied.cshtml" />
     <Content Include="Views\Membership\EditHouseHold.cshtml" />
     <Content Include="Views\Membership\_EditMemberHouseHold.cshtml" />
+    <None Include="Views\Membership\HouseHolds.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

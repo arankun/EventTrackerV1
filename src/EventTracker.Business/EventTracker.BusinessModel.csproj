@@ -75,6 +75,8 @@
     <Compile Include="Authentication\CustomPrincipalSerializeModel.cs" />
     <Compile Include="Authentication\LoginViewModel.cs" />
     <Compile Include="Authentication\Role.cs" />
+    <Compile Include="Common\PagingInfo.cs" />
+    <Compile Include="Criterias\HouseHoldCriteria.cs" />
     <Compile Include="Membership\BaseMember.cs" />
     <Compile Include="EventAttendance.cs" />
     <Compile Include="Event.cs" />

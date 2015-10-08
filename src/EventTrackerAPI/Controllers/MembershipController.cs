@@ -1,5 +1,6 @@
 ﻿#region directives
 
+using System.Collections.Generic;
 using System.Web.Http;
 using EventTracker.BusinessModel;
 using EventTracker.BusinessModel.Membership;
@@ -41,6 +42,13 @@ namespace EventTrackerAPI.Controllers
                 SortDirection = sortDirection
             };
             return _services.GetMembers(searchParam);
+        }
+
+        [HttpGet]
+        [Route("getfamilymembers")]
+        public IEnumerable<Member> GetFamilyMembersByHeadOfFamilyMemberId(int memberId) {
+           
+            return _services.GetFamilyMembersByHeadOfFamilyMemberId(memberId);
         }
 
         [HttpPost]

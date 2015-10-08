@@ -2,7 +2,10 @@
 
 using System.Collections.Generic;
 using EventTracker.BusinessModel;
+using EventTracker.BusinessModel.Common;
+using EventTracker.BusinessModel.Criterias;
 using EventTracker.BusinessModel.Membership;
+using PagedList;
 
 #endregion
 
@@ -15,11 +18,13 @@ namespace EventTracker.BusinessServices.Membership
         int AddKfcMember(int parentId, NewMember newMember);
         Member GetMember(int memberId);
         IEnumerable<Member> GetMembers(int pageIndex, int pageSize, out int numberOfPages);
-        IEnumerable<Member> GetMembers(int pageIndex, int pageSizes);
+        IEnumerable<Member> GetFamilyMembersByHeadOfFamilyMemberId(int headOfFamilyMemberId);
+
+        IPagedList<Member> GetMembers(int pageIndex, int pageSizes);
         void UpdateMember(Member aMember);
         Common.PagedList GetMembers(SearchParameter searchParam);
 
-        IEnumerable<HouseHold> GetHouseHolds();
-        HouseHold GetHouseHold(int memberId);
+        HouseHold GetHouseHold(int houseHoldId);
+        IPagedList<HouseHold> GetHouseHolds(HouseHoldCriteria houseHoldCriteria, PagingInfo pagingInfo);
     }
 }
