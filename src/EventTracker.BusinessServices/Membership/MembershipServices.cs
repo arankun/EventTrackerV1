@@ -245,6 +245,7 @@ namespace EventTracker.BusinessServices.Membership
                     select new HouseHold
                     {
                         HouseHoldId = hh.HouseHoldId,
+                        HouseHoldLeaderMemberId = hh.HouseHoldLeaderMemberId,
                         Name = hh.Name,
                         Area = hh.Area,
                         State = hh.State,

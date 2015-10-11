@@ -14,7 +14,7 @@
     <table class="table table-striped table-condensed table-bordered">
         <tr>
             <th class="text-right">
-                @Html.ActionLink("Last Name", "EditHousehold", new { householdId = ViewBag.HouseholdId, sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
+                @Html.ActionLink("Last Name", "EditHousehold", new { householdId = ViewBag.HouseholdId, houseHoldLeaderMemberId =ViewBag.HouseHoldLeaderMemberId, sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
             </th>
             <th class="text-right">Firstname</th>
             <th class="text-right">Email</th>
@@ -23,7 +23,7 @@
             <th class="text-right">HH</th>
             <th class="text-right">DOB</th>
             <th>
-                @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-plus'></span>", "Add", "AddMemberToHouseHold", "Membership", routeValues: new { houseHoldId = ViewBag.HouseholdId }, htmlAttributes: new { data_modal = "", @class = "btn btn-primary pull-right" })
+                @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-plus'></span>", "Add", "AddMemberToHouseHold", "Membership", routeValues: new { houseHoldId = ViewBag.HouseHoldId, houseHoldLeaderMemberId=ViewBag.HouseHoldLeaderMemberId }, htmlAttributes: new { data_modal = "", @class = "btn btn-primary pull-right" })
             </th>
         </tr>
         @foreach (var item in Model) {
@@ -60,14 +60,13 @@
     $(function () {
        
         $.ajaxSetup({ cache: false });
-        alert('a');
         $("a[data-modal]").on("click", function (e) {
             // hide dropdown if any (this is used wehen invoking modal from link in bootstrap dropdown )
             //$(e.target).closest('.btn-group').children('.dropdown-toggle').dropdown('toggle');
-
             $('#myModalContent').load(this.href, function () {
                 $('#myModal').modal({
                     /*backdrop: 'static',*/
+
                     keyboard: true
                 }, 'show');
                 bindForm(this);

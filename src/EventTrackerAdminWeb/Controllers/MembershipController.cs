@@ -50,11 +50,12 @@ namespace EventTrackerAdminWeb.Controllers
         }
 
         [HttpGet]
-        public ActionResult HouseholdMembers(int householdId, int? page) {
+        public ActionResult HouseholdMembers(int householdId, int houseHoldLeaderMemberId, int? page) {
             var pageSize = 10;
             var pageNumber = page ?? 1;
             
             ViewBag.HouseHoldId = householdId;
+            ViewBag.HouseHoldLeaderMemberId = houseHoldLeaderMemberId;
             var members = _services.GetHouseHoldMemers(householdId, pageNumber, pageSize);
             return PartialView("_Members", members);
         }
@@ -128,6 +129,7 @@ namespace EventTrackerAdminWeb.Controllers
             var newHhMember = new NewHouseholdMember()
             {
                 HouseHoldId = houseHoldId,
+                HouseHoldLeaderMemberId = houseHoldLeaderMemberId,
                 HeadOfFamilyMembersList = new SelectList(list, "MemberId", "FullName")
             };
             return PartialView("_AddNewHouseholdMember", newHhMember);
@@ -140,16 +142,15 @@ namespace EventTrackerAdminWeb.Controllers
             {
                 _services.AddMemberToHousehold(newhhMember);
 
-                TempData["message"] = string.Format("{0} has been saved", newhhMember.MemberId);
-                ViewBag.HouseHoldId = newhhMember.HouseHoldId;
-                var members = _services.GetHouseHoldMemers(newhhMember.HouseHoldId, 1, 10);
-                return PartialView("_Members", members);
+                //TempData["message"] = string.Format("{0} has been saved", newhhMember.MemberId);
+                //ViewBag.HouseHoldId = newhhMember.HouseHoldId;
+                //var members = _services.GetHouseHoldMemers(newhhMember.HouseHoldId, 1, 10);
+                //return PartialView("_AddNewHouseholdMember", newhhMember);
+
+                string url = Url.Action("HouseholdMembers", "Membership", new { houseHoldId = newhhMember.HouseHoldId, houseHoldLeaderMemberId = newhhMember.HouseHoldLeaderMemberId });
+                return Json(new { success = true, url = url });
             }
-            else {
-                // there is something wrong with the data values
-                //return PartialView("_Members", members);
-                return null;
-            }
+            return PartialView("_AddNewHouseholdMember", newhhMember);
         }
 
         public ActionResult Delete()
@@ -163,11 +164,15 @@ namespace EventTrackerAdminWeb.Controllers
             return View("Edit", new Member());
         }
 
+
         public ActionResult EditHousehold(int houseHoldId)
         {
             ViewBag.HouseHoldId = houseHoldId;
+            
             var hhViewModel = _services.GetHouseHoldViewModel(houseHoldId);
+            ViewBag.HouseHoldLeaderMemberId = hhViewModel.HouseHold.HouseHoldLeaderMemberId;
             return View(hhViewModel);
+            //return PartialView("_Ind", addresses.ToList());
         }
 
         [Route("DeleteHouseHold/{houseHoldId}")]

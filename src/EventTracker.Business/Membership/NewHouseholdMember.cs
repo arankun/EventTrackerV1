@@ -14,5 +14,6 @@ namespace EventTracker.BusinessModel.Membership {
         public int MemberId { get; set; }
         public string FamilyName { get; set; }
         public SelectList HeadOfFamilyMembersList { get; set; }
+        public int HouseHoldLeaderMemberId { get; set; }
     }
 }

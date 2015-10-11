@@ -18,9 +18,9 @@
                 @Html.LabelFor(model => model.MemberId, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
 
-                    @*
-    @Html.DropDownListFor(x => x.MemberId, Model.HeadOfFamilyMembersList, "MemberId", "FullName")
-                    *@
+                    @**@
+                    @Html.DropDownListFor(x => x.MemberId, Model.HeadOfFamilyMembersList, "-- Select One --")
+                    
                     @Html.ValidationMessageFor(model => model.MemberId, "", new { @class = "text-danger" })
                 </div>
             </div>
