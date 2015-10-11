@@ -1,6 +1,9 @@
 ﻿#region directives
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Web.Mvc;
 using AutoMapper;
 using EventTracker.BusinessModel.Common;
@@ -15,7 +18,6 @@ using PagedList;
 namespace EventTrackerAdminWeb.Controllers
 {
     //[CustomAuthorize(Roles = "Admin")]
-    [RoutePrefix("membership")]
     public class MembershipController : BaseController
     {
         private readonly IMembershipServices _services;
@@ -26,8 +28,7 @@ namespace EventTrackerAdminWeb.Controllers
         }
 
         [HttpGet]
-        [Route("members")]
-        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
+        public ActionResult Members(string sortOrder, string currentFilter, string searchString, int? page)
         {
             ViewBag.CurrentSort = sortOrder;
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "LastName" : "";
@@ -49,8 +50,17 @@ namespace EventTrackerAdminWeb.Controllers
         }
 
         [HttpGet]
-        [Route("households")]
-        public ActionResult GetHouseholds(string sortOrder, string currentFilter, string searchString, int? page) {
+        public ActionResult HouseholdMembers(int householdId, int? page) {
+            var pageSize = 10;
+            var pageNumber = page ?? 1;
+            
+            ViewBag.HouseHoldId = householdId;
+            var members = _services.GetHouseHoldMemers(householdId, pageNumber, pageSize);
+            return PartialView("_Members", members);
+        }
+
+        [HttpGet]
+        public ActionResult Households(string sortOrder, string currentFilter, string searchString, int? page) {
             ViewBag.CurrentSort = sortOrder;
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "LastName" : "";
             ViewBag.DateSortParm = sortOrder == "MemberOf" ? "memberOf_desc" : "MemberOf";
@@ -74,7 +84,7 @@ namespace EventTrackerAdminWeb.Controllers
         }
 
         [HttpGet]
-        public ActionResult Edit(int memberid)
+        public ActionResult EditMember(int memberid)
         {
             var member = _services.GetMember(memberid);
 
@@ -82,7 +92,7 @@ namespace EventTrackerAdminWeb.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(Member aMember) {
+        public ActionResult EditMember(Member aMember) {
             if (ModelState.IsValid) {
                 if (aMember.MemberId > 0) {
                     _services.UpdateMember(aMember);
@@ -95,11 +105,50 @@ namespace EventTrackerAdminWeb.Controllers
                 }
 
                 TempData["message"] = string.Format("{0} has been saved", aMember.FullName);
-                return RedirectToAction("Index");
+                return RedirectToAction("Members");
             }
             else {
                 // there is something wrong with the data values
                 return View(aMember);
+            }
+        }
+
+
+        public ActionResult AddMemberToHouseHold(int houseHoldId, int houseHoldLeaderMemberId) {
+
+            var list = _services.GetHeadOfFamilyMembers(houseHoldId, houseHoldLeaderMemberId).ToList();
+            //List<SelectListItem> items = list.Select(item => new SelectListItem
+            //{
+            //    Text = item.FullName, Value = item.MemberId.ToString()
+            //}).ToList();
+
+            //ViewBag.HeadOfFamilyMembers = new SelectList(list, "MemberId", "FullName");
+            //var items = new SelectList(list, "MemberId", "FullName").ToList();
+            //items.Insert(0, (new SelectListItem { Text = "", Value = "0" }));
+            var newHhMember = new NewHouseholdMember()
+            {
+                HouseHoldId = houseHoldId,
+                HeadOfFamilyMembersList = new SelectList(list, "MemberId", "FullName")
+            };
+            return PartialView("_AddNewHouseholdMember", newHhMember);
+        }
+
+        [HttpPost]
+        public ActionResult AddMemberToHouseHold(NewHouseholdMember newhhMember) {
+
+            if (ModelState.IsValid)
+            {
+                _services.AddMemberToHousehold(newhhMember);
+
+                TempData["message"] = string.Format("{0} has been saved", newhhMember.MemberId);
+                ViewBag.HouseHoldId = newhhMember.HouseHoldId;
+                var members = _services.GetHouseHoldMemers(newhhMember.HouseHoldId, 1, 10);
+                return PartialView("_Members", members);
+            }
+            else {
+                // there is something wrong with the data values
+                //return PartialView("_Members", members);
+                return null;
             }
         }
 
@@ -114,14 +163,24 @@ namespace EventTrackerAdminWeb.Controllers
             return View("Edit", new Member());
         }
 
-        public ActionResult EditHousehold(int? householdid)
+        public ActionResult EditHousehold(int houseHoldId)
         {
-            return PartialView("_EditMemberHouseHold", new HouseHold());
+            ViewBag.HouseHoldId = houseHoldId;
+            var hhViewModel = _services.GetHouseHoldViewModel(houseHoldId);
+            return View(hhViewModel);
         }
 
-        public ActionResult DeleteHouseHold()
+        [Route("DeleteHouseHold/{houseHoldId}")]
+        public ActionResult DeleteHouseHold(int? houseHoldId)
         {
-            return PartialView("_EditMemberHouseHold", new HouseHold());
+            if (houseHoldId == null) {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var hh = _services.GetHouseHold(houseHoldId);
+            if (hh == null) {
+                return HttpNotFound();
+            }
+            return View(hh);
         }
     }
 }

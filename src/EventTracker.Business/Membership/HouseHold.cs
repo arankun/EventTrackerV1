@@ -8,5 +8,8 @@
         public string Area { get; set; }
         public string State { get; set; }
         public string HouseHoldLeader { get; set; }
+
+        public int FamilyCount { get; set; }
+        public int MemberCount { get; set; }
     }
 }

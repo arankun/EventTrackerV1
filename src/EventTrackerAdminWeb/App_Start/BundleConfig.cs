@@ -10,7 +10,8 @@ namespace EventTrackerAdminWeb
     {
         public static void RegisterBundles(BundleCollection bundles) {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        "~/Scripts/jquery-{version}.js"));
+                        "~/Scripts/jquery-{version}.js",
+                        "~/Scripts/jquery-2.1.4.min.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include(
                         "~/Scripts/jquery-ui-{version}.js"));
@@ -72,10 +73,19 @@ namespace EventTrackerAdminWeb
             bundles.Add(new ScriptBundle("~/bundles/app").Include(
                           "~/app/app.js",
                           "~/app/controllers/membershipController.js",
+                          "~/app/controllers/HouseholdMemberController.js",
                           "~/app/controllers/customer.js",
                           "~/app/services/membershipServices.js",
                           "~/app/services/customer.js"
                           ));
+
+            bundles.Add(new ScriptBundle("~/bundles/modalform").Include(
+            "~/Scripts/modal/modalform.js"));
+
+            //AT: only for debugging
+            // Set EnableOptimizations to false for debugging. For more information,
+            // visit http://go.microsoft.com/fwlink/?LinkId=301862
+            BundleTable.EnableOptimizations = false;
         }
     }
 }

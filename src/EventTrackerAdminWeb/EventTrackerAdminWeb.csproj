@@ -166,6 +166,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app\app.js" />
+    <Content Include="app\Controllers\AddHouseholdMemberController.js" />
+    <Content Include="app\Partials\Modal.html" />
+    <Content Include="app\Services\ModalService.js" />
     <Content Include="app\Controllers\MembershipController.js" />
     <Content Include="app\Services\MembershipServices.js" />
     <Content Include="app\Views\Members\index.html" />
@@ -235,39 +238,39 @@
     <Content Include="Scripts\bootstrap-datepicker.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\adapters\standalone-framework.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\adapters\standalone-framework.src.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\highcharts-3d.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\highcharts-3d.src.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\highcharts-all.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\highcharts-more.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\highcharts-more.src.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\highcharts.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\highcharts.src.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\modules\canvas-tools.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\modules\canvas-tools.src.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\modules\data.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\modules\data.src.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\modules\drilldown.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\modules\drilldown.src.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\modules\exporting.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\modules\exporting.src.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\modules\funnel.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\modules\funnel.src.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\modules\heatmap.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\modules\heatmap.src.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\modules\no-data-to-display.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\modules\no-data-to-display.src.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\modules\solid-gauge.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\modules\solid-gauge.src.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\themes\dark-blue.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\themes\dark-green.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\themes\dark-unica.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\themes\gray.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\themes\grid-light.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\themes\grid.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\themes\sand-signika.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\themes\skies.js" />
+    <Content Include="Scripts\angular-ui\Highcharts-4.0.1\js\adapters\standalone-framework.js" />
+    <Content Include="Scripts\angular-ui\Highcharts-4.0.1\js\adapters\standalone-framework.src.js" />
+    <Content Include="Scripts\angular-ui\Highcharts-4.0.1\js\highcharts-3d.js" />
+    <Content Include="Scripts\angular-ui\Highcharts-4.0.1\js\highcharts-3d.src.js" />
+    <Content Include="Scripts\angular-ui\Highcharts-4.0.1\js\highcharts-all.js" />
+    <Content Include="Scripts\angular-ui\Highcharts-4.0.1\js\highcharts-more.js" />
+    <Content Include="Scripts\angular-ui\Highcharts-4.0.1\js\highcharts-more.src.js" />
+    <Content Include="Scripts\angular-ui\Highcharts-4.0.1\js\highcharts.js" />
+    <Content Include="Scripts\angular-ui\Highcharts-4.0.1\js\highcharts.src.js" />
+    <Content Include="Scripts\angular-ui\Highcharts-4.0.1\js\modules\canvas-tools.js" />
+    <Content Include="Scripts\angular-ui\Highcharts-4.0.1\js\modules\canvas-tools.src.js" />
+    <Content Include="Scripts\angular-ui\Highcharts-4.0.1\js\modules\data.js" />
+    <Content Include="Scripts\angular-ui\Highcharts-4.0.1\js\modules\data.src.js" />
+    <Content Include="Scripts\angular-ui\Highcharts-4.0.1\js\modules\drilldown.js" />
+    <Content Include="Scripts\angular-ui\Highcharts-4.0.1\js\modules\drilldown.src.js" />
+    <Content Include="Scripts\angular-ui\Highcharts-4.0.1\js\modules\exporting.js" />
+    <Content Include="Scripts\angular-ui\Highcharts-4.0.1\js\modules\exporting.src.js" />
+    <Content Include="Scripts\angular-ui\Highcharts-4.0.1\js\modules\funnel.js" />
+    <Content Include="Scripts\angular-ui\Highcharts-4.0.1\js\modules\funnel.src.js" />
+    <Content Include="Scripts\angular-ui\Highcharts-4.0.1\js\modules\heatmap.js" />
+    <Content Include="Scripts\angular-ui\Highcharts-4.0.1\js\modules\heatmap.src.js" />
+    <Content Include="Scripts\angular-ui\Highcharts-4.0.1\js\modules\no-data-to-display.js" />
+    <Content Include="Scripts\angular-ui\Highcharts-4.0.1\js\modules\no-data-to-display.src.js" />
+    <Content Include="Scripts\angular-ui\Highcharts-4.0.1\js\modules\solid-gauge.js" />
+    <Content Include="Scripts\angular-ui\Highcharts-4.0.1\js\modules\solid-gauge.src.js" />
+    <Content Include="Scripts\angular-ui\Highcharts-4.0.1\js\themes\dark-blue.js" />
+    <Content Include="Scripts\angular-ui\Highcharts-4.0.1\js\themes\dark-green.js" />
+    <Content Include="Scripts\angular-ui\Highcharts-4.0.1\js\themes\dark-unica.js" />
+    <Content Include="Scripts\angular-ui\Highcharts-4.0.1\js\themes\gray.js" />
+    <Content Include="Scripts\angular-ui\Highcharts-4.0.1\js\themes\grid-light.js" />
+    <Content Include="Scripts\angular-ui\Highcharts-4.0.1\js\themes\grid.js" />
+    <Content Include="Scripts\angular-ui\Highcharts-4.0.1\js\themes\sand-signika.js" />
+    <Content Include="Scripts\angular-ui\Highcharts-4.0.1\js\themes\skies.js" />
     <Content Include="packages.config" />
     <Content Include="Scripts\angular.min.js.map" />
     <Content Include="Scripts\angular-route.min.js.map" />
@@ -354,6 +357,7 @@
     <Content Include="Scripts\ng-grid.min.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\modal\modalform.js" />
     <Content Include="Web.config" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Events\Index.cshtml" />
@@ -370,6 +374,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MembershipController.cs" />
     <Compile Include="Controllers\MenuBarController.cs" />
+    <Compile Include="Extensions\HtmlHelperExtensions.cs" />
     <Compile Include="Filter\CustomAuthorizeAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -382,16 +387,18 @@
     <Content Include="Views\Shared\_MenuBar - Copy.cshtml" />
     <Content Include="Views\Events\Index - Copy.cshtml" />
     <Content Include="Views\Events\Edit.cshtml" />
-    <Content Include="Views\Membership\Index.cshtml" />
-    <Content Include="Views\Membership\Edit.cshtml" />
+    <Content Include="Views\Membership\_Members.cshtml" />
+    <Content Include="Views\Membership\EditMember.cshtml" />
     <Content Include="Scripts\jquery-2.1.4.min.map" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\Index.cshtml" />
     <Content Include="Views\Shared\_AdminLayout.cshtml" />
     <Content Include="Views\Error\AccessDenied.cshtml" />
-    <Content Include="Views\Membership\EditHouseHold.cshtml" />
-    <Content Include="Views\Membership\_EditMemberHouseHold.cshtml" />
+    <Content Include="Views\Membership\EditHousehold.cshtml" />
+    <Content Include="Views\Membership\DeleteHouseHold.cshtml" />
     <None Include="Views\Membership\HouseHolds.cshtml" />
+    <Content Include="Views\Membership\Members.cshtml" />
+    <Content Include="Views\Membership\_AddNewHouseholdMember.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -403,7 +410,6 @@
     <Folder Include="app\Directives\" />
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
-    <Folder Include="Views\Base\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EventTracker.BusinessServices\EventTracker.BusinessServices.csproj">

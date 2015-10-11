@@ -23,7 +23,7 @@ namespace EventTracker.BusinessServices
                 Order = 1,
                 SubMenuItems = new List<MenuItem>()
                 {
-                    new MenuItem {Name="Current/Future Events", NavigateUrl = "/Events"}
+                    new MenuItem {Name="Current/Future Events", NavigateUrl = "/Index"}
                 }
             };
 
@@ -34,7 +34,7 @@ namespace EventTracker.BusinessServices
                 Order = 2,
                 SubMenuItems = new List<MenuItem>()
                 {
-                    new MenuItem {Name="All", NavigateUrl = "/Membership"},
+                    new MenuItem {Name="All", NavigateUrl = "/Membership/Members"},
                     new MenuItem {Name="KFC", NavigateUrl = "/Membership/getKFC"},
                     new MenuItem {Name="Households", NavigateUrl = "/Membership/Households"}
                 }

@@ -7,6 +7,12 @@
     @Styles.Render("~/Content/css")
     @Styles.Render("~/Content/themes/base/css")
 
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jqueryui")
+    @*
+    @RenderSection("PageLevelJavaScript", required: false)
+    *@
 </head>
 <body ng-app="app">
 
@@ -61,15 +67,14 @@
             </div>
         </div>
     </footer>
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/jqueryval")
-    @Scripts.Render("~/bundles/jqueryui")
+
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/bootstrap-datepicker")
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/angularjs")
 
     @Scripts.Render("~/bundles/app")
+
     @RenderSection("scripts", required: false)
 </body>
 </html>

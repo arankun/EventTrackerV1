@@ -13,7 +13,7 @@ namespace EventTrackerAdminWeb
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
-            routes.MapMvcAttributeRoutes();
+            //routes.MapMvcAttributeRoutes();
             //AT: this is the default. This will be reserve for login. Comment for testing purpose
             //routes.MapRoute(
             //    name: "Default",

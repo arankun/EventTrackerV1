@@ -1,0 +1,34 @@
+﻿@model EventTracker.BusinessModel.Membership.NewHouseholdMember
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title" id="myModalLabel">Add new Address</h4>
+</div>
+
+
+@using (Html.BeginForm()) {
+    <div class="modal-body">
+
+        @Html.AntiForgeryToken()
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.HouseHoldId)
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.MemberId, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+
+                    @*
+    @Html.DropDownListFor(x => x.MemberId, Model.HeadOfFamilyMembersList, "MemberId", "FullName")
+                    *@
+                    @Html.ValidationMessageFor(model => model.MemberId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn" type="button" data-dismiss="modal">Cancel</button>
+        <input class="btn btn-primary" type="submit" value="Add" />
+    </div>
+}
+

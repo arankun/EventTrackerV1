@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Common.CommandTrees;
 using System.Linq;
 using System.Management.Instrumentation;
 using System.Net.Sockets;
@@ -12,8 +13,11 @@ using EventTracker.BusinessModel;
 using EventTracker.BusinessModel.Common;
 using EventTracker.BusinessModel.Criterias;
 using EventTracker.BusinessModel.Membership;
+using EventTracker.DataModel.Generated;
 using EventTracker.DataModel.UnitOfWork;
 using PagedList;
+using HouseHold = EventTracker.BusinessModel.Membership.HouseHold;
+using Member = EventTracker.BusinessModel.Membership.Member;
 
 #endregion
 
@@ -148,17 +152,120 @@ namespace EventTracker.BusinessServices.Membership
             }
         }
 
-        public HouseHold GetHouseHold(int houseHoldId)
-        {
-            var dbEntity = _unitOfWork.HouseHoldRepository.Get(u => u.HouseHoldId == houseHoldId);
-            if (dbEntity != null && dbEntity.HouseHoldId > 0) {
-                //AT: Custom mapping a field
-                Mapper.CreateMap<DataModel.Generated.HouseHold, HouseHold>();
-                var model = Mapper.Map<DataModel.Generated.HouseHold, HouseHold>(dbEntity);
+        //public IEnumerable<Member> GetHouseHoldMemers(int houseHoldId)
+        //{
+        //    using (var context = _unitOfWork.DbContext) {
+        //        var houseHolds = (from hhm in context.HouseHoldMembers
+        //                          join m in context.Members on hhm.MemberId equals m.MemberId
+        //                          where (hhm.HouseHoldId == houseHoldId && hhm.EndDate == null)
+        //                          orderby m.LastName, m.IsHeadOfFamily descending , m.DOB
+        //                          select new Member {
+        //                              MemberId = m.MemberId,
+        //                              LastName = m.LastName,
+        //                              FirstName = m.FirstName,
+        //                              DateOfBirth = m.DOB.Value
+        //                          });//.ToPagedList(paging.CurrentPage, paging.ItemsPerPage);
 
-                return model;
+        //        return houseHolds.ToList();
+        //    }
+        //}
+
+        public HouseHold GetHouseHold(int? houseHoldId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IPagedList<Member> GetHouseHoldMemers(int houseHoldId, int pageNumber, int pageSize)
+        {
+            using (var context = _unitOfWork.DbContext) {
+                var houseHolds = (from hhm in context.HouseHoldMembers
+                                  join m in context.Members on hhm.MemberId equals m.MemberId
+                                  where (hhm.HouseHoldId == houseHoldId && hhm.EndDate == null)
+                                  orderby m.LastName, m.IsHeadOfFamily descending, m.DOB
+                                  select new Member {
+                                      MemberId = m.MemberId,
+                                      LastName = m.LastName,
+                                      FirstName = m.FirstName,
+                                      DateOfBirth = m.DOB.Value
+                                  }).ToPagedList(pageNumber, pageSize);
+
+                return houseHolds;
             }
-            return null;
+        }
+
+        public IEnumerable<Member> GetHeadOfFamilyMembers(int houseHoldId, int houseHoldLeaderMemberId)
+        {
+            //AT: Get HeadOfFamilyMembers that are not in current householdid
+            using (var context = _unitOfWork.DbContext) {
+                var mm = (from m in context.Members join hhm in context.HouseHoldMembers
+                          on m.MemberId equals hhm.MemberId into tempJoin
+                          from hhmTemp in tempJoin.DefaultIfEmpty()
+                          where m.IsHeadOfFamily == "Y" 
+                          && hhmTemp.HouseHoldId != houseHoldId
+                          && m.MemberId != houseHoldLeaderMemberId
+                          select new Member() { MemberId = m.MemberId, LastName = m.LastName, FirstName = m.FirstName });
+                var list = mm.ToList();
+                return list;
+            }
+        }
+
+        public int AddMemberToHousehold(NewHouseholdMember newhhMember)
+        {
+            using (var scope = new TransactionScope()) {
+                var dbMember = new DataModel.Generated.HouseHoldMember {
+                       HouseHoldId = newhhMember.HouseHoldId,
+                       MemberId = newhhMember.MemberId,
+                       StartDate = DateTime.Now.Date
+                };
+                _unitOfWork.HouseHoldMemberRepository.Insert(dbMember);
+                _unitOfWork.Save();
+                scope.Complete();
+                return dbMember.HouseHoldMemberId;
+            }
+        }
+
+        public HouseHoldDetailsViewModel GetHouseHoldViewModel(int houseHoldId)
+        {
+            //var dbEntity = _unitOfWork.HouseHoldRepository.GetByID(houseHoldId);
+            //if (dbEntity != null && dbEntity.HouseHoldId > 0) {
+            //    //AT: Custom mapping a field
+            //    Mapper.CreateMap<DataModel.Generated.HouseHold, HouseHold>();
+            //    var model = Mapper.Map<DataModel.Generated.HouseHold, HouseHold>(dbEntity);
+
+            //    return model;
+            //}
+            //return null;
+            var crit = new HouseHoldCriteria() {HouseHoldId = houseHoldId};
+            using (var context = _unitOfWork.DbContext)
+            {
+                var houseHolds = (from hh in context.HouseHolds
+                    join m in context.Members on hh.HouseHoldLeaderMemberId equals m.MemberId
+                    where hh.HouseHoldId == crit.HouseHoldId
+                    orderby hh.Name
+                    select new HouseHold
+                    {
+                        HouseHoldId = hh.HouseHoldId,
+                        Name = hh.Name,
+                        Area = hh.Area,
+                        State = hh.State,
+                        HouseHoldLeader = m.FirstName + " " + m.LastName
+                    }).FirstOrDefault();
+
+                var hhMembers = (from hhm in context.HouseHoldMembers
+                                  join m in context.Members on hhm.MemberId equals m.MemberId
+                                  where (hhm.HouseHoldId == houseHoldId && hhm.EndDate == null)
+                                  orderby m.LastName, m.IsHeadOfFamily descending, m.DOB
+                                  select new Member {
+                                      MemberId = m.MemberId,
+                                      LastName = m.LastName,
+                                      FirstName = m.FirstName,
+                                      DateOfBirth = m.DOB.Value
+                                  });//.ToPagedList(paging.CurrentPage, paging.ItemsPerPage);
+                var vm = new HouseHoldDetailsViewModel() {HouseHold = houseHolds , HouseHoldMembers = hhMembers.ToList()};
+
+                return vm;
+            }
+
         }
 
         public int AddSpouseOfMember(int spouseMemberId, NewMember newMember)
