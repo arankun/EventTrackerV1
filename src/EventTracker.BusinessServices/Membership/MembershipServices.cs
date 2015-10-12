@@ -211,17 +211,55 @@ namespace EventTracker.BusinessServices.Membership
 
         public int AddMemberToHousehold(NewHouseholdMember newhhMember)
         {
-            using (var scope = new TransactionScope()) {
-                var dbMember = new DataModel.Generated.HouseHoldMember {
-                       HouseHoldId = newhhMember.HouseHoldId,
-                       MemberId = newhhMember.MemberId,
-                       StartDate = DateTime.Now.Date
-                };
-                _unitOfWork.HouseHoldMemberRepository.Insert(dbMember);
-                _unitOfWork.Save();
+            var familyMembers = GetFamilyMembersByHeadOfFamilyMemberId(newhhMember.MemberId);
+            int membersAdded = 0;
+            using (var scope = new TransactionScope())
+            {
+                //var dbHhMember = BuildHouseHoldMember(newhhMember.HouseHoldId, newhhMember.MemberId);
+                //_unitOfWork.HouseHoldMemberRepository.Insert(dbHhMember);
+                //_unitOfWork.Save();
+                //membersAdded++;
+                foreach (var member in familyMembers)
+                {
+                    HouseHoldMember dbHhMember;
+                    switch (member.MemberOf)
+                    {
+                        case "KFC":
+                        case "YFC":
+                            dbHhMember = BuildHouseHoldMember(newhhMember.HouseHoldId, member.MemberId);
+                            _unitOfWork.HouseHoldMemberRepository.Insert(dbHhMember);
+                            _unitOfWork.Save();
+                            membersAdded++;
+                            break;
+                        default:
+                            if (member.MemberId == newhhMember.MemberId)
+                            {
+                                dbHhMember = BuildHouseHoldMember(newhhMember.HouseHoldId, member.MemberId);
+                                _unitOfWork.HouseHoldMemberRepository.Insert(dbHhMember);
+                                _unitOfWork.Save();
+                            }
+                            else if (member.SpouseMemberId == newhhMember.MemberId)
+                            {
+                                dbHhMember = BuildHouseHoldMember(newhhMember.HouseHoldId, member.MemberId);
+                                _unitOfWork.HouseHoldMemberRepository.Insert(dbHhMember);
+                                _unitOfWork.Save();
+                                membersAdded++;
+                            }
+                            break;
+                    }
+                }
                 scope.Complete();
-                return dbMember.HouseHoldMemberId;
+                return membersAdded;
             }
+        }
+
+        private HouseHoldMember BuildHouseHoldMember(int houseHoldId, int memberId) {
+            var dbHhMember = new DataModel.Generated.HouseHoldMember {
+                HouseHoldId = houseHoldId,
+                MemberId = memberId,
+                StartDate = DateTime.Now.Date
+            };
+            return dbHhMember;
         }
 
         public HouseHoldDetailsViewModel GetHouseHoldViewModel(int houseHoldId)
@@ -359,27 +397,46 @@ namespace EventTracker.BusinessServices.Membership
 
         public IEnumerable<Member> GetFamilyMembersByHeadOfFamilyMemberId(int headOfFamilyMemberId)
         {
-            using (var context = _unitOfWork.DbContext)
-            {
-                var mm = (from m in context.Members
-                    where m.MemberId == headOfFamilyMemberId
-                    select new Member() {MemberId = m.MemberId, LastName = m.LastName, FirstName = m.FirstName})
-                    .Union(from m in context.Members
-                        where m.SpouseMemberId == headOfFamilyMemberId
-                        select new Member() {MemberId = m.MemberId, LastName = m.LastName, FirstName = m.FirstName})
-                    .Union(from mC in context.Members
-                        join mmTemp in context.MemberMemberships on mC.MemberId equals mmTemp.MemberId into tempJoin
-                        from mmTempJoin in tempJoin.DefaultIfEmpty()
-                        join mMo in context.Members on mC.MotherMemberId equals mMo.MemberId into tempJoinMo
-                        from mJoinMo in tempJoin.DefaultIfEmpty()
-                        join mFa in context.Members on mC.FatherMemberId equals mFa.MemberId into tempJoinFa
-                        from mJoinFa in tempJoinFa.DefaultIfEmpty()
-                        where (mC.FatherMemberId == headOfFamilyMemberId || mC.MotherMemberId == headOfFamilyMemberId)
-                              && mmTempJoin.EndDate == null
-                        select new Member() {MemberId = mC.MemberId, LastName = mC.LastName, FirstName = mC.FirstName});
-                var list = mm.ToList();
-                return list;
-            }
+            //using (var context = _unitOfWork.DbContext)
+            //{
+            //    var mm = (from m in context.Members
+            //        where m.MemberId == headOfFamilyMemberId
+            //        select new Member() {MemberId = m.MemberId, LastName = m.LastName, FirstName = m.FirstName, SpouseMemberId = m.SpouseMemberId})
+            //        .Union(from m in context.Members
+            //            where m.SpouseMemberId == headOfFamilyMemberId
+            //            select new Member() {MemberId = m.MemberId, LastName = m.LastName, FirstName = m.FirstName, SpouseMemberId = m.SpouseMemberId })
+            //        .Union(from mC in context.Members
+            //            join mmTemp in context.MemberMemberships on mC.MemberId equals mmTemp.MemberId into tempJoin
+            //            from mmTempJoin in tempJoin.DefaultIfEmpty()
+            //            join mMo in context.Members on mC.MotherMemberId equals mMo.MemberId into tempJoinMo
+            //            from mJoinMo in tempJoin.DefaultIfEmpty()
+            //            join mFa in context.Members on mC.FatherMemberId equals mFa.MemberId into tempJoinFa
+            //            from mJoinFa in tempJoinFa.DefaultIfEmpty()
+            //            where (mC.FatherMemberId == headOfFamilyMemberId || mC.MotherMemberId == headOfFamilyMemberId)
+            //                  && mmTempJoin.EndDate == null
+            //            select new Member() {MemberId = mC.MemberId, LastName = mC.LastName, FirstName = mC.FirstName, SpouseMemberId = mC.SpouseMemberId });
+            //    var list = mm.ToList();
+            //    return list;
+            //}
+            var context = _unitOfWork.DbContext;
+            var mm = (from m in context.Members
+                      where m.MemberId == headOfFamilyMemberId
+                      select new Member() { MemberId = m.MemberId, LastName = m.LastName, FirstName = m.FirstName, SpouseMemberId = m.SpouseMemberId })
+                .Union(from m in context.Members
+                       where m.SpouseMemberId == headOfFamilyMemberId
+                       select new Member() { MemberId = m.MemberId, LastName = m.LastName, FirstName = m.FirstName, SpouseMemberId = m.SpouseMemberId })
+                .Union(from mC in context.Members
+                       join mmTemp in context.MemberMemberships on mC.MemberId equals mmTemp.MemberId into tempJoin
+                       from mmTempJoin in tempJoin.DefaultIfEmpty()
+                       join mMo in context.Members on mC.MotherMemberId equals mMo.MemberId into tempJoinMo
+                       from mJoinMo in tempJoin.DefaultIfEmpty()
+                       join mFa in context.Members on mC.FatherMemberId equals mFa.MemberId into tempJoinFa
+                       from mJoinFa in tempJoinFa.DefaultIfEmpty()
+                       where (mC.FatherMemberId == headOfFamilyMemberId || mC.MotherMemberId == headOfFamilyMemberId)
+                                 && mmTempJoin.EndDate == null
+                       select new Member() { MemberId = mC.MemberId, LastName = mC.LastName, FirstName = mC.FirstName, SpouseMemberId = mC.SpouseMemberId });
+            var list = mm.ToList();
+            return list;
         }
 
         public IPagedList<Member> GetMembers(int pageIndex, int pageSize)

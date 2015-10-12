@@ -38,7 +38,7 @@
             @foreach (var item in Model)
             {
                 <tr>
-                    <td>@Html.ActionLink(item.LastName, "Edit", new {item.MemberId})</td>
+                    <td>@Html.ActionLink(item.LastName, "EditMember", new {item.MemberId})</td>
                     <td class="text-right">@item.FirstName</td>
                     <td class="text-right">@item.Email</td>
                     <td class="text-right">@item.Phone</td>
