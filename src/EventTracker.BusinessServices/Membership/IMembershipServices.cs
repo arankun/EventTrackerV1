@@ -18,20 +18,20 @@ namespace EventTracker.BusinessServices.Membership
         int AddKfcMember(int parentId, NewMember newMember);
         Member GetMember(int memberId);
         IEnumerable<Member> GetMembers(int pageIndex, int pageSize, out int numberOfPages);
-        IEnumerable<Member> GetFamilyMembersByHeadOfFamilyMemberId(int headOfFamilyMemberId);
+        //IEnumerable<Member> GetFamilyMembersByHeadOfFamilyMemberId(int headOfFamilyMemberId);
 
         IPagedList<Member> GetMembers(int pageIndex, int pageSizes);
         void UpdateMember(Member aMember);
         Common.PagedList GetMembers(SearchParameter searchParam);
 
-        HouseHoldDetailsViewModel GetHouseHoldViewModel(int houseHoldId);
+        
 
         //HouseHold GetHouseHoldViewModel(int houseHoldId);
-        IPagedList<HouseHold> GetHouseHolds(HouseHoldCriteria houseHoldCriteria, PagingInfo pagingInfo);
+        //IPagedList<HouseHold> GetHouseHolds(HouseHoldCriteria houseHoldCriteria, PagingInfo pagingInfo);
         //IEnumerable<Member> GetHouseHoldMemers(int houseHoldId);
-        HouseHold GetHouseHold(int? houseHoldId);
-        IPagedList<Member> GetHouseHoldMemers(int houseHoldId, int pageNumber, int pageSize);
-        IEnumerable<Member> GetHeadOfFamilyMembers(int houseHoldId, int houseHoldLeaderMemberId);
-        int AddMemberToHousehold(NewHouseholdMember newhhMember);
+        
+        //IPagedList<Member> GetHouseHoldMemers(int houseHoldId, int pageNumber, int pageSize);
+        
+        
     }
 }

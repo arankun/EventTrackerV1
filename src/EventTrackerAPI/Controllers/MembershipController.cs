@@ -44,12 +44,12 @@ namespace EventTrackerAPI.Controllers
             return _services.GetMembers(searchParam);
         }
 
-        [HttpGet]
-        [Route("getfamilymembers")]
-        public IEnumerable<Member> GetFamilyMembersByHeadOfFamilyMemberId(int memberId) {
+        //[HttpGet]
+        //[Route("getfamilymembers")]
+        //public IEnumerable<Member> GetFamilyMembersByHeadOfFamilyMemberId(int memberId) {
            
-            return _services.GetFamilyMembersByHeadOfFamilyMemberId(memberId);
-        }
+        //    return _services.GetFamilyMembersByHeadOfFamilyMemberId(memberId);
+        //}
 
         [HttpPost]
         public int AddMember([FromBody] NewMember newMember)

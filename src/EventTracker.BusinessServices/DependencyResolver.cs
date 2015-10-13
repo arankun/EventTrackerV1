@@ -23,6 +23,7 @@ namespace EventTracker.BusinessServices
             registerComponent.RegisterType<IMembershipServices, MembershipServices>();
             registerComponent.RegisterType<IMenuServices, MenuServices>();
             registerComponent.RegisterType<IAuthenticationService, AuthenticationService>();
+            registerComponent.RegisterType<IHouseHoldServices, HouseHoldServices>();
 
         }
     }

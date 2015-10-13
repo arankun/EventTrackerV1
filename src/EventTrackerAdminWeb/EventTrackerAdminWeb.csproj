@@ -372,6 +372,7 @@
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\EventsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\HouseHoldController.cs" />
     <Compile Include="Controllers\MembershipController.cs" />
     <Compile Include="Controllers\MenuBarController.cs" />
     <Compile Include="Extensions\HtmlHelperExtensions.cs" />
@@ -387,18 +388,18 @@
     <Content Include="Views\Shared\_MenuBar - Copy.cshtml" />
     <Content Include="Views\Events\Index - Copy.cshtml" />
     <Content Include="Views\Events\Edit.cshtml" />
-    <Content Include="Views\Membership\_Members.cshtml" />
+    <Content Include="Views\HouseHold\_Members.cshtml" />
     <Content Include="Views\Membership\EditMember.cshtml" />
     <Content Include="Scripts\jquery-2.1.4.min.map" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\Index.cshtml" />
     <Content Include="Views\Shared\_AdminLayout.cshtml" />
     <Content Include="Views\Error\AccessDenied.cshtml" />
-    <Content Include="Views\Membership\EditHousehold.cshtml" />
-    <Content Include="Views\Membership\DeleteHouseHold.cshtml" />
-    <None Include="Views\Membership\HouseHolds.cshtml" />
+    <Content Include="Views\HouseHold\EditHousehold.cshtml" />
+    <Content Include="Views\HouseHold\DeleteHouseHold.cshtml" />
+    <None Include="Views\HouseHold\HouseHolds.cshtml" />
     <Content Include="Views\Membership\Members.cshtml" />
-    <Content Include="Views\Membership\_AddNewHouseholdMember.cshtml" />
+    <Content Include="Views\HouseHold\_AddNewHouseholdMember.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

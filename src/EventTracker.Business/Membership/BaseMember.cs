@@ -20,11 +20,12 @@ namespace EventTracker.BusinessModel.Membership
         [Display(Name = "First Name", Order = 2)]
         public string FirstName { get; set; }
 
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
         [Display(Name = "Date of Birth", Order = 3)]
         public DateTime? DateOfBirth { get; set; }
 
         [Display(Order = 4)]
-        public char Gender { get; set; }
+        public string Gender { get; set; }
 
         [Display(Order = 5)]
         public string Phone { get; set; }

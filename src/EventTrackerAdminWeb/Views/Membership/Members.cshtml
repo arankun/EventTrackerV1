@@ -28,11 +28,8 @@
                     @Html.ActionLink("Last Name", "Members", new {sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter})
                 </th>
                 <th class="text-right">Firstname</th>
-                <th class="text-right">Email</th>
-                <th class="text-right">Phone</th>
                 <th class="text-right">MemberOf</th>
                 <th class="text-right">HH</th>
-                <th class="text-right">DOB</th>
                 <th class="text-right"></th>
             </tr>
             @foreach (var item in Model)
@@ -40,11 +37,8 @@
                 <tr>
                     <td>@Html.ActionLink(item.LastName, "EditMember", new {item.MemberId})</td>
                     <td class="text-right">@item.FirstName</td>
-                    <td class="text-right">@item.Email</td>
-                    <td class="text-right">@item.Phone</td>
                     <td class="text-right">@item.MemberOf</td>
                     <td class="text-right">@item.HouseholdName</td>
-                    <td class="text-right">@string.Format("{0:MM/dd/yyyy}", item.DateOfBirth)</td>
                     <td class="text-center">
                         @using (Html.BeginForm("Delete", "Membership"))
                         {

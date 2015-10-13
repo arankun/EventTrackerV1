@@ -17,31 +17,23 @@
                 @Html.ActionLink("Last Name", "EditHousehold", new { householdId = ViewBag.HouseholdId, houseHoldLeaderMemberId =ViewBag.HouseHoldLeaderMemberId, sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
             </th>
             <th class="text-right">Firstname</th>
-            <th class="text-right">Email</th>
-            <th class="text-right">Phone</th>
             <th class="text-right">MemberOf</th>
-            <th class="text-right">HH</th>
-            <th class="text-right">DOB</th>
             <th>
-                @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-plus'></span>", "Add", "AddMemberToHouseHold", "Membership", routeValues: new { houseHoldId = ViewBag.HouseHoldId, houseHoldLeaderMemberId=ViewBag.HouseHoldLeaderMemberId }, htmlAttributes: new { data_modal = "", @class = "btn btn-primary pull-right" })
+                @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-plus'></span>", "Add", "AddMemberToHouseHold", "Household", routeValues: new { houseHoldId = ViewBag.HouseHoldId, houseHoldLeaderMemberId=ViewBag.HouseHoldLeaderMemberId }, htmlAttributes: new { data_modal = "", @class = "btn btn-primary pull-right" })
             </th>
         </tr>
         @foreach (var item in Model) {
             <tr>
-                <td>@Html.ActionLink(item.LastName, "EditMember", new { item.MemberId })</td>
+                <td>@Html.ActionLink(item.LastName, "EditMember", new { controller="Membership", item.MemberId })</td>
                 <td class="text-right">@item.FirstName</td>
-                <td class="text-right">@item.Email</td>
-                <td class="text-right">@item.Phone</td>
                 <td class="text-right">@item.MemberOf</td>
-                <td class="text-right">@item.HouseholdName</td>
-                <td class="text-right">@string.Format("{0:MM/dd/yyyy}", item.DateOfBirth)</td>
                 <td class="text-center">
-                    @using (Html.BeginForm("Delete", "Membership"))
+                    @using (Html.BeginForm("RemoveMemberFromHousehold", "Household", new {memberId = item.MemberId}))
                     {
                         @Html.Hidden("MemberId", item.MemberId)
                         <input type="submit"
                                class="btn btn-default btn-xs"
-                               value="Delete"/>
+                               value="Remove"/>
                     }
                 </td>
             </tr>
