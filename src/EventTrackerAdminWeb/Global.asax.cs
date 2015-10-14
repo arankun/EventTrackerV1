@@ -2,10 +2,13 @@
 
 using System;
 using System.Web;
+using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using System.Web.Security;
 using EventTracker.BusinessModel.Authentication;
+using EventTracker.BusinessModel.Membership;
+using EventTrackerAdminWeb.ModelBinders;
 using Newtonsoft.Json;
 
 #endregion
@@ -19,6 +22,8 @@ namespace EventTrackerAdminWeb
 
             //AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
+
+           // System.Web.Mvc.ModelBinders.Binders.Add(typeof(Member), new MemberModelBinder());
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
         }

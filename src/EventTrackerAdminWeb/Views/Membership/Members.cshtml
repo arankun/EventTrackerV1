@@ -37,7 +37,7 @@
                 <tr>
                     <td>@Html.ActionLink(item.LastName, "EditMember", new {item.MemberId})</td>
                     <td class="text-right">@item.FirstName</td>
-                    @if (item.MemberOf == "KFC" || item.MemberOf == "YFC") {
+                    @if (item.MemberOf == "KFC" || item.MemberOf == "YFC" || item.MemberOf == "SFC") {
                         <td>@Html.ActionLink(item.MemberOf, "MembershipHistory", new { memberId = item.MemberId, memberOf = item.MemberOf })</td>
                     }
                     else {

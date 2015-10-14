@@ -141,6 +141,51 @@ namespace EventTracker.BusinessServices.Membership
             return null;
         }
 
+        public void UpdateMemberOf(Member existingMember)
+        {
+            var success = false;
+            if (existingMember != null) {
+                using (var scope = new TransactionScope()) {
+                    var dbMember = _unitOfWork.MemberRepository.GetByID(existingMember.MemberId);
+                    if (dbMember != null) {
+                        var oldMemberOf = dbMember.MemberOf;
+
+                        dbMember.MemberOf = existingMember.MemberOf;
+                        _unitOfWork.MemberRepository.Update(dbMember);
+                        _unitOfWork.Save();
+
+                        var dbMemberHistory =
+                            _unitOfWork.MemberMembershipRepository.Get(
+                                m => m.MemberId == existingMember.MemberId && m.MemberOf == oldMemberOf);
+                        if (dbMemberHistory != null)
+                        {
+                            dbMemberHistory.EndDate = DateTime.Now.Date;
+                            _unitOfWork.MemberMembershipRepository.Update(dbMemberHistory);
+                            _unitOfWork.Save();
+                        }
+
+                        var dbMemberNewLog = _unitOfWork.MemberMembershipRepository.Get(m => m.MemberId == existingMember.MemberId && m.MemberOf == existingMember.MemberOf);
+                        if (dbMemberNewLog == null) {
+                            var newMemberHistory = new DataModel.Generated.MemberMembership
+                            {
+                                MemberId = existingMember.MemberId,
+                                StartDate = DateTime.Now.Date,
+                                MemberOf = existingMember.MemberOf
+                            };
+                            _unitOfWork.MemberMembershipRepository.Insert(newMemberHistory);
+                            _unitOfWork.Save();
+                        }
+
+                        //TODO: Insert new member history
+                        //TODO: Add record in history table
+                        scope.Complete();
+                        success = true;
+                    }
+                }
+            }
+            //return success;
+        }
+
         public int AddSpouseOfMember(int spouseMemberId, NewMember newMember)
         {
             using (var scope = new TransactionScope())

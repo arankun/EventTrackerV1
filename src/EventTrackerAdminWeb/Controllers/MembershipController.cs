@@ -132,12 +132,25 @@ namespace EventTrackerAdminWeb.Controllers
             }, "Value", "Text", memberOf);
 
             var mHistoryViewModel = new MembershipHistoryViewModel {
+                MemberId = memberid,
                 MemberOf = memberOf,
                 MembershipHistory = mHistory,
                 MembershipOptions = membershipOptions
             };
-
+            //TempData["heading"] = 
             return View(mHistoryViewModel);
+        }
+
+        [HttpPost]
+        public RedirectToRouteResult UpdateMembership(MembershipHistoryViewModel viewModel, string memberOfOldValue)
+        {
+            if (viewModel.MemberOf != memberOfOldValue)
+            {
+                //existingMember.MemberOf = memberof;
+                var member = new Member() {MemberId = viewModel.MemberId, MemberOf = viewModel.MemberOf};
+                _services.UpdateMemberOf(member);
+            }
+            return RedirectToAction("Members");
         }
     }
 }

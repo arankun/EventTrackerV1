@@ -7,8 +7,9 @@ using System.Web.Mvc;
 
 namespace EventTracker.BusinessModel.Membership {
     public class MembershipHistoryViewModel {
-        public string MemberOf { get; set; }
         public IEnumerable<MembershipHistory> MembershipHistory { get; set; }
         public SelectList MembershipOptions { get; set; }
+        public int MemberId { get; set; }
+        public string MemberOf { get; set; }
     }
 }
