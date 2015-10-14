@@ -116,10 +116,28 @@ namespace EventTrackerAdminWeb.Controllers
 
         public ActionResult Create()
         {
-            return View("Edit", new Member());
+            return View("EditMember", new Member());
         }
 
 
+        public ActionResult MembershipHistory(int memberid, string memberOf)
+        {
+            var mHistory = _services.GetMembershipHistory(memberid);
+            //TODO: logic to determine available memberships
+            var membershipOptions = new SelectList(new List<SelectListItem>
+            {
+                new SelectListItem { Text = "KFC", Value = "KFC"},
+                new SelectListItem { Text = "YFC", Value = "YFC"},
+                new SelectListItem { Text = "SFC", Value = "SFC"},
+            }, "Value", "Text", memberOf);
 
+            var mHistoryViewModel = new MembershipHistoryViewModel {
+                MemberOf = memberOf,
+                MembershipHistory = mHistory,
+                MembershipOptions = membershipOptions
+            };
+
+            return View(mHistoryViewModel);
+        }
     }
 }

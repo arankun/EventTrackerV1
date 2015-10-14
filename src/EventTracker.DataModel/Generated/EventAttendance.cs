@@ -24,7 +24,7 @@ namespace EventTracker.DataModel.Generated
         public Nullable<System.DateTime> RegisteredDate { get; set; }
     
         public virtual Event Event { get; set; }
-        public virtual Member Member { get; set; }
         public virtual User User { get; set; }
+        public virtual Member Member { get; set; }
     }
 }

@@ -89,19 +89,16 @@ namespace EventTracker.BusinessServices.Membership
                     orderByFunc = item => item.LastName;
 
                 pagedRecord.Content = (from m in context.Members
-                    join mmTemp in context.MemberMemberships on m.MemberId equals mmTemp.MemberId into tempJoin
-                    from mm in tempJoin.DefaultIfEmpty()
                     join hhmTemp in context.HouseHoldMembers on m.MemberId equals hhmTemp.MemberId into hhmTempJoin
                     from hhm in hhmTempJoin.DefaultIfEmpty()
                     join hhTemp in context.HouseHolds on hhm.HouseHoldId equals hhTemp.HouseHoldId into hhTempJoin
                     from hh in hhTempJoin.DefaultIfEmpty()
-                    where mm.EndDate == null 
                     select new Member
                     {
                         MemberId = m.MemberId,
                         LastName = m.LastName,
                         FirstName = m.FirstName,
-                        MemberOf = mm.MemberOf,
+                        MemberOf = m.MemberOf,
                         Email = m.Email,
                         Phone = m.Phone,
                         DateOfBirth = m.DOB.Value,
@@ -114,13 +111,10 @@ namespace EventTracker.BusinessServices.Membership
                     .ToList();
 
                 pagedRecord.TotalRecords = (from m in context.Members
-                    join mmTemp in context.MemberMemberships on m.MemberId equals mmTemp.MemberId into tempJoin
-                    from mm in tempJoin.DefaultIfEmpty()
                     join hhmTemp in context.HouseHoldMembers on m.MemberId equals hhmTemp.MemberId into hhmTempJoin
                     from hhm in hhmTempJoin.DefaultIfEmpty()
                     join hhTemp in context.HouseHolds on hhm.HouseHoldId equals hhTemp.HouseHoldId into hhTempJoin
                     from hh in hhTempJoin.DefaultIfEmpty()
-                    where mm.EndDate == null
                     select m).Count();
 
                 pagedRecord.CurrentPage = param.PageNumber;
@@ -130,67 +124,22 @@ namespace EventTracker.BusinessServices.Membership
             }
         }
 
-        //public IPagedList<HouseHold> GetHouseHolds(HouseHoldCriteria crit, PagingInfo paging)
-        //{
-        //    using (var context = _unitOfWork.DbContext)
-        //    {
-        //        var houseHolds = (from hh in context.HouseHolds
-        //                          join m in context.Members on hh.HouseHoldLeaderMemberId equals m.MemberId
-        //                          where (!crit.HouseHoldId.HasValue || (hh.HouseHoldId == crit.HouseHoldId))
-        //                                && (string.IsNullOrEmpty(crit.Area) || (!string.IsNullOrEmpty(crit.Area) && hh.Area == crit.Area))
-        //                          orderby hh.Name
-        //                          select new HouseHold {
-        //                              HouseHoldId = hh.HouseHoldId,
-        //                              Name = hh.Name,
-        //                              Area = hh.Area,
-        //                              State = hh.State,
-        //                              HouseHoldLeader = m.FirstName + " "  + m.LastName
-        //                          });//.ToPagedList(paging.CurrentPage, paging.ItemsPerPage);
+        public IEnumerable<MembershipHistory> GetMembershipHistory(int memberid)
+        {
+            using (var context = _unitOfWork.DbContext) {
+                var members = (from m in context.MemberMemberships
+                               where m.MemberId == memberid
+                               select new MembershipHistory {
+                                   MembershipHistoryId = m.MemberMembershipId,
+                                   StartDate = m.StartDate,
+                                   EndDate = m.EndDate,
+                                   MemberOf = m.MemberOf
+                               }).ToList();
 
-        //        var pagedList = houseHolds.ToPagedList(paging.CurrentPage, paging.ItemsPerPage);
-        //        return pagedList;
-        //    }
-        //}
-
-        //public IEnumerable<Member> GetHouseHoldMemers(int houseHoldId)
-        //{
-        //    using (var context = _unitOfWork.DbContext) {
-        //        var houseHolds = (from hhm in context.HouseHoldMembers
-        //                          join m in context.Members on hhm.MemberId equals m.MemberId
-        //                          where (hhm.HouseHoldId == houseHoldId && hhm.EndDate == null)
-        //                          orderby m.LastName, m.IsHeadOfFamily descending , m.DOB
-        //                          select new Member {
-        //                              MemberId = m.MemberId,
-        //                              LastName = m.LastName,
-        //                              FirstName = m.FirstName,
-        //                              DateOfBirth = m.DOB.Value
-        //                          });//.ToPagedList(paging.CurrentPage, paging.ItemsPerPage);
-
-        //        return houseHolds.ToList();
-        //    }
-        //}
-
-        //public IPagedList<Member> GetHouseHoldMemers(int houseHoldId, int pageNumber, int pageSize)
-        //{
-        //    using (var context = _unitOfWork.DbContext) {
-        //        var houseHolds = (from hhm in context.HouseHoldMembers
-        //                          join m in context.Members on hhm.MemberId equals m.MemberId
-        //                          where (hhm.HouseHoldId == houseHoldId && hhm.EndDate == null)
-        //                          orderby m.LastName, m.IsHeadOfFamily descending, m.DOB
-        //                          select new Member {
-        //                              MemberId = m.MemberId,
-        //                              LastName = m.LastName,
-        //                              FirstName = m.FirstName,
-        //                              DateOfBirth = m.DOB.Value
-        //                          }).ToPagedList(pageNumber, pageSize);
-
-        //        return houseHolds;
-        //    }
-        //}
-
-
-
-
+                return members;
+            }
+            return null;
+        }
 
         public int AddSpouseOfMember(int spouseMemberId, NewMember newMember)
         {
@@ -231,7 +180,8 @@ namespace EventTracker.BusinessServices.Membership
                     DOB = newMember.DateOfBirth,
                     Gender = newMember.Gender.ToString(),
                     Phone = newMember.Phone,
-                    Email = newMember.Email
+                    Email = newMember.Email,
+                    MemberOf = "KFC"
                 };
                 _unitOfWork.MemberRepository.Insert(dbMember);
                 _unitOfWork.Save();
@@ -252,21 +202,19 @@ namespace EventTracker.BusinessServices.Membership
         public Member GetMember(int memberId) {
             using (var context = _unitOfWork.DbContext) {
                 var member = (from m in context.Members
-                              join mmTemp in context.MemberMemberships on m.MemberId equals mmTemp.MemberId into tempJoin
-                                 from mm in tempJoin.DefaultIfEmpty()
                                  join hhmTemp in context.HouseHoldMembers on m.MemberId equals hhmTemp.MemberId into hhmTempJoin
                                  from hhm in hhmTempJoin.DefaultIfEmpty()
                                  join hhTemp in context.HouseHolds on hhm.HouseHoldId equals hhTemp.HouseHoldId into hhTempJoin
                                  from hh in hhTempJoin.DefaultIfEmpty()
                               join mSpouseTemp in context.Members on m.SpouseMemberId equals mSpouseTemp.MemberId into tempSpouseJoin
                               from mSpouse in tempSpouseJoin.DefaultIfEmpty()
-                              where mm.EndDate == null && m.MemberId == memberId
+                              where m.MemberId == memberId
                               select new Member {
                                      MemberId = m.MemberId,
                                      LastName = m.LastName,
                                      FirstName = m.FirstName,
                                      Gender = m.Gender,
-                                     MemberOf = mm.MemberOf,
+                                     MemberOf = m.MemberOf,
                                      Email = m.Email,
                                      Phone = m.Phone,
                                      DateOfBirth = m.DOB.Value,
@@ -285,20 +233,17 @@ namespace EventTracker.BusinessServices.Membership
             using (var context = _unitOfWork.DbContext)
             {
                 var pagedList = (from m in context.Members
-                    join mmTemp in context.MemberMemberships on m.MemberId equals mmTemp.MemberId into tempJoin
-                    from mm in tempJoin.DefaultIfEmpty()
                     join hhmTemp in context.HouseHoldMembers on m.MemberId equals hhmTemp.MemberId into hhmTempJoin
                     from hhm in hhmTempJoin.DefaultIfEmpty()
                     join hhTemp in context.HouseHolds on hhm.HouseHoldId equals hhTemp.HouseHoldId into hhTempJoin
                     from hh in hhTempJoin.DefaultIfEmpty()
-                               where mm.EndDate == null
                     orderby m.LastName, m.SpouseMemberId descending, m.FatherMemberId, m.MotherMemberId
                     select new Member
                     {
                         MemberId = m.MemberId,
                         LastName = m.LastName,
                         FirstName = m.FirstName,
-                        MemberOf = mm.MemberOf,
+                        MemberOf = m.MemberOf.Trim(),
                         Email = m.Email,
                         Phone = m.Phone,
                         DateOfBirth = m.DOB.Value,
@@ -313,8 +258,6 @@ namespace EventTracker.BusinessServices.Membership
         public IEnumerable<Member> GetMembers(int pageIndex, int pageSize, out int numberOfPages) {
             using (var context = _unitOfWork.DbContext) {
                 var members = (from m in context.Members
-                               join mmTemp in context.MemberMemberships on m.MemberId equals mmTemp.MemberId into tempJoin
-                               from mm in tempJoin.DefaultIfEmpty()
                                join hhmTemp in context.HouseHoldMembers on m.MemberId equals hhmTemp.HouseHoldMemberId into hhmTempJoin
                                from hhm in hhmTempJoin.DefaultIfEmpty()
                                join hh in context.HouseHolds on hhm.MemberId equals hh.HouseHoldLeaderMemberId
@@ -323,7 +266,7 @@ namespace EventTracker.BusinessServices.Membership
                                    MemberId = m.MemberId,
                                    LastName = m.LastName,
                                    FirstName = m.FirstName,
-                                   MemberOf = mm.MemberOf,
+                                   MemberOf = m.MemberOf,
                                    Email = m.Email,
                                    Phone = m.Phone,
                                    DateOfBirth = m.DOB.Value,

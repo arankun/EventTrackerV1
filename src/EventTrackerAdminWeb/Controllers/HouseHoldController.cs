@@ -117,5 +117,9 @@ namespace EventTrackerAdminWeb.Controllers
             return PartialView("_AddNewHouseholdMember", newhhMember);
         }
 
+        public ActionResult RemoveMemberFromHousehold(int memberid)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -83,6 +83,8 @@
     <Compile Include="EventAttendanceSummary.cs" />
     <Compile Include="Membership\HouseHold.cs" />
     <Compile Include="Membership\HouseHoldDetailsViewModel.cs" />
+    <Compile Include="Membership\MembershipHistory.cs" />
+    <Compile Include="Membership\MembershipHistoryViewModel.cs" />
     <Compile Include="Membership\NewHouseholdMember.cs" />
     <Compile Include="Membership\NewMember.cs" />
     <Compile Include="Menus\MenuItem.cs" />

@@ -400,6 +400,7 @@
     <None Include="Views\HouseHold\HouseHolds.cshtml" />
     <Content Include="Views\Membership\Members.cshtml" />
     <Content Include="Views\HouseHold\_AddNewHouseholdMember.cshtml" />
+    <Content Include="Views\Membership\MembershipHistory.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

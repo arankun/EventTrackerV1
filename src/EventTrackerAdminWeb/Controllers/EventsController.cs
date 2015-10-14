@@ -1,5 +1,6 @@
 ﻿#region directives
 
+using System;
 using System.Web.Mvc;
 using EventTracker.BusinessModel;
 using EventTracker.BusinessServices;
@@ -68,7 +69,8 @@ namespace EventTrackerAdminWeb.Controllers
 
         public ActionResult Create()
         {
-            return View("Edit", new Event());
+            ViewBag.Title = "New Event";
+            return View("Edit", new Event() { EventDate = DateTime.Now.Date});
         }
     }
 }

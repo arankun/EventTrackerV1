@@ -24,14 +24,15 @@ namespace EventTracker.BusinessServices.Membership
         void UpdateMember(Member aMember);
         Common.PagedList GetMembers(SearchParameter searchParam);
 
-        
+
 
         //HouseHold GetHouseHoldViewModel(int houseHoldId);
         //IPagedList<HouseHold> GetHouseHolds(HouseHoldCriteria houseHoldCriteria, PagingInfo pagingInfo);
         //IEnumerable<Member> GetHouseHoldMemers(int houseHoldId);
-        
+
         //IPagedList<Member> GetHouseHoldMemers(int houseHoldId, int pageNumber, int pageSize);
-        
-        
+
+
+        IEnumerable<MembershipHistory> GetMembershipHistory(int memberid);
     }
 }
