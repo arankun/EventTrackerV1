@@ -1,5 +1,6 @@
 ﻿#region directives
 
+using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 
 #endregion
@@ -29,5 +30,13 @@ namespace EventTracker.BusinessModel.Membership
 
         public string HouseholdName { get; set; }
 
+        [HiddenInput(DisplayValue = false)]
+        public int? FatherMemberId { get; set; }
+
+        [HiddenInput(DisplayValue = false)]
+        public int? MotherMemberId { get; set; }
+
+        [Display(Name = "Is Head of Family", Order = 7)]
+        public string IsHeadOfFamily { get; set; }
     }
 }

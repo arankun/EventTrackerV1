@@ -24,7 +24,7 @@ namespace EventTrackerAdminWeb
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "membership", action = "households", id = UrlParameter.Optional }
+                defaults: new { controller = "membership", action = "members", id = UrlParameter.Optional }
             );
         }
     }

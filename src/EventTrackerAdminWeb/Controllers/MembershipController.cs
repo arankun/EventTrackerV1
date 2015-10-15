@@ -126,9 +126,13 @@ namespace EventTrackerAdminWeb.Controllers
             //TODO: logic to determine available memberships
             var membershipOptions = new SelectList(new List<SelectListItem>
             {
+                new SelectListItem { Text = "NONE", Value = "NONE"},
                 new SelectListItem { Text = "KFC", Value = "KFC"},
                 new SelectListItem { Text = "YFC", Value = "YFC"},
                 new SelectListItem { Text = "SFC", Value = "SFC"},
+                new SelectListItem { Text = "CFC", Value = "CFC"},
+                new SelectListItem { Text = "HOLD", Value = "HOLD"},
+                new SelectListItem { Text = "SOLD", Value = "SOLD"},
             }, "Value", "Text", memberOf);
 
             var mHistoryViewModel = new MembershipHistoryViewModel {
@@ -151,6 +155,54 @@ namespace EventTrackerAdminWeb.Controllers
                 _services.UpdateMemberOf(member);
             }
             return RedirectToAction("Members");
+        }
+
+        public ActionResult AddSpouse(int spousememberid, string spouseName, string gender)
+        {
+            ViewBag.PanelHeading = string.Format("Adding Spouse Of {0}", spouseName);
+            var oppositeGender = (gender.ToLower().Equals("m")) ? "F" : "M";
+            return View("EditMember", new Member() { SpouseMemberId = spousememberid , SpouseName = spouseName, Gender = oppositeGender });
+        }
+
+        public ActionResult AddChild(int parentmemberid)
+        {
+            var parentMember = _services.GetMember(parentmemberid);
+            int? fatherId = null;
+            int? motherId = null;
+            Member father = null;
+            Member mother = null;
+            string parentNames;
+            //TODO: Refactor
+            if (parentMember.Gender == "M")
+            {
+                fatherId = parentMember.MemberId;
+                //father = _services.GetMember(fatherId.Value);
+                if (parentMember.SpouseMemberId.HasValue)
+                {
+                    motherId = parentMember.SpouseMemberId.Value;
+                    mother = _services.GetMember(motherId.Value);
+                    parentNames = $"{parentMember.FirstName}/{mother.FirstName} {parentMember.LastName}";
+                }
+                else
+                {
+                    parentNames = $"{parentMember.FirstName} {parentMember.LastName}";
+                }
+            }
+            else
+            {
+                motherId = parentMember.MemberId;
+                if (parentMember.SpouseMemberId.HasValue) {
+                    fatherId = parentMember.SpouseMemberId.Value;
+                    father = _services.GetMember(fatherId.Value);
+                    parentNames = $"{father.FirstName}/{parentMember.FirstName} {father.LastName}";
+                }
+                else {
+                    parentNames = $"{parentMember.FirstName} {parentMember.LastName}";
+                }
+            }
+            
+            ViewBag.PanelHeading = string.Format("Adding Child Of {0}", parentNames);
+            return View("EditMember", new Member() { FatherMemberId = fatherId, MotherMemberId = motherId  });
         }
     }
 }

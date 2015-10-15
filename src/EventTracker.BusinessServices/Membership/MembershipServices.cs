@@ -34,6 +34,7 @@ namespace EventTracker.BusinessServices.Membership
 
         public int AddMember(NewMember newMember)
         {
+            var gender = string.IsNullOrEmpty(newMember.Gender) ? (char?)null : newMember.Gender[0];
             using (var scope = new TransactionScope())
             {
                 var dbMember = new DataModel.Generated.Member()
@@ -41,35 +42,53 @@ namespace EventTracker.BusinessServices.Membership
                     FirstName = newMember.FirstName,
                     LastName = newMember.LastName,
                     DOB = newMember.DateOfBirth,
-                    Gender = newMember.Gender.ToString(),
+                    Gender = gender.ToString(),
                     Phone = newMember.Phone,
-                    Email = newMember.Email
+                    Email = newMember.Email,
+                    SpouseMemberId = newMember.SpouseMemberId,
+                    FatherMemberId = newMember.FatherMemberId,
+                    MotherMemberId = newMember.MotherMemberId,
+                    IsHeadOfFamily = newMember.IsHeadOfFamily
                 };
                 _unitOfWork.MemberRepository.Insert(dbMember);
                 _unitOfWork.Save();
+
+                if (newMember.SpouseMemberId.HasValue)
+                {
+                    var spouseMember =
+                        _unitOfWork.MemberRepository.GetFirst(m => m.MemberId == newMember.SpouseMemberId.Value);
+                    spouseMember.SpouseMemberId = dbMember.MemberId;
+                    _unitOfWork.MemberRepository.Update(spouseMember);
+                    _unitOfWork.Save();
+                }
                 scope.Complete();
                 return dbMember.MemberId;
             }
         }
 
-        public void UpdateMember(Member aMember) {
+        public void UpdateMember(Member aMember)
+        {
+            var gender = string.IsNullOrEmpty(aMember.Gender) ? (char?) null : aMember.Gender[0];
             using (var scope = new TransactionScope()) {
                 var dbMember = new DataModel.Generated.Member() {
+                    MemberId = aMember.MemberId,
                     FirstName = aMember.FirstName,
                     LastName = aMember.LastName,
                     DOB = aMember.DateOfBirth,
-                    Gender = aMember.Gender.ToString(),
+                    Gender = gender.ToString(), 
                     Phone = aMember.Phone,
-                    Email = aMember.Email
+                    Email = aMember.Email,
+                    SpouseMemberId = aMember.SpouseMemberId,
+                    IsHeadOfFamily = aMember.IsHeadOfFamily
                 };
+            //string.IsNullOrEmpty(MyString) ? (char?)null : MyString[0]
+            //AT: We need to do manual mapping above. We can use code below but need to add the Ignore fields that we don't want updated
+            //            Mapper.CreateMap<Member, DataModel.Generated.Member > ()
+            //.ForMember(dest => dest.DOB,
+            //    opts => opts.MapFrom(src => src.DateOfBirth));
+            //            var dbMember = Mapper.Map<Member, DataModel.Generated.Member>(aMember);
 
-                //AT: We need to do manual mapping above. We can use code below but need to add the Ignore fields that we don't want updated
-                //            Mapper.CreateMap<Member, DataModel.Generated.Member > ()
-                //.ForMember(dest => dest.DOB,
-                //    opts => opts.MapFrom(src => src.DateOfBirth));
-                //            var dbMember = Mapper.Map<Member, DataModel.Generated.Member>(aMember);
-
-                _unitOfWork.MemberRepository.Update(dbMember);
+            _unitOfWork.MemberRepository.Update(dbMember);
                 _unitOfWork.Save();
                 scope.Complete();
             }
@@ -87,7 +106,7 @@ namespace EventTracker.BusinessServices.Membership
                     orderByFunc = item => item.FirstName;
                 else 
                     orderByFunc = item => item.LastName;
-
+                //aa == null ? false : aa.Onlin
                 pagedRecord.Content = (from m in context.Members
                     join hhmTemp in context.HouseHoldMembers on m.MemberId equals hhmTemp.MemberId into hhmTempJoin
                     from hhm in hhmTempJoin.DefaultIfEmpty()
@@ -98,7 +117,7 @@ namespace EventTracker.BusinessServices.Membership
                         MemberId = m.MemberId,
                         LastName = m.LastName,
                         FirstName = m.FirstName,
-                        MemberOf = m.MemberOf,
+                        MemberOf = m.MemberOf ?? "NONE",
                         Email = m.Email,
                         Phone = m.Phone,
                         DateOfBirth = m.DOB.Value,
@@ -244,37 +263,39 @@ namespace EventTracker.BusinessServices.Membership
             }
         }
         //((DisplayType)oRoleRightsPage.DisplayType).HasFlag(displayType)
-        public Member GetMember(int memberId) {
-            using (var context = _unitOfWork.DbContext) {
-                var member = (from m in context.Members
-                                 join hhmTemp in context.HouseHoldMembers on m.MemberId equals hhmTemp.MemberId into hhmTempJoin
-                                 from hhm in hhmTempJoin.DefaultIfEmpty()
-                                 join hhTemp in context.HouseHolds on hhm.HouseHoldId equals hhTemp.HouseHoldId into hhTempJoin
-                                 from hh in hhTempJoin.DefaultIfEmpty()
-                              join mSpouseTemp in context.Members on m.SpouseMemberId equals mSpouseTemp.MemberId into tempSpouseJoin
-                              from mSpouse in tempSpouseJoin.DefaultIfEmpty()
-                              where m.MemberId == memberId
-                              select new Member {
-                                     MemberId = m.MemberId,
-                                     LastName = m.LastName,
-                                     FirstName = m.FirstName,
-                                     Gender = m.Gender,
-                                     MemberOf = m.MemberOf,
-                                     Email = m.Email,
-                                     Phone = m.Phone,
-                                     DateOfBirth = m.DOB.Value,
-                                     HouseholdName = hh.Name,
-                                     SpouseMemberId = m.SpouseMemberId,
-                                     SpouseName = mSpouse.FirstName,
-                                     HouseHoldId = hh.HouseHoldId
-                                 }).FirstOrDefault();
-                return member;
-            }
+        public Member GetMember(int memberId)
+        {
+            var context = _unitOfWork.DbContext;
+            var member = (from m in context.Members
+                          join hhmTemp in context.HouseHoldMembers on m.MemberId equals hhmTemp.MemberId into hhmTempJoin
+                          from hhm in hhmTempJoin.DefaultIfEmpty()
+                          join hhTemp in context.HouseHolds on hhm.HouseHoldId equals hhTemp.HouseHoldId into hhTempJoin
+                          from hh in hhTempJoin.DefaultIfEmpty()
+                          join mSpouseTemp in context.Members on m.SpouseMemberId equals mSpouseTemp.MemberId into tempSpouseJoin
+                          from mSpouse in tempSpouseJoin.DefaultIfEmpty()
+                          where m.MemberId == memberId
+                          select new Member {
+                              MemberId = m.MemberId,
+                              LastName = m.LastName,
+                              FirstName = m.FirstName,
+                              Gender = m.Gender,
+                              MemberOf = m.MemberOf == null ? "NONE" : m.MemberOf.Trim(),
+                              Email = m.Email,
+                              Phone = m.Phone,
+                              DateOfBirth = m.DOB.Value,
+                              HouseholdName = hh.Name,
+                              SpouseMemberId = m.SpouseMemberId,
+                              SpouseName = mSpouse.FirstName,
+                              HouseHoldId = hh.HouseHoldId,
+                              IsHeadOfFamily = m.IsHeadOfFamily
+                          }).FirstOrDefault();
+            return member;
             return null;
         }
 
         public IPagedList<Member> GetMembers(int pageIndex, int pageSize)
         {
+            //aa == null ? false : aa.Onlin
             using (var context = _unitOfWork.DbContext)
             {
                 var pagedList = (from m in context.Members
@@ -288,7 +309,7 @@ namespace EventTracker.BusinessServices.Membership
                         MemberId = m.MemberId,
                         LastName = m.LastName,
                         FirstName = m.FirstName,
-                        MemberOf = m.MemberOf.Trim(),
+                        MemberOf = m.MemberOf==null? "NONE" :m.MemberOf.Trim(),
                         Email = m.Email,
                         Phone = m.Phone,
                         DateOfBirth = m.DOB.Value,
