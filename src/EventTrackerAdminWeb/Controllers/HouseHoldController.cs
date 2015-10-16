@@ -73,7 +73,8 @@ namespace EventTrackerAdminWeb.Controllers
             ViewBag.HouseHoldId = houseHoldId;
             //var list = _services.GetHeadOfFamilyMembers(houseHoldId, houseHoldLeaderMemberId).ToList();
             var hhViewModel = _services.GetHouseHoldViewModel(houseHoldId);
-            var list = _services.GetHeadOfFamilyMembers();
+            //var list = _services.GetHeadOfFamilyMembers();
+            var list = _services.GetHeadOfFamilyMembers(houseHoldId, hhViewModel.HouseHoldLeaderMemberId).ToList();
             hhViewModel.HeadOfFamilyMembersList = new SelectList(list, "MemberId", "FullName");
             ViewBag.HouseHoldLeaderMemberId = hhViewModel.HouseHoldLeaderMemberId;
             return View(hhViewModel);

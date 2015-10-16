@@ -23,51 +23,53 @@
             *@
             @if (Model.HouseHoldId <= 0) {
                 <div class="form-group">
-                        <label>Household Leader</label>
-                        @Html.DropDownList("HouseHoldLeaderMemberId", Model.HeadOfFamilyMembersList, "-- Select HH Leader --", new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.HouseHoldLeaderMemberId, "", new { @class = "text-danger" })
+                    <label>Household Leader</label>
+                    @Html.DropDownList("HouseHoldLeaderMemberId", Model.HeadOfFamilyMembersList, "-- Select HH Leader --", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.HouseHoldLeaderMemberId, "", new { @class = "text-danger" })
                 </div>
-            }
-           else {
+            }       
+            else {
                 <div class="form-group">
                     <label>Household Leader</label>
-                    @Html.DropDownList("HouseHoldLeaderMemberId", Model.HeadOfFamilyMembersList, "-- Select HH Leader --", new { @disabled = "disabled" })
-                    @Html.ValidationMessageFor(model => model.HouseHoldLeaderMemberId, "", new { @class = "text-danger" })
+                    @*
+                        @Html.DropDownList("HouseHoldLeaderMemberId", Model.HeadOfFamilyMembersList, "-- Select HH Leader --", new { @disabled = "disabled" })
+                    *@
+                    @Html.Label(Model.HouseHoldLeader)
                 </div>
             }
             <div class="form-group">
-            @*
-            @Html.LabelFor(model => model.Name, htmlAttributes: new {@class = "control-label col-md-2"})
-            *@
+                @*
+                    @Html.LabelFor(model => model.Name, htmlAttributes: new {@class = "control-label col-md-2"})
+                *@
                 @Html.LabelFor(model => model.Name)
-                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
             </div>
 
             <div class="form-group">
                 @Html.LabelFor(model => model.Area)
-                    @Html.EditorFor(model => model.Area, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Area, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.Area, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Area, "", new { @class = "text-danger" })
             </div>
 
 
         </div>
         <div class="panel-footer">
             <input type="submit" value="Save" class="btn btn-primary" />
-            @Html.ActionLink("Cancel and return to List", "Households", null, new {@class = "btn btn-default"})
+            @Html.ActionLink("Cancel and return to List", "Households", null, new { @class = "btn btn-default" })
         </div>
     }
 
-        @if (Model.HouseHoldId > 0) {
-            <div class="row">
-                <div class="form-group">
-                    <div class="col-md-10" id="replacetarget">
-                        @{ Html.RenderAction("HouseholdMembers", "HouseHold", new { householdId = Model.HouseHoldId, houseHoldLeaderMemberId = Model.HouseHoldLeaderMemberId }); }
-                    </div>
+    @if (Model.HouseHoldId > 0) {
+        <div class="row">
+            <div class="form-group">
+                <div class="col-md-10" id="replacetarget">
+                    @{ Html.RenderAction("HouseholdMembers", "HouseHold", new { householdId = Model.HouseHoldId, houseHoldLeaderMemberId = Model.HouseHoldLeaderMemberId }); }
                 </div>
             </div>
-        }
-    
+        </div>
+                        }
+
 </div>
 
 
@@ -79,14 +81,14 @@
         </div>
     </div>
 </div>
-        @**@
+@**@
 
-        <p>
-            @Html.ActionLink("Back to List", "Households")
+    <p>
+        @Html.ActionLink("Back to List", "Households")
 
-        </p>
+    </p>
 
-        @section Scripts {
-            @Scripts.Render("~/bundles/jqueryval")
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
 
-        }
+    }

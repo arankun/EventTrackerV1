@@ -38,7 +38,7 @@
                     <td>@Html.ActionLink(item.LastName, "EditMember", new {item.MemberId})</td>
                     <td class="text-right">@item.FirstName</td>
                     <td>@Html.ActionLink(item.MemberOf, "MembershipHistory", new {memberId = item.MemberId, memberOf = item.MemberOf})</td>
-                    @*
+                @*
     @if (item.MemberOf == "KFC" || item.MemberOf == "YFC" || item.MemberOf == "SFC" || item.MemberOf=="CFC") {
         <td>@Html.ActionLink(item.MemberOf, "MembershipHistory", new { memberId = item.MemberId, memberOf = item.MemberOf })</td>
     }
@@ -46,7 +46,15 @@
         <td class="text-right">@item.MemberOf</td>
     }
                     *@
-                    <td class="text-right">@item.HouseholdName</td>
+
+                    <td>
+                        @if (item.HouseHoldId.HasValue) {
+                            @Html.ActionLink(item.HouseholdName, "EditHousehold", new { controller = "HouseHold", houseHoldId = item.HouseHoldId.Value })
+                        }
+                        else {
+                            @item.HouseholdName
+                        }
+                    </td>
                     <td class="text-center">
                         @using (Html.BeginForm("Delete", "Membership"))
                         {

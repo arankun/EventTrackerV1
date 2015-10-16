@@ -265,7 +265,7 @@ on m.MemberId equals hhm.MemberId into tempJoin
                           && hhmTemp.HouseHoldId != houseHoldId
                           && m.MemberId != houseHoldLeaderMemberId
                           select new Member() { MemberId = m.MemberId, LastName = m.LastName, FirstName = m.FirstName });
-                var list = mm.ToList();
+                var list = mm.Distinct().ToList();
                 return list;
             }
         }

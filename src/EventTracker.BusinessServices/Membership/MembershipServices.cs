@@ -299,11 +299,12 @@ namespace EventTracker.BusinessServices.Membership
             //aa == null ? false : aa.Onlin
             using (var context = _unitOfWork.DbContext)
             {
-                var pagedList = (from m in context.Members
+                var qry = (from m in context.Members
                     join hhmTemp in context.HouseHoldMembers on m.MemberId equals hhmTemp.MemberId into hhmTempJoin
                     from hhm in hhmTempJoin.DefaultIfEmpty()
                     join hhTemp in context.HouseHolds on hhm.HouseHoldId equals hhTemp.HouseHoldId into hhTempJoin
                     from hh in hhTempJoin.DefaultIfEmpty()
+                           where hhm.EndDate == null
                     orderby m.LastName, m.SpouseMemberId descending, m.FatherMemberId, m.MotherMemberId
                     select new Member
                     {
@@ -314,9 +315,11 @@ namespace EventTracker.BusinessServices.Membership
                         Email = m.Email,
                         Phone = m.Phone,
                         DateOfBirth = m.DOB.Value,
-                        HouseholdName = hh.Name
-                    }).ToPagedList(pageIndex, pageSize);
+                        HouseholdName = hh.Name,
+                        HouseHoldId = hh.HouseHoldId
+                    });
 
+                var pagedList = qry.ToPagedList(pageIndex, pageSize);
                 return pagedList;
             }
         }
