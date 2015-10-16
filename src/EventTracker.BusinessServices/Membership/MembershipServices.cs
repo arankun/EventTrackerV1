@@ -69,18 +69,19 @@ namespace EventTracker.BusinessServices.Membership
         public void UpdateMember(Member aMember)
         {
             var gender = string.IsNullOrEmpty(aMember.Gender) ? (char?) null : aMember.Gender[0];
-            using (var scope = new TransactionScope()) {
-                var dbMember = new DataModel.Generated.Member() {
-                    MemberId = aMember.MemberId,
-                    FirstName = aMember.FirstName,
-                    LastName = aMember.LastName,
-                    DOB = aMember.DateOfBirth,
-                    Gender = gender.ToString(), 
-                    Phone = aMember.Phone,
-                    Email = aMember.Email,
-                    SpouseMemberId = aMember.SpouseMemberId,
-                    IsHeadOfFamily = aMember.IsHeadOfFamily
-                };
+            using (var scope = new TransactionScope())
+            {
+                var dbMember = _unitOfWork.MemberRepository.GetByID(aMember.MemberId);
+
+                dbMember.MemberId = aMember.MemberId;
+                dbMember.FirstName = aMember.FirstName;
+                dbMember.LastName = aMember.LastName;
+                dbMember.DOB = aMember.DateOfBirth;
+                dbMember.Gender = gender.ToString();
+                dbMember.Phone = aMember.Phone;
+                dbMember.Email = aMember.Email;
+                    //SpouseMemberId = aMember.SpouseMemberId,
+                dbMember.IsHeadOfFamily = aMember.IsHeadOfFamily;
             //string.IsNullOrEmpty(MyString) ? (char?)null : MyString[0]
             //AT: We need to do manual mapping above. We can use code below but need to add the Ignore fields that we don't want updated
             //            Mapper.CreateMap<Member, DataModel.Generated.Member > ()

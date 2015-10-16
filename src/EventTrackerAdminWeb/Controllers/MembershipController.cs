@@ -127,6 +127,7 @@ namespace EventTrackerAdminWeb.Controllers
             var membershipOptions = new SelectList(new List<SelectListItem>
             {
                 new SelectListItem { Text = "NONE", Value = "NONE"},
+                new SelectListItem { Text = "PRE-K", Value = "PRE-K"},
                 new SelectListItem { Text = "KFC", Value = "KFC"},
                 new SelectListItem { Text = "YFC", Value = "YFC"},
                 new SelectListItem { Text = "SFC", Value = "SFC"},

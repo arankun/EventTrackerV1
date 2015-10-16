@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Transactions;
 using AutoMapper;
 using EventTracker.BusinessModel.Common;
@@ -72,7 +73,9 @@ namespace EventTracker.BusinessServices.Membership
                                       MemberId = m.MemberId,
                                       LastName = m.LastName,
                                       FirstName = m.FirstName,
-                                      DateOfBirth = m.DOB.Value
+                                      DateOfBirth = m.DOB.Value,
+                                      MemberOf = m.MemberOf == null ? "NONE" : m.MemberOf.Trim(),
+                                      IsHeadOfFamily = m.IsHeadOfFamily
                                   }).ToPagedList(pageNumber, pageSize);
 
                 return houseHolds;
@@ -114,7 +117,16 @@ namespace EventTracker.BusinessServices.Membership
                                      FirstName = m.FirstName,
                                      DateOfBirth = m.DOB.Value
                                  });//.ToPagedList(paging.CurrentPage, paging.ItemsPerPage);
-                var vm = new HouseHoldDetailsViewModel() { HouseHold = houseHolds, HouseHoldMembers = hhMembers.ToList() };
+                var vm = new HouseHoldDetailsViewModel()
+                {
+                    HouseHoldId = houseHolds.HouseHoldId,
+                    HouseHoldLeaderMemberId = houseHolds.HouseHoldLeaderMemberId,
+                    Name = houseHolds.Name,
+                    Area = houseHolds.Area,
+                    State = houseHolds.State,
+                    HouseHoldLeader = houseHolds.HouseHoldLeader,
+                    HouseHoldMembers = hhMembers.ToList()
+                };
 
                 return vm;
             }
@@ -134,6 +146,7 @@ namespace EventTracker.BusinessServices.Membership
                     switch (member.MemberOf) {
                         case "KFC":
                         case "YFC":
+                        case "PRE-K":
                             dbHhMember = BuildHouseHoldMember(newhhMember.HouseHoldId, member.MemberId);
                             _unitOfWork.HouseHoldMemberRepository.Insert(dbHhMember);
                             _unitOfWork.Save();
@@ -159,6 +172,61 @@ namespace EventTracker.BusinessServices.Membership
             }
         }
 
+        public void RemoveHouseholdMembersByHeadOfFamilyId(int householdId, int memberid)
+        {
+            var familyMembers = GetFamilyMembersByHeadOfFamilyMemberId(memberid);
+            using (var scope = new TransactionScope()) {
+                foreach (var member in familyMembers)
+                {
+                    var hhMember =
+                        _unitOfWork.HouseHoldMemberRepository.Get(
+                            m => m.MemberId == member.MemberId && m.HouseHoldId == householdId);
+                    if (hhMember != null)
+                    {
+                        hhMember.EndDate = DateTime.Now;
+                        _unitOfWork.HouseHoldMemberRepository.Update(hhMember);
+                        _unitOfWork.Save();
+                    }
+                }
+                scope.Complete();
+            }
+        }
+
+        public bool UpdateHousehold(HouseHold aHousehold)
+        {
+            var success = false;
+            if (aHousehold != null) {
+                using (var scope = new TransactionScope()) {
+                    var hhDbModel = _unitOfWork.HouseHoldRepository.GetByID(aHousehold.HouseHoldId);
+                    if (hhDbModel != null) {
+                        hhDbModel.Name = aHousehold.Name;
+                        hhDbModel.Area = aHousehold.Area;
+                        _unitOfWork.HouseHoldRepository.Update(hhDbModel);
+                        _unitOfWork.Save();
+                        scope.Complete();
+                        success = true;
+                    }
+                }
+            }
+            return success;
+        }
+
+        public int CreateHousehold(HouseHold aHousehold)
+        {
+            using (var scope = new TransactionScope()) {
+                var dbEntity = new DataModel.Generated.HouseHold {
+                    HouseHoldLeaderMemberId = aHousehold.HouseHoldLeaderMemberId,
+                    Name = aHousehold.Name,
+                    Area = aHousehold.Area,
+                    StartDate = DateTime.Now.Date
+                };
+                _unitOfWork.HouseHoldRepository.Insert(dbEntity);
+                _unitOfWork.Save();
+                scope.Complete();
+                return dbEntity.HouseHoldId;
+            }
+        }
+
         private HouseHoldMember BuildHouseHoldMember(int houseHoldId, int memberId) {
             var dbHhMember = new DataModel.Generated.HouseHoldMember {
                 HouseHoldId = houseHoldId,
@@ -168,34 +236,13 @@ namespace EventTracker.BusinessServices.Membership
             return dbHhMember;
         }
         public IEnumerable<Member> GetFamilyMembersByHeadOfFamilyMemberId(int headOfFamilyMemberId) {
-            //using (var context = _unitOfWork.DbContext)
-            //{
-            //    var mm = (from m in context.Members
-            //        where m.MemberId == headOfFamilyMemberId
-            //        select new Member() {MemberId = m.MemberId, LastName = m.LastName, FirstName = m.FirstName, SpouseMemberId = m.SpouseMemberId})
-            //        .Union(from m in context.Members
-            //            where m.SpouseMemberId == headOfFamilyMemberId
-            //            select new Member() {MemberId = m.MemberId, LastName = m.LastName, FirstName = m.FirstName, SpouseMemberId = m.SpouseMemberId })
-            //        .Union(from mC in context.Members
-            //            join mmTemp in context.MemberMemberships on mC.MemberId equals mmTemp.MemberId into tempJoin
-            //            from mmTempJoin in tempJoin.DefaultIfEmpty()
-            //            join mMo in context.Members on mC.MotherMemberId equals mMo.MemberId into tempJoinMo
-            //            from mJoinMo in tempJoin.DefaultIfEmpty()
-            //            join mFa in context.Members on mC.FatherMemberId equals mFa.MemberId into tempJoinFa
-            //            from mJoinFa in tempJoinFa.DefaultIfEmpty()
-            //            where (mC.FatherMemberId == headOfFamilyMemberId || mC.MotherMemberId == headOfFamilyMemberId)
-            //                  && mmTempJoin.EndDate == null
-            //            select new Member() {MemberId = mC.MemberId, LastName = mC.LastName, FirstName = mC.FirstName, SpouseMemberId = mC.SpouseMemberId });
-            //    var list = mm.ToList();
-            //    return list;
-            //}
             var context = _unitOfWork.DbContext;
             var mm = (from m in context.Members
                       where m.MemberId == headOfFamilyMemberId
-                      select new Member() { MemberId = m.MemberId, LastName = m.LastName, FirstName = m.FirstName, SpouseMemberId = m.SpouseMemberId })
+                      select new Member() { MemberId = m.MemberId, LastName = m.LastName, FirstName = m.FirstName, SpouseMemberId = m.SpouseMemberId, MemberOf = (m.MemberOf==null)? "NONE":m.MemberOf.Trim() })
                 .Union(from m in context.Members
                        where m.SpouseMemberId == headOfFamilyMemberId
-                       select new Member() { MemberId = m.MemberId, LastName = m.LastName, FirstName = m.FirstName, SpouseMemberId = m.SpouseMemberId })
+                       select new Member() { MemberId = m.MemberId, LastName = m.LastName, FirstName = m.FirstName, SpouseMemberId = m.SpouseMemberId, MemberOf = (m.MemberOf == null) ? "NONE" : m.MemberOf.Trim() })
                 .Union(from mC in context.Members
                        join mmTemp in context.MemberMemberships on mC.MemberId equals mmTemp.MemberId into tempJoin
                        from mmTempJoin in tempJoin.DefaultIfEmpty()
@@ -205,7 +252,7 @@ namespace EventTracker.BusinessServices.Membership
                        from mJoinFa in tempJoinFa.DefaultIfEmpty()
                        where (mC.FatherMemberId == headOfFamilyMemberId || mC.MotherMemberId == headOfFamilyMemberId)
                                  && mmTempJoin.EndDate == null
-                       select new Member() { MemberId = mC.MemberId, LastName = mC.LastName, FirstName = mC.FirstName, SpouseMemberId = mC.SpouseMemberId });
+                       select new Member() { MemberId = mC.MemberId, LastName = mC.LastName, FirstName = mC.FirstName, SpouseMemberId = mC.SpouseMemberId, MemberOf = (mC.MemberOf == null) ? "NONE" : mC.MemberOf.Trim() });
             var list = mm.ToList();
             return list;
         }
@@ -226,6 +273,18 @@ on m.MemberId equals hhm.MemberId into tempJoin
             }
         }
 
+        public IEnumerable<Member> GetHeadOfFamilyMembers() {
+            //AT: Get HeadOfFamilyMembers that are not in current householdid
+            using (var context = _unitOfWork.DbContext) {
+                var mm = (from m in context.Members
+                          join hh in context.HouseHolds on m.MemberId equals hh.HouseHoldLeaderMemberId into tempJoin
+                          from hhmTemp in tempJoin.DefaultIfEmpty()
+                          where hhmTemp == null && m.IsHeadOfFamily == "Y"
+                          select new Member() { MemberId = m.MemberId, LastName = m.LastName, FirstName = m.FirstName });
+                var list = mm.ToList();
+                return list;
+            }
+        }
     }
 
     public interface IHouseHoldServices
@@ -238,7 +297,10 @@ on m.MemberId equals hhm.MemberId into tempJoin
 
         HouseHoldDetailsViewModel GetHouseHoldViewModel(int houseHoldId);
         IEnumerable<Member> GetHeadOfFamilyMembers(int houseHoldId, int houseHoldLeaderMemberId);
-
+        IEnumerable<Member> GetHeadOfFamilyMembers();
         int AddMemberToHousehold(NewHouseholdMember newhhMember);
+        void RemoveHouseholdMembersByHeadOfFamilyId(int householdId, int memberid);
+        bool UpdateHousehold(HouseHold aHousehold);
+        int CreateHousehold(HouseHold aHousehold);
     }
 }

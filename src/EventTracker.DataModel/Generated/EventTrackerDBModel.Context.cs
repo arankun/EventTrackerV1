@@ -29,10 +29,11 @@ namespace EventTracker.DataModel.Generated
         public virtual DbSet<Event> Events { get; set; }
         public virtual DbSet<HouseHoldMember> HouseHoldMembers { get; set; }
         public virtual DbSet<HouseHold> HouseHolds { get; set; }
+        public virtual DbSet<MemberAddress> MemberAddresses { get; set; }
         public virtual DbSet<MemberMembership> MemberMemberships { get; set; }
+        public virtual DbSet<Member> Members { get; set; }
         public virtual DbSet<Token> Tokens { get; set; }
         public virtual DbSet<UserEvent> UserEvents { get; set; }
         public virtual DbSet<User> Users { get; set; }
-        public virtual DbSet<Member> Members { get; set; }
     }
 }

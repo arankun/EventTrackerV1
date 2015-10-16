@@ -7,6 +7,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace EventTracker.DataModel.Generated
 {
     using System;
@@ -21,6 +23,7 @@ namespace EventTracker.DataModel.Generated
         }
     
         public int HouseHoldId { get; set; }
+        [ForeignKey("Member")]
         public int HouseHoldLeaderMemberId { get; set; }
         public string Area { get; set; }
         public string State { get; set; }

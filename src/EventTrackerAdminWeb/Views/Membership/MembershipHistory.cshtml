@@ -43,7 +43,7 @@
         @using (@Html.BeginForm("UpdateMembership", "Membership", FormMethod.Post)) {
             @Html.Hidden("MemberOfOldValue", Model.MemberOf)
             @Html.Hidden("MemberId", Model.MemberId)
-            <div>
+            <div class="form-group">
                 @Html.DropDownList("memberOf", Model.MembershipOptions, new { @class = "form-control" })
             </div>
 

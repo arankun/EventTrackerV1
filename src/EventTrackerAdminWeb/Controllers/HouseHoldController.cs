@@ -49,6 +49,15 @@ namespace EventTrackerAdminWeb.Controllers
             return View("HouseHolds", houseHolds);
         }
 
+        public ActionResult Create() {
+            ViewBag.Title = "New HouseHold";
+            var vm = new HouseHoldDetailsViewModel() {Name = "NAME OF HOUSEHOLD"};
+            var list = _services.GetHeadOfFamilyMembers();
+            //var list = _services.GetHeadOfFamilyMembers(houseHoldId, houseHoldLeaderMemberId).ToList();
+            vm.HeadOfFamilyMembersList = new SelectList(list, "MemberId", "FullName");
+            return View("EditHousehold", vm);
+        }
+
         [HttpGet]
         public ActionResult HouseholdMembers(int householdId, int houseHoldLeaderMemberId, int? page) {
             var pageSize = 10;
@@ -64,12 +73,12 @@ namespace EventTrackerAdminWeb.Controllers
             ViewBag.HouseHoldId = houseHoldId;
 
             var hhViewModel = _services.GetHouseHoldViewModel(houseHoldId);
-            ViewBag.HouseHoldLeaderMemberId = hhViewModel.HouseHold.HouseHoldLeaderMemberId;
+            ViewBag.HouseHoldLeaderMemberId = hhViewModel.HouseHoldLeaderMemberId;
             return View(hhViewModel);
             //return PartialView("_Ind", addresses.ToList());
         }
 
-        [Route("DeleteHouseHold/{houseHoldId}")]
+        //[Route("DeleteHouseHold/{houseHoldId}")]
         public ActionResult DeleteHouseHold(int? houseHoldId) {
             if (houseHoldId == null) {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -92,6 +101,7 @@ namespace EventTrackerAdminWeb.Controllers
             //ViewBag.HeadOfFamilyMembers = new SelectList(list, "MemberId", "FullName");
             //var items = new SelectList(list, "MemberId", "FullName").ToList();
             //items.Insert(0, (new SelectListItem { Text = "", Value = "0" }));
+            ViewBag.HouseHoldId = houseHoldId;
             var newHhMember = new NewHouseholdMember() {
                 HouseHoldId = houseHoldId,
                 HouseHoldLeaderMemberId = houseHoldLeaderMemberId,
@@ -117,9 +127,42 @@ namespace EventTrackerAdminWeb.Controllers
             return PartialView("_AddNewHouseholdMember", newhhMember);
         }
 
-        public ActionResult RemoveMemberFromHousehold(int memberid)
+        public ActionResult RemoveMemberFromHousehold(int memberid, int householdId)
         {
-            throw new NotImplementedException();
+            _services.RemoveHouseholdMembersByHeadOfFamilyId(householdId,memberid);
+            return RedirectToAction("EditHousehold", new { houseHoldId = householdId });
+        }
+
+        [HttpPost]
+        public ActionResult EditHousehold(HouseHoldDetailsViewModel houseHoldViewModel)
+        {
+            if (ModelState.IsValid) {
+                var aHousehold = new HouseHold()
+                {
+                    HouseHoldId = houseHoldViewModel.HouseHoldId,
+                    HouseHoldLeaderMemberId = houseHoldViewModel.HouseHoldLeaderMemberId,
+                    Name = houseHoldViewModel.Name,
+                    Area = houseHoldViewModel.Area
+                };
+                
+                if (houseHoldViewModel.HouseHoldId > 0) {
+                    _services.UpdateHousehold(aHousehold);
+                }
+                else {
+                   var newHhId = _services.CreateHousehold(aHousehold);
+                    houseHoldViewModel.HouseHoldId = newHhId;
+                }
+
+                TempData["message"] = string.Format("{0} has been saved", aHousehold.Name);
+                //ModelState.Clear();
+                return RedirectToAction("EditHousehold", new { houseHoldId= houseHoldViewModel.HouseHoldId});
+                //return View(houseHoldViewModel);
+                //return View("EditHousehold", houseHoldViewModel);
+            }
+            else {
+                // there is something wrong with the data values
+                return View("EditHousehold", houseHoldViewModel);
+            }
         }
     }
 }
