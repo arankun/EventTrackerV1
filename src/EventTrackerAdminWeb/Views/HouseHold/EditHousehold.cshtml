@@ -5,50 +5,70 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@using (Html.BeginForm("EditHousehold", "HouseHold")) {
-    @Html.AntiForgeryToken()
+<div class="panel panel-default">
 
-    <div class="form-horizontal">
-        <h4>Household</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.HouseHoldId)
-        @*
-    @Html.HiddenFor(model => model.HouseHoldLeaderMemberId)
-        *@
-        @if (Model.HouseHoldId <= 0) {
+    <div class="panel-heading">
+        <h>Household</h>
+    </div>
+
+
+    @using (Html.BeginForm("EditHousehold", "HouseHold")) {
+        <div class="panel-body">
+            @Html.AntiForgeryToken()
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.HouseHoldId)
+            @*
+                @Html.HiddenFor(model => model.HouseHoldLeaderMemberId)
+            *@
+            @if (Model.HouseHoldId <= 0) {
+                <div class="form-group">
+                        <label>Household Leader</label>
+                        @Html.DropDownList("HouseHoldLeaderMemberId", Model.HeadOfFamilyMembersList, "-- Select HH Leader --", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.HouseHoldLeaderMemberId, "", new { @class = "text-danger" })
+                </div>
+            }
+           else {
+                <div class="form-group">
+                    <label>Household Leader</label>
+                    @Html.DropDownList("HouseHoldLeaderMemberId", Model.HeadOfFamilyMembersList, "-- Select HH Leader --", new { @disabled = "disabled" })
+                    @Html.ValidationMessageFor(model => model.HouseHoldLeaderMemberId, "", new { @class = "text-danger" })
+                </div>
+            }
             <div class="form-group">
-                @Html.LabelFor(model => model.HouseHoldLeaderMemberId, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.DropDownList("HouseHoldLeaderMemberId", Model.HeadOfFamilyMembersList, "-- Select HH Leader --", new {@class = "form-control"})
-                    @Html.ValidationMessageFor(model => model.HouseHoldLeaderMemberId, "", new {@class = "text-danger"})
+            @*
+            @Html.LabelFor(model => model.Name, htmlAttributes: new {@class = "control-label col-md-2"})
+            *@
+                @Html.LabelFor(model => model.Name)
+                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Area)
+                    @Html.EditorFor(model => model.Area, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Area, "", new { @class = "text-danger" })
+            </div>
+
+
+        </div>
+        <div class="panel-footer">
+            <input type="submit" value="Save" class="btn btn-primary" />
+            @Html.ActionLink("Cancel and return to List", "Households", null, new {@class = "btn btn-default"})
+        </div>
+    }
+
+        @if (Model.HouseHoldId > 0) {
+            <div class="row">
+                <div class="form-group">
+                    <div class="col-md-10" id="replacetarget">
+                        @{ Html.RenderAction("HouseholdMembers", "HouseHold", new { householdId = Model.HouseHoldId, houseHoldLeaderMemberId = Model.HouseHoldLeaderMemberId }); }
+                    </div>
                 </div>
             </div>
         }
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Area, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Area, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Area, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <button class="btn btn-default">Save</button>
-            </div>
-        </div>
-    </div>
-}
+    
+</div>
 
 
 <!-- modal placeholder-->
@@ -59,20 +79,14 @@
         </div>
     </div>
 </div>
-@**@
-@if (Model.HouseHoldId > 0) {
-    <div class="row">
-        <div class="col-md-offset-2 col-md-10" id="replacetarget">
-            @{ Html.RenderAction("HouseholdMembers", "HouseHold", new { householdId = Model.HouseHoldId, houseHoldLeaderMemberId = Model.HouseHoldLeaderMemberId }); }
-        </div>
-    </div>
-}
-<p>
-    @Html.ActionLink("Back to List", "Households")
+        @**@
 
-</p>
+        <p>
+            @Html.ActionLink("Back to List", "Households")
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
+        </p>
 
-}
+        @section Scripts {
+            @Scripts.Render("~/bundles/jqueryval")
+
+        }

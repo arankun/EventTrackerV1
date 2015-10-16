@@ -19,7 +19,7 @@
                 <div class="col-md-10">
 
                     @**@
-                    @Html.DropDownListFor(x => x.MemberId, Model.HeadOfFamilyMembersList, "-- Select One --")
+                    @Html.DropDownListFor(x => x.MemberId, Model.HeadOfFamilyMembersList, "-- Select One --", new { @class = "form-control"})
                     
                     @Html.ValidationMessageFor(model => model.MemberId, "", new { @class = "text-danger" })
                 </div>

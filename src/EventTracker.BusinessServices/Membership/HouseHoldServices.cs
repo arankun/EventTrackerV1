@@ -93,44 +93,41 @@ namespace EventTracker.BusinessServices.Membership
             //}
             //return null;
             var crit = new HouseHoldCriteria() { HouseHoldId = houseHoldId };
-            using (var context = _unitOfWork.DbContext) {
-                var houseHolds = (from hh in context.HouseHolds
-                                  join m in context.Members on hh.HouseHoldLeaderMemberId equals m.MemberId
-                                  where hh.HouseHoldId == crit.HouseHoldId
-                                  orderby hh.Name
-                                  select new HouseHold {
-                                      HouseHoldId = hh.HouseHoldId,
-                                      HouseHoldLeaderMemberId = hh.HouseHoldLeaderMemberId,
-                                      Name = hh.Name,
-                                      Area = hh.Area,
-                                      State = hh.State,
-                                      HouseHoldLeader = m.FirstName + " " + m.LastName
-                                  }).FirstOrDefault();
+            var context = _unitOfWork.DbContext;
+            var houseHolds = (from hh in context.HouseHolds
+                              join m in context.Members on hh.HouseHoldLeaderMemberId equals m.MemberId
+                              where hh.HouseHoldId == crit.HouseHoldId
+                              orderby hh.Name
+                              select new HouseHold {
+                                  HouseHoldId = hh.HouseHoldId,
+                                  HouseHoldLeaderMemberId = hh.HouseHoldLeaderMemberId,
+                                  Name = hh.Name,
+                                  Area = hh.Area,
+                                  State = hh.State,
+                                  HouseHoldLeader = m.FirstName + " " + m.LastName
+                              }).FirstOrDefault();
 
-                var hhMembers = (from hhm in context.HouseHoldMembers
-                                 join m in context.Members on hhm.MemberId equals m.MemberId
-                                 where (hhm.HouseHoldId == houseHoldId && hhm.EndDate == null)
-                                 orderby m.LastName, m.IsHeadOfFamily descending, m.DOB
-                                 select new Member {
-                                     MemberId = m.MemberId,
-                                     LastName = m.LastName,
-                                     FirstName = m.FirstName,
-                                     DateOfBirth = m.DOB.Value
-                                 });//.ToPagedList(paging.CurrentPage, paging.ItemsPerPage);
-                var vm = new HouseHoldDetailsViewModel()
-                {
-                    HouseHoldId = houseHolds.HouseHoldId,
-                    HouseHoldLeaderMemberId = houseHolds.HouseHoldLeaderMemberId,
-                    Name = houseHolds.Name,
-                    Area = houseHolds.Area,
-                    State = houseHolds.State,
-                    HouseHoldLeader = houseHolds.HouseHoldLeader,
-                    HouseHoldMembers = hhMembers.ToList()
-                };
+            var hhMembers = (from hhm in context.HouseHoldMembers
+                             join m in context.Members on hhm.MemberId equals m.MemberId
+                             where (hhm.HouseHoldId == houseHoldId && hhm.EndDate == null)
+                             orderby m.LastName, m.IsHeadOfFamily descending, m.DOB
+                             select new Member {
+                                 MemberId = m.MemberId,
+                                 LastName = m.LastName,
+                                 FirstName = m.FirstName,
+                                 DateOfBirth = m.DOB.Value
+                             });//.ToPagedList(paging.CurrentPage, paging.ItemsPerPage);
+            var vm = new HouseHoldDetailsViewModel() {
+                HouseHoldId = houseHolds.HouseHoldId,
+                HouseHoldLeaderMemberId = houseHolds.HouseHoldLeaderMemberId,
+                Name = houseHolds.Name,
+                Area = houseHolds.Area,
+                State = houseHolds.State,
+                HouseHoldLeader = houseHolds.HouseHoldLeader,
+                HouseHoldMembers = hhMembers.ToList()
+            };
 
-                return vm;
-            }
-
+            return vm;
         }
 
         public int AddMemberToHousehold(NewHouseholdMember newhhMember) {

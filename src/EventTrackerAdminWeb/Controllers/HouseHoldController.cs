@@ -71,8 +71,10 @@ namespace EventTrackerAdminWeb.Controllers
 
         public ActionResult EditHousehold(int houseHoldId) {
             ViewBag.HouseHoldId = houseHoldId;
-
+            //var list = _services.GetHeadOfFamilyMembers(houseHoldId, houseHoldLeaderMemberId).ToList();
             var hhViewModel = _services.GetHouseHoldViewModel(houseHoldId);
+            var list = _services.GetHeadOfFamilyMembers();
+            hhViewModel.HeadOfFamilyMembersList = new SelectList(list, "MemberId", "FullName");
             ViewBag.HouseHoldLeaderMemberId = hhViewModel.HouseHoldLeaderMemberId;
             return View(hhViewModel);
             //return PartialView("_Ind", addresses.ToList());
@@ -105,7 +107,7 @@ namespace EventTrackerAdminWeb.Controllers
             var newHhMember = new NewHouseholdMember() {
                 HouseHoldId = houseHoldId,
                 HouseHoldLeaderMemberId = houseHoldLeaderMemberId,
-                HeadOfFamilyMembersList = new SelectList(list, "MemberId", "FullName")
+                HeadOfFamilyMembersList = new SelectList(list, "MemberId", "FullName", houseHoldLeaderMemberId)
             };
             return PartialView("_AddNewHouseholdMember", newHhMember);
         }
