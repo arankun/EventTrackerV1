@@ -261,7 +261,7 @@ namespace EventTracker.BusinessServices.Membership
                           join hhm in context.HouseHoldMembers
 on m.MemberId equals hhm.MemberId into tempJoin
                           from hhmTemp in tempJoin.DefaultIfEmpty()
-                          where m.IsHeadOfFamily == "Y"
+                          where m.IsHeadOfFamily == true
                           && hhmTemp.HouseHoldId != houseHoldId
                           && m.MemberId != houseHoldLeaderMemberId
                           select new Member() { MemberId = m.MemberId, LastName = m.LastName, FirstName = m.FirstName });
@@ -276,7 +276,7 @@ on m.MemberId equals hhm.MemberId into tempJoin
                 var mm = (from m in context.Members
                           join hh in context.HouseHolds on m.MemberId equals hh.HouseHoldLeaderMemberId into tempJoin
                           from hhmTemp in tempJoin.DefaultIfEmpty()
-                          where hhmTemp == null && m.IsHeadOfFamily == "Y"
+                          where hhmTemp == null && m.IsHeadOfFamily == true
                           select new Member() { MemberId = m.MemberId, LastName = m.LastName, FirstName = m.FirstName });
                 var list = mm.ToList();
                 return list;

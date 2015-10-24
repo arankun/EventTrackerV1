@@ -5,6 +5,6 @@
         public int? SpouseMemberId { get; set; }
         public int? FatherMemberId { get; set; }
         public int? MotherMemberId { get; set; }
-        public string IsHeadOfFamily { get; set; }
+        public bool IsHeadOfFamily { get; set; }
     }
 }

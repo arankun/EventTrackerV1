@@ -93,9 +93,9 @@
                             }
                             else if (property.PropertyName == "IsHeadOfFamily") {
                                 <label>@(property.DisplayName ?? property.PropertyName)</label>
-                                @Html.RadioButtonFor(m => m.IsHeadOfFamily, "Y", Model.Gender == "Y" ? new { Checked = "checked" } : null)
+                                @Html.RadioButtonFor(m => m.IsHeadOfFamily, true, Model.IsHeadOfFamily == true ? new { Checked = "checked" } : null)
                                 <span>Yes</span>
-                                @Html.RadioButtonFor(m => m.IsHeadOfFamily, "N", Model.Gender == "N" ? new { Checked = "checked" } : null)  <span>No</span>
+                                @Html.RadioButtonFor(m => m.IsHeadOfFamily, false, Model.IsHeadOfFamily == false ? new { Checked = "checked" } : null)  <span>No</span>
                             }
                             else {
                                 <label>@(property.DisplayName ?? property.PropertyName)</label>

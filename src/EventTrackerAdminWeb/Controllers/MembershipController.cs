@@ -108,10 +108,18 @@ namespace EventTrackerAdminWeb.Controllers
 
 
 
-        public ActionResult Delete()
+        public ActionResult Delete(int memberId)
         {
             //AT:TODO
-            return View("Edit", new Member());
+
+            var anEvent = _services.GetMember(memberId);
+
+            if (anEvent != null & _services.DeleteMember(memberId))
+            {
+                TempData["message"] = string.Format("{0} was deleted",
+                    anEvent.FullName);
+            }
+            return RedirectToAction("Members");
         }
 
         public ActionResult Create()

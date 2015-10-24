@@ -288,7 +288,7 @@ namespace EventTracker.BusinessServices.Membership
                               SpouseMemberId = m.SpouseMemberId,
                               SpouseName = mSpouse.FirstName,
                               HouseHoldId = hh.HouseHoldId,
-                              IsHeadOfFamily = m.IsHeadOfFamily
+                              IsHeadOfFamily = m.IsHeadOfFamily 
                           }).FirstOrDefault();
             return member;
             return null;
@@ -353,6 +353,24 @@ namespace EventTracker.BusinessServices.Membership
             return null;
         }
 
-        
+        public bool DeleteMember(int memberId)
+        {
+            var success = false;
+            if (memberId > 0)
+            {
+                using (var scope = new TransactionScope())
+                {
+                    var dbEvent = _unitOfWork.MemberRepository.GetByID(memberId);
+                    if (dbEvent != null)
+                    {
+                        _unitOfWork.MemberRepository.Delete(dbEvent);
+                        _unitOfWork.Save();
+                        scope.Complete();
+                        success = true;
+                    }
+                }
+            }
+            return success;
+        }
     }
 }

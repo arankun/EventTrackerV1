@@ -37,6 +37,6 @@ namespace EventTracker.BusinessModel.Membership
         public int? MotherMemberId { get; set; }
 
         [Display(Name = "Is Head of Family", Order = 7)]
-        public string IsHeadOfFamily { get; set; }
+        public bool IsHeadOfFamily { get; set; }
     }
 }

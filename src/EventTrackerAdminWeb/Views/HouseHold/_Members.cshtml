@@ -27,7 +27,7 @@
                 <td class="text-right">@item.FirstName</td>
                 <td class="text-right">@item.MemberOf</td>
                 <td class="text-center">
-                    @if (item.IsHeadOfFamily == "Y") {
+                    @if (item.IsHeadOfFamily) {
                         using (Html.BeginForm("RemoveMemberFromHousehold", "Household", new { memberId = item.MemberId, householdId = ViewBag.HouseHoldId })) {
                             @Html.Hidden("MemberId", item.MemberId)
                             <input type="submit"

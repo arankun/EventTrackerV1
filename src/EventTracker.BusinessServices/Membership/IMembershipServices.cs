@@ -35,5 +35,6 @@ namespace EventTracker.BusinessServices.Membership
 
         IEnumerable<MembershipHistory> GetMembershipHistory(int memberid);
         void UpdateMemberOf(Member existingMember);
+        bool DeleteMember(int memberId);
     }
 }
