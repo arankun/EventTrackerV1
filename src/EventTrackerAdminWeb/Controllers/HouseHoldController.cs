@@ -11,11 +11,11 @@ using EventTracker.BusinessServices.Membership;
 
 namespace EventTrackerAdminWeb.Controllers
 {
-    public class HouseHoldController : BaseController
+    public class HouseholdController : BaseController
     {
         private readonly IHouseHoldServices _services;
 
-        public HouseHoldController(IHouseHoldServices services)
+        public HouseholdController(IHouseHoldServices services)
         {
             _services = services;
         }
