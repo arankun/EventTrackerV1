@@ -26,7 +26,7 @@ namespace EventTrackerAdminWeb.Controllers
         }
 
         [HttpGet]
-        public ActionResult Households(string sortOrder, string currentFilter, string searchString, int? page) {
+        public ActionResult List(string sortOrder, string currentFilter, string searchString, int? page) {
             ViewBag.CurrentSort = sortOrder;
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "LastName" : "";
             ViewBag.DateSortParm = sortOrder == "MemberOf" ? "memberOf_desc" : "MemberOf";

@@ -18,7 +18,7 @@
         <table class="table">
             <tr>
                 <th>
-                    @Html.ActionLink("Name", "Households", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
+                    @Html.ActionLink("Name", "List", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
                 </th>
                 <th>HH Leader</th>
                 <th>Area</th>
@@ -66,7 +66,7 @@
         <br />
         Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
 
-        @Html.PagedListPager(Model, page => Url.Action("Households",
+        @Html.PagedListPager(Model, page => Url.Action("List",
     new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
     </div>
 </div>
