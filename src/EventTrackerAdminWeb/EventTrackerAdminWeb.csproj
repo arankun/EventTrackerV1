@@ -367,7 +367,7 @@
     <Content Include="Views\Error\AccessDenied.cshtml" />
     <Content Include="Views\Household\EditHousehold.cshtml" />
     <Content Include="Views\Household\DeleteHouseHold.cshtml" />
-    <None Include="Views\Household\Households.cshtml" />
+    <None Include="Views\Household\List.cshtml" />
     <Content Include="Views\Membership\Members.cshtml" />
     <Content Include="Views\Household\_AddNewHouseholdMember.cshtml" />
     <Content Include="Views\Membership\MembershipHistory.cshtml" />

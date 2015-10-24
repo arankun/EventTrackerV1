@@ -22,7 +22,7 @@ namespace EventTrackerAdminWeb.Controllers
 
         // GET: HouseHold
         public ActionResult Index() {
-            return View("Households");
+            return View("List");
         }
 
         [HttpGet]
@@ -46,7 +46,7 @@ namespace EventTrackerAdminWeb.Controllers
             var pagingInfo = new PagingInfo() { CurrentPage = 1, ItemsPerPage = 5 };
             var houseHoldCriteria = new HouseHoldCriteria();
             var houseHolds = _services.GetHouseHolds(houseHoldCriteria, pagingInfo);
-            return View("HouseHolds", houseHolds);
+            return View("List", houseHolds);
         }
 
         public ActionResult Create() {
