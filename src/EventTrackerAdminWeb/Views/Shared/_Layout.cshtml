@@ -37,7 +37,7 @@
                         <li>@Html.ActionLink("Logout", "Logout", "Home")</li>
                     }
                     else {
-                        <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                        <li><a href="@Url.Action("Signup", "Account")"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
                         <li><a href="@Url.Action("Index", "Account")"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
                     }
                 </ul>

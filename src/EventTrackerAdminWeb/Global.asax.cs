@@ -28,32 +28,36 @@ namespace EventTrackerAdminWeb
 
         }
 
-        //protected void Application_AuthenticateRequest(object sender, EventArgs e) {
+        //protected void Application_AuthenticateRequest(object sender, EventArgs e)
+        //{
         //    // Extract the forms authentication cookie
         //    string cookieName = null;
         //    cookieName = FormsAuthentication.FormsCookieName;
         //    HttpCookie authCookie = default(HttpCookie);
         //    authCookie = Context.Request.Cookies[cookieName];
-        //    if ((authCookie == null)) {
+        //    if ((authCookie == null))
+        //    {
         //        // There is no authentication cookie.
         //        return;
         //    }
         //    FormsAuthenticationTicket authTicket = default(FormsAuthenticationTicket);
         //    authTicket = null;
-        //    try {
+        //    try
+        //    {
         //        authTicket = FormsAuthentication.Decrypt(authCookie.Value);
         //    }
-        //    catch (Exception ex) {
+        //    catch (Exception ex)
+        //    {
         //        // Log exception details (omitted for simplicity)
         //        return;
         //    }
-        //    string[] roles = new string[3];
-        //    roles[0] = "One";
-        //    roles[1] = "Two";
+        //    //string[] roles = new string[3];
+        //    //roles[0] = "One";
+        //    //roles[1] = "Two";
         //    FormsIdentity id = default(FormsIdentity);
         //    id = new FormsIdentity(authTicket);
-        //    GenericPrincipal principal = default(GenericPrincipal);
-        //    principal = new GenericPrincipal(id, roles);
+        //    CustomPrincipal principal = default(CustomPrincipal);
+        //    principal = new CustomPrincipal(id);
         //    // Attach the new principal object to the current HttpContext object
         //    Context.User = principal;
 

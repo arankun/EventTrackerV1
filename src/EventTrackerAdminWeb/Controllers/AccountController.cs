@@ -32,6 +32,17 @@ namespace EventTrackerAdminWeb.Controllers
             return View(new LoginViewModel());
         }
 
+
+        public ActionResult Signup()
+        {
+            if (TempData["LoginError"] != null)
+            {
+                ViewBag.LoginError = TempData["LoginError"];
+            }
+
+            return View(new SignupViewModel());
+        }
+
         [HttpPost]
         public ActionResult LoginAuthentication(LoginViewModel model, string returnUrl = "")
         {
@@ -62,7 +73,7 @@ namespace EventTrackerAdminWeb.Controllers
                 Response.Cookies.Add(faCookie);
 
                 if (appUser.Roles.Contains("Admin")) {
-                    return RedirectToAction("Index", "Membership");
+                    return RedirectToAction("Members", "Membership");
                 }
                 else if (appUser.Roles.Contains("User")) {
                     return RedirectToAction("Index", "Events");

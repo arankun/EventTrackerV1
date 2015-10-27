@@ -23,7 +23,7 @@ namespace EventTracker.BusinessServices.Authentication
             if (aUser != null)
             {
                 var member = _unitOfWork.MemberRepository.GetByID(aUser.MemberId);
-
+                //TODO: @integrate role based security
                 var appUser = new CustomPrincipalSerializeModel()
                 {
                     LastName =  member.LastName,

@@ -73,6 +73,7 @@
     <Compile Include="Authentication\BaseViewPage.cs" />
     <Compile Include="Authentication\CustomPrincipal.cs" />
     <Compile Include="Authentication\CustomPrincipalSerializeModel.cs" />
+    <Compile Include="Authentication\SignupViewModel.cs" />
     <Compile Include="Authentication\LoginViewModel.cs" />
     <Compile Include="Authentication\Role.cs" />
     <Compile Include="Common\PagingInfo.cs" />

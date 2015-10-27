@@ -18,6 +18,7 @@ using PagedList;
 namespace EventTrackerAdminWeb.Controllers
 {
     //[CustomAuthorize(Roles = "Admin")]
+    [CustomAuthorize()]
     public class MembershipController : BaseController
     {
         private readonly IMembershipServices _services;
@@ -124,7 +125,7 @@ namespace EventTrackerAdminWeb.Controllers
 
         public ActionResult Create()
         {
-            return View("EditMember", new Member());
+            return View("EditMember", new Member() { MemberOf = "CFC" });
         }
 
 
@@ -170,7 +171,7 @@ namespace EventTrackerAdminWeb.Controllers
         {
             ViewBag.PanelHeading = string.Format("Adding Spouse Of {0}", spouseName);
             var oppositeGender = (gender.ToLower().Equals("m")) ? "F" : "M";
-            return View("EditMember", new Member() { SpouseMemberId = spousememberid , SpouseName = spouseName, Gender = oppositeGender });
+            return View("EditMember", new Member() { SpouseMemberId = spousememberid , SpouseName = spouseName, Gender = oppositeGender, MemberOf= "CFC"});
         }
 
         public ActionResult AddChild(int parentmemberid)
@@ -211,7 +212,7 @@ namespace EventTrackerAdminWeb.Controllers
             }
             
             ViewBag.PanelHeading = string.Format("Adding Child Of {0}", parentNames);
-            return View("EditMember", new Member() { FatherMemberId = fatherId, MotherMemberId = motherId  });
+            return View("EditMember", new Member() { FatherMemberId = fatherId, MotherMemberId = motherId ,MemberOf="KFC" });
         }
     }
 }

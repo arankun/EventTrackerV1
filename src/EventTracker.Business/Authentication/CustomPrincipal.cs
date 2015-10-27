@@ -14,6 +14,12 @@ namespace EventTracker.BusinessModel.Authentication
             Identity = new GenericIdentity(username);
         }
 
+        public CustomPrincipal(string username, string[] roles)
+        {
+            Identity = new GenericIdentity(username);
+            Roles = roles.ToList();
+        }
+
         public int UserId { get; set; }
         public List<string> Roles { get; set; }
         public string FirstName { get; set; }

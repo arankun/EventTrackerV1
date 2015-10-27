@@ -46,6 +46,11 @@ namespace EventTrackerAdminWeb.Filter
                     }
                 }
             }
+            else
+            {
+                filterContext.Result = new RedirectToRouteResult(new
+                        RouteValueDictionary(new { controller = "Account", action = "Index" }));
+            }
 
         }
     }

@@ -6,15 +6,11 @@
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css"/>
 
 @{
-    ViewBag.Title = "title";
+    ViewBag.Title = "Members";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="panel panel-default">
-
-    <div class="panel-heading">
-        <h>Events</h>
-    </div>
     <div class="panel-body">
         @using (Html.BeginForm("Members", "Membership", FormMethod.Get)) {
             <p>

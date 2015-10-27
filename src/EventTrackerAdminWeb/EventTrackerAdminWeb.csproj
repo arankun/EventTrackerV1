@@ -341,7 +341,7 @@
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\EventsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\HouseHoldController.cs" />
+    <Compile Include="Controllers\HouseholdController.cs" />
     <Compile Include="Controllers\MembershipController.cs" />
     <Compile Include="Controllers\MenuBarController.cs" />
     <Compile Include="Extensions\HtmlHelperExtensions.cs" />
