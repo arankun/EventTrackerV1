@@ -10,7 +10,7 @@ using EventTrackerAdminWeb.Filter;
 
 namespace EventTrackerAdminWeb.Controllers
 {
-    [CustomAuthorize]
+    //[CustomAuthorize]
     public class EventsController : BaseController
     {
         private readonly IEventServices _services;

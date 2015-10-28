@@ -9,5 +9,6 @@ namespace EventTracker.BusinessServices {
     public interface IMenuServices
     {
         IEnumerable<MenuItem> GetUserMenus();
+        IEnumerable<MenuItem> GetUserMenus(List<string> roles);
     }
 }

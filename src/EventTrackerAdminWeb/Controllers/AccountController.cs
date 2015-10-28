@@ -75,11 +75,11 @@ namespace EventTrackerAdminWeb.Controllers
                 if (appUser.Roles.Contains("Admin")) {
                     return RedirectToAction("Members", "Admin");
                 }
-                else if (appUser.Roles.Contains("User")) {
+                else if (appUser.Roles.Contains("HHLeader")) {
                     return RedirectToAction("Index", "Events");
                 }
                 else {
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Events");
                 }
 
 
