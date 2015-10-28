@@ -40,24 +40,19 @@
         @*
             @using (Html.BeginForm("BringBackList", "BringBack",FormMethod.Get, new {bringBackSearchViewModel = Model.BringBackSearchingModel })) {
         *@
-        @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
-        {
-            using (@Html.BeginForm("UpdateMembership", "Admin", FormMethod.Post))
-            {
-                @Html.Hidden("MemberOfOldValue", Model.MemberOf)
-                @Html.Hidden("MemberId", Model.MemberId)
-                <div class="form-group">
-                    @Html.DropDownList("memberOf", Model.MembershipOptions, new { @class = "form-control" })
-                </div>
+        @using (@Html.BeginForm("UpdateMembership", "Membership", FormMethod.Post)) {
+            @Html.Hidden("MemberOfOldValue", Model.MemberOf)
+            @Html.Hidden("MemberId", Model.MemberId)
+            <div class="form-group">
+                @Html.DropDownList("memberOf", Model.MembershipOptions, new { @class = "form-control" })
+            </div>
 
-                    <div class="modal-footer">
-                        @Html.ActionLink("Cancel and return to List", "Members", null, new { @class = "btn btn-default" })
-                        <input class="btn btn-primary" type="submit" value="Save" />
-                    </div>
+            <div class="modal-footer">
+                @Html.ActionLink("Cancel and return to List", "Members", null, new { @class = "btn btn-default" })
+                <input class="btn btn-primary" type="submit" value="Save" />
+            </div>
 
-            }
         }
-
     </div>
 
 </div>

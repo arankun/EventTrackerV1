@@ -26,17 +26,31 @@ namespace EventTracker.BusinessServices.Authentication
                 //TODO: @integrate role based security
                 var appUser = new CustomPrincipalSerializeModel()
                 {
-                    LastName =  member.LastName,
+                    LastName = member.LastName,
                     FirstName = member.FirstName,
                     Email = member.Email,
                     UserId = aUser.UserId,
                     Username = aUser.UserName,
-                    MemberId = member.MemberId,
-                    Roles = new List<string>() { "Admin" }
-            };
+                    MemberId = member.MemberId
+                };
+
+                //TODO: manually map role for now
+                if (appUser.LastName.ToUpper().StartsWith("TEJ") && appUser.FirstName.ToUpper().StartsWith("ALL"))
+                {
+                    appUser.Roles = new List<string>() { "Admin" };
+
+                }
+                else if (appUser.LastName.ToUpper().StartsWith("PO") && appUser.FirstName.ToUpper().StartsWith("MAN"))
+                {
+                    appUser.Roles = new List<string>() { "HHLeader" };
+                }
+                else
+                {
+                    appUser.Roles = new List<string>() { "Member" };
+                }
                 return appUser;
             }
-
+                
             return null;
         }
     }

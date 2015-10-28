@@ -372,5 +372,62 @@ namespace EventTracker.BusinessServices.Membership
             }
             return success;
         }
+
+        public IPagedList<Member> GetMembersOf(SearchParameter searchParam)
+        {
+
+
+            using (var context = _unitOfWork.DbContext)
+            {
+                var qry = (from m in context.Members
+                           join hhmTemp in context.HouseHoldMembers on m.MemberId equals hhmTemp.MemberId into hhmTempJoin
+                           from hhm in hhmTempJoin.DefaultIfEmpty()
+                           join hhTemp in context.HouseHolds on hhm.HouseHoldId equals hhTemp.HouseHoldId into hhTempJoin
+                           from hh in hhTempJoin.DefaultIfEmpty()
+                           where hhm.EndDate == null
+                           orderby m.LastName, m.SpouseMemberId descending, m.FatherMemberId, m.MotherMemberId
+                           select new Member
+                           {
+                               MemberId = m.MemberId,
+                               LastName = m.LastName,
+                               FirstName = m.FirstName,
+                               MemberOf = m.MemberOf == null ? "NONE" : m.MemberOf.Trim(),
+                               Email = m.Email,
+                               Phone = m.Phone,
+                               DateOfBirth = m.DOB.Value,
+                               HouseholdName = hh.Name,
+                               HouseHoldId = hh.HouseHoldId
+                           });
+                if (!String.IsNullOrEmpty(searchParam.SearchText))
+                {
+                    qry = qry.Where(s => s.LastName.Contains(searchParam.SearchText)
+                                           || s.FirstName.Contains(searchParam.SearchText));
+                }
+
+                if (!String.IsNullOrEmpty(searchParam.MemberOf))
+                {
+                    qry = qry.Where(s => s.MemberOf == searchParam.MemberOf);
+                }
+
+                switch (searchParam.SortBy)
+                {
+                    case "LastName_desc":
+                        qry = qry.OrderByDescending(s => s.LastName);
+                        break;
+                    case "memberOf":
+                        qry = qry.OrderBy(s => s.MemberOf);
+                        break;
+                    case "household":
+                        qry = qry.OrderByDescending(s => s.HouseholdName);
+                        break;
+                    default:
+                        qry = qry.OrderBy(s => s.LastName);
+                        break;
+                }
+
+                var pagedList = qry.ToPagedList(searchParam.PageNumber, searchParam.PageSize);
+                return pagedList;
+            }
+        }
     }
 }

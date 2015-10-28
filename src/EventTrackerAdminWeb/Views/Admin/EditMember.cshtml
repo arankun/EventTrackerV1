@@ -1,0 +1,121 @@
+﻿@model EventTracker.BusinessModel.Membership.Member
+
+@{
+    ViewBag.Title = "title";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="panel">
+    <div class="panel-heading">
+        <h3>
+            @if (Model.MemberId > 0)
+            {
+                @Model.FullName
+            }
+            else
+            {
+                @ViewBag.PanelHeading
+                ;
+            }
+        </h3>
+
+        @if (Model.SpouseMemberId.HasValue && Model.SpouseMemberId.Value > 0)
+        {
+            @Html.ActionLink("Spouse: " + @Model.SpouseName, "EditMember", new {memberId = @Model.SpouseMemberId}, new {@class = "btn btn-primary"})
+        }
+        else {
+            if (Model.MemberId > 0 && Model.MemberOf != "KFC" && Model.MemberOf != "YFC") {
+                @Html.ActionLink("Add Spouse", "AddSpouse", new { spouseMemberId = @Model.MemberId, spouseName = @Model.FullName, gender=@Model.Gender }, new { @class = "btn btn-primary" })
+            }
+        }
+        @if (Model.HouseHoldId.HasValue) {
+            @Html.ActionLink("Household: " + @Model.HouseholdName, "EditHousehold", new { controller= "Admin", householdid = @Model.HouseHoldId }, new { @class = "btn btn-primary" })
+        }
+        @if (Model.MemberId > 0 && Model.MemberOf!="KFC" && Model.MemberOf!="YFC") {
+            @Html.ActionLink("Add Children", "AddChild", new { parentMemberId = @Model.MemberId }, new { @class = "btn btn-primary" })
+        }
+
+
+    </div>
+
+    @using (Html.BeginForm("EditMember", "Admin")) {
+        <div class="panel-body">
+            @Html.HiddenFor(m => m.MemberId)
+            @Html.HiddenFor(m => m.SpouseMemberId)
+            @Html.HiddenFor(m => m.FatherMemberId)
+            @Html.HiddenFor(m => m.MotherMemberId)
+
+            @foreach (var property in ViewData.ModelMetadata.Properties) {
+
+                switch (property.PropertyName) {
+                    case "MemberId":
+                        break;
+                    case "FullName":
+                        break;
+                    case "SpouseMemberId":
+                        break;
+                    case "ParentMemberId":
+                        break;
+                    case "Name":
+                        break;
+                    case "SpouseName":
+                        break;
+                    case "MemberOf":
+                        break;
+                    case "HouseHoldId":
+                        break;
+                    case "HouseholdName":
+                        break;
+                    case "FatherMemberId":
+                        break;
+                    case "MotherMemberId":
+                        break;
+                    default:
+                        <div class="form-group">
+                            @if (property.PropertyName == "DateOfBirth") {
+                                <label>@(property.DisplayName ?? property.PropertyName)</label>
+                                <div class="input-group date">
+                                    @Html.TextBoxFor(model => Model.DateOfBirth, "{0:MM/dd/yyyy}", new { @class = "form-control", id = "EventDate", @placeholder = "mm/dd/yyyy", @title = "Event Date" })
+                                    <div class="input-group-addon">
+                                        <span class="glyphicon glyphicon-th"></span>
+                                    </div>
+                                </div>
+                            }
+                            @*else if (property.PropertyName == "HouseholdName") {
+                                    if (@Model.HouseHoldId.HasValue) {
+                                        @Html.ActionLink("Household: " + @Model.HouseholdName, "EditHousehold", new { householdid = @Model.HouseHoldId }, new { @class = "btn btn-primary" })
+                                    }
+                                }*@
+                            else if (property.PropertyName == "Gender") {
+                                <label>@(property.DisplayName ?? property.PropertyName)</label>
+                                @Html.RadioButtonFor(m => m.Gender, "Male", Model.Gender == "M" ? new { Checked = "checked" } : null)
+                                <span>Male</span>
+                                @Html.RadioButtonFor(m => m.Gender, "Female", Model.Gender == "F" ? new { Checked = "checked" } : null)  <span>Female</span>
+                            }
+                            else if (property.PropertyName == "IsHeadOfFamily") {
+                                <label>@(property.DisplayName ?? property.PropertyName)</label>
+                                @Html.RadioButtonFor(m => m.IsHeadOfFamily, true, Model.IsHeadOfFamily == true ? new { Checked = "checked" } : null)
+                                <span>Yes</span>
+                                @Html.RadioButtonFor(m => m.IsHeadOfFamily, false, Model.IsHeadOfFamily == false ? new { Checked = "checked" } : null)  <span>No</span>
+                            }
+                            else {
+                                <label>@(property.DisplayName ?? property.PropertyName)</label>
+                                @Html.TextBox(property.PropertyName, null,
+                                    new { @class = "form-control" })
+                            }
+                            @Html.ValidationMessage(property.PropertyName)
+                        </div>
+                        break;
+                }
+                @Html.ValidationMessage(property.PropertyName)
+
+
+            }
+        </div>
+
+        <div class="panel-footer">
+            <input type="submit" value="Save" class="btn btn-primary" />
+            @Html.ActionLink("Cancel and return to List", "Members", null, new {
+           @class = "btn btn-default" })
+        </div>
+    }
+</div>

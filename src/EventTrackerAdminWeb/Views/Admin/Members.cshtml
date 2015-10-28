@@ -1,0 +1,82 @@
+﻿@*
+@model System.Collections.Generic.IEnumerable<EventTracker.BusinessModel.Membership.Member>
+*@
+@using PagedList.Mvc
+@model PagedList.IPagedList<EventTracker.BusinessModel.Membership.Member>
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css"/>
+
+@{
+    ViewBag.Title = "Members";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        @Html.ActionLink("Add Member", "CreateMember", null,
+            new { @class = "btn btn-default" })
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm("Members", "Admin", FormMethod.Get))
+        {
+            <p>
+                Find by name: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+                <input type="submit" value="Search" />
+            </p>
+        }
+        <table class="table table-striped table-condensed table-bordered">
+            <tr>
+                <th class="text-right">
+                    @Html.ActionLink("Last Name", "Members", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
+                </th>
+                <th class="text-right">Firstname</th>
+                <th class="text-right">MemberOf</th>
+                <th class="text-right">HH</th>
+                <th class="text-right"></th>
+            </tr>
+            @foreach (var item in Model)
+        {
+                <tr>
+                    <td>@Html.ActionLink(item.LastName, "EditMember", new { item.MemberId })</td>
+                    <td class="text-right">@item.FirstName</td>
+                    <td>@Html.ActionLink(item.MemberOf, "MembershipHistory", new { memberId = item.MemberId, memberOf = item.MemberOf })</td>
+                    @*
+                        @if (item.MemberOf == "KFC" || item.MemberOf == "YFC" || item.MemberOf == "SFC" || item.MemberOf=="CFC") {
+                            <td>@Html.ActionLink(item.MemberOf, "MembershipHistory", new { memberId = item.MemberId, memberOf = item.MemberOf })</td>
+                        }
+                        else {
+                            <td class="text-right">@item.MemberOf</td>
+                        }
+                    *@
+
+                    <td>
+                        @if (item.HouseHoldId.HasValue)
+                        {
+                            @Html.ActionLink(item.HouseholdName, "EditHousehold", new { controller = "Admin", houseHoldId = item.HouseHoldId.Value })
+                        }
+                        else
+                        {
+                            @item.HouseholdName
+                        }
+                    </td>
+                    <td class="text-center">
+                        @using (Html.BeginForm("DeleteMember", "Admin"))
+                        {
+                            @Html.Hidden("MemberId", item.MemberId)
+                            <input type="submit"
+                                    class="btn btn-default btn-xs"
+                                    value="Delete" />
+                        }
+                    </td>
+                </tr>
+            }
+        </table>
+        Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+        @Html.PagedListPager(Model, page => Url.Action("Members",
+new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+    </div>
+    <div class="panel-footer">
+        @Html.ActionLink("Add Member", "CreateMember", null,
+            new { @class = "btn btn-default" })
+    </div>
+</div>	

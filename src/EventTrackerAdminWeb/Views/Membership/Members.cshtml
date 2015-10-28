@@ -14,7 +14,7 @@
     <div class="panel-body">
         @using (Html.BeginForm("Members", "Membership", FormMethod.Get)) {
             <p>
-                Find by name: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+                Search: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
                 <input type="submit" value="Search" />
             </p>
         }
@@ -24,9 +24,8 @@
                     @Html.ActionLink("Last Name", "Members", new {sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter})
                 </th>
                 <th class="text-right">Firstname</th>
-                <th class="text-right">MemberOf</th>
-                <th class="text-right">HH</th>
-                <th class="text-right"></th>
+                <th class="text-right">@Html.ActionLink("Member Of", "Members", new { sortOrder = ViewBag.MemberOfSortParm, currentFilter = ViewBag.CurrentFilter })</th>
+                <th class="text-right">@Html.ActionLink("Household", "Members", new { sortOrder = ViewBag.HouseholdSortParm, currentFilter = ViewBag.CurrentFilter })</th>
             </tr>
             @foreach (var item in Model)
             {
@@ -51,26 +50,14 @@
                             @item.HouseholdName
                         }
                     </td>
-                    <td class="text-center">
-                        @using (Html.BeginForm("Delete", "Membership"))
-                        {
-                            @Html.Hidden("MemberId", item.MemberId)
-                            <input type="submit"
-                                   class="btn btn-default btn-xs"
-                                   value="Delete"/>
-                        }
-                    </td>
+
                 </tr>
             }
         </table>
-        <br />
         Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
 
         @Html.PagedListPager(Model, page => Url.Action("Members",
     new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
     </div>
-    <div class="panel-footer">
-        @Html.ActionLink("Add Member", "Create", null,
-                new { @class = "btn btn-default" })
-    </div>
+
 </div>	

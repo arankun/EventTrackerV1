@@ -73,7 +73,7 @@ namespace EventTrackerAdminWeb.Controllers
                 Response.Cookies.Add(faCookie);
 
                 if (appUser.Roles.Contains("Admin")) {
-                    return RedirectToAction("Members", "Membership");
+                    return RedirectToAction("Members", "Admin");
                 }
                 else if (appUser.Roles.Contains("User")) {
                     return RedirectToAction("Index", "Events");
