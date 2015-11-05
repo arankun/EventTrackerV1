@@ -12,7 +12,7 @@
 <div class="panel panel-default">
 
     <div class="panel-heading">
-        @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-plus'></span>", "Add New Household", "CreateHousehold", "Admin", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })
+        @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-plus'></span> Add Household", "Add New Household", "CreateHousehold", "Admin", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })
     </div>
     <div class="panel-body">
         <table class="table">
@@ -34,10 +34,10 @@
             @foreach (var item in Model) {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Name)
+                        @Html.ActionLink(item.Name, "EditHousehold", new {item.HouseHoldId})
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.HouseHoldLeader)
+                        @Html.ActionLink(item.HouseHoldLeader, "EditMember", new { @memberid = item.HouseHoldLeaderMemberId })
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Area)

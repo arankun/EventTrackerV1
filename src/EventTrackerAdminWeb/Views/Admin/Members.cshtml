@@ -14,15 +14,21 @@
     <div class="panel-heading">
         @Html.ActionLink("Add Member", "CreateMember", null,
             new { @class = "btn btn-default" })
+        @using (Html.BeginForm("Members", "Admin", FormMethod.Get, new { @class = "pull-right" }))
+        {
+            <div class="form-group">
+                <div class="col-md-8">
+                    @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-control" })
+                </div>
+                <div class="col-md-4">
+                    <input type="submit" value="Search" class="form-control btn-primary" />
+                </div>
+                
+            </div>
+        }
     </div>
     <div class="panel-body">
-        @using (Html.BeginForm("Members", "Admin", FormMethod.Get))
-        {
-            <p>
-                Find by name: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
-                <input type="submit" value="Search" />
-            </p>
-        }
+
         <table class="table table-striped table-condensed table-bordered">
             <tr>
                 <th class="text-right">

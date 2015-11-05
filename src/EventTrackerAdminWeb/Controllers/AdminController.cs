@@ -24,11 +24,36 @@ namespace EventTrackerAdminWeb.Controllers
 
         #region Member Management
         // GET: Admin
-        public ActionResult Members(string sortOrder, string currentFilter, string searchString, int? page)
+        //public ActionResult Members(string sortOrder, string currentFilter, string searchString, int? page)
+        //{
+        //    ViewBag.CurrentSort = sortOrder;
+        //    ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "LastName" : "";
+        //    ViewBag.DateSortParm = sortOrder == "MemberOf" ? "memberOf_desc" : "MemberOf";
+
+        //    if (searchString != null)
+        //    {
+        //        page = 1;
+        //    }
+        //    else
+        //    {
+        //        searchString = currentFilter;
+        //    }
+
+        //    ViewBag.CurrentFilter = searchString;
+        //    var pageSize = 10;
+        //    var pageNumber = (page ?? 1);
+        //    int pageCount;
+        //    var members = _membershipSvc.GetMembers(pageNumber, pageSize);
+        //    return View(members);
+        //}
+
+        [HttpGet]
+        public ActionResult Members(string memberOf, string sortOrder, string currentFilter, string searchString, int? page)
         {
             ViewBag.CurrentSort = sortOrder;
-            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "LastName" : "";
-            ViewBag.DateSortParm = sortOrder == "MemberOf" ? "memberOf_desc" : "MemberOf";
+            ViewBag.LastnameSortParm = String.IsNullOrEmpty(sortOrder) ? "LastName_desc" : "";
+            ViewBag.MemberOfSortParm = sortOrder == "MemberOf" ? "memberOf_desc" : "memberOf";
+            ViewBag.HouseholdSortParm = sortOrder == "MemberOf" ? "household_desc" : "household";
 
             if (searchString != null)
             {
@@ -43,7 +68,8 @@ namespace EventTrackerAdminWeb.Controllers
             var pageSize = 10;
             var pageNumber = (page ?? 1);
             int pageCount;
-            var members = _membershipSvc.GetMembers(pageNumber, pageSize);
+            //var members = _services.GetMembers(pageNumber, pageSize);
+            var members = _membershipSvc.GetMembersOf(new EventTracker.BusinessModel.SearchParameter { PageNumber = pageNumber, PageSize = pageSize, SortBy = sortOrder, SearchText = searchString, MemberOf = memberOf });
             return View(members);
         }
 
@@ -138,7 +164,7 @@ namespace EventTrackerAdminWeb.Controllers
                 var member = new Member() { MemberId = viewModel.MemberId, MemberOf = viewModel.MemberOf };
                 _membershipSvc.UpdateMemberOf(member);
             }
-            return RedirectToAction("Members");
+            return RedirectToAction("Members","Admin");
         }
 
         public ActionResult AddSpouse(int spousememberid, string spouseName, string gender)

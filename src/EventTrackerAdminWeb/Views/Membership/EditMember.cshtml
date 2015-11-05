@@ -98,9 +98,12 @@
                                 @Html.RadioButtonFor(m => m.IsHeadOfFamily, false, Model.IsHeadOfFamily == false ? new { Checked = "checked" } : null)  <span>No</span>
                             }
                             else {
-                                <label>@(property.DisplayName ?? property.PropertyName)</label>
-                                @Html.TextBox(property.PropertyName, null,
-                                    new { @class = "form-control" })
+                                <div class="controls">
+                                    <label>@(property.DisplayName ?? property.PropertyName)</label>
+                                    @Html.Label(property.PropertyName, null,
+                                    new { @class = "form-control" })                                    
+                                </div>
+
                             }
                             @Html.ValidationMessage(property.PropertyName)
                         </div>

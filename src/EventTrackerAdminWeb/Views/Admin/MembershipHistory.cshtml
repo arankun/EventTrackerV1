@@ -40,7 +40,7 @@
         @*
             @using (Html.BeginForm("BringBackList", "BringBack",FormMethod.Get, new {bringBackSearchViewModel = Model.BringBackSearchingModel })) {
         *@
-        @using (@Html.BeginForm("UpdateMembership", "Membership", FormMethod.Post)) {
+        @using (@Html.BeginForm("UpdateMembership", "Admin", FormMethod.Post)) {
             @Html.Hidden("MemberOfOldValue", Model.MemberOf)
             @Html.Hidden("MemberId", Model.MemberId)
             <div class="form-group">
