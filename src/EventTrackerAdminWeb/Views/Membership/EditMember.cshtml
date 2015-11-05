@@ -74,10 +74,7 @@
                             @if (property.PropertyName == "DateOfBirth") {
                                 <label>@(property.DisplayName ?? property.PropertyName)</label>
                                 <div class="input-group date">
-                                    @Html.TextBoxFor(model => Model.DateOfBirth, "{0:MM/dd/yyyy}", new { @class = "form-control", id = "EventDate", @placeholder = "mm/dd/yyyy", @title = "Event Date" })
-                                    <div class="input-group-addon">
-                                        <span class="glyphicon glyphicon-th"></span>
-                                    </div>
+                                    @Html.TextBoxFor(model => Model.DateOfBirth, "{0:MM/dd/yyyy}", new { @class = "form-control-static", id = "EventDate", @placeholder = "mm/dd/yyyy", @title = "Event Date" })
                                 </div>
                             }
                             @*else if (property.PropertyName == "HouseholdName") {
@@ -86,7 +83,6 @@
                                     }
                                 }*@
                             else if (property.PropertyName == "Gender") {
-                                <label>@(property.DisplayName ?? property.PropertyName)</label>
                                 @Html.RadioButtonFor(m => m.Gender, "Male", Model.Gender == "M" ? new { Checked = "checked" } : null)
                                 <span>Male</span>
                                 @Html.RadioButtonFor(m => m.Gender, "Female", Model.Gender == "F" ? new { Checked = "checked" } : null)  <span>Female</span>
@@ -97,15 +93,11 @@
                                 <span>Yes</span>
                                 @Html.RadioButtonFor(m => m.IsHeadOfFamily, false, Model.IsHeadOfFamily == false ? new { Checked = "checked" } : null)  <span>No</span>
                             }
-                            else {
-                                <div class="controls">
-                                    <label>@(property.DisplayName ?? property.PropertyName)</label>
-                                    @Html.Label(property.PropertyName, null,
-                                    new { @class = "form-control" })                                    
-                                </div>
-
+                            else
+                            {
+                                @Html.TextBox(property.PropertyName, null, new { @class = "form-control-static", placeholder=property.PropertyName })
                             }
-                            @Html.ValidationMessage(property.PropertyName)
+                                @Html.ValidationMessage(property.PropertyName)
                         </div>
                         break;
                 }
