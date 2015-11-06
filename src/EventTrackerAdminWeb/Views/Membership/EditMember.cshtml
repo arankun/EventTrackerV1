@@ -72,10 +72,7 @@
                     default:
                         <div class="form-group">
                             @if (property.PropertyName == "DateOfBirth") {
-                                <label>@(property.DisplayName ?? property.PropertyName)</label>
-                                <div class="input-group date">
-                                    @Html.TextBoxFor(model => Model.DateOfBirth, "{0:MM/dd/yyyy}", new { @class = "form-control-static", id = "EventDate", @placeholder = "mm/dd/yyyy", @title = "Event Date" })
-                                </div>
+                                @Html.TextBoxFor(model => Model.DateOfBirth, "{0:MM/dd/yyyy}", new { @class = "form-control", id = "EventDate", @placeholder = "Birthday (mm/dd/yyyy)", @title = "Event Date" })
                             }
                             @*else if (property.PropertyName == "HouseholdName") {
                                     if (@Model.HouseHoldId.HasValue) {
@@ -95,7 +92,7 @@
                             }
                             else
                             {
-                                @Html.TextBox(property.PropertyName, null, new { @class = "form-control-static", placeholder=property.PropertyName })
+                                @Html.TextBox(property.PropertyName, null, new { @class = "form-control", placeholder=property.PropertyName })
                             }
                                 @Html.ValidationMessage(property.PropertyName)
                         </div>

@@ -72,7 +72,6 @@
                     default:
                         <div class="form-group">
                             @if (property.PropertyName == "DateOfBirth") {
-                                <label>@(property.DisplayName ?? property.PropertyName)</label>
                                 <div class="input-group date">
                                     @Html.TextBoxFor(model => Model.DateOfBirth, "{0:MM/dd/yyyy}", new { @class = "form-control", id = "EventDate", @placeholder = "mm/dd/yyyy", @title = "Event Date" })
                                     <div class="input-group-addon">
@@ -86,7 +85,6 @@
                                     }
                                 }*@
                             else if (property.PropertyName == "Gender") {
-                                <label>@(property.DisplayName ?? property.PropertyName)</label>
                                 @Html.RadioButtonFor(m => m.Gender, "Male", Model.Gender == "M" ? new { Checked = "checked" } : null)
                                 <span>Male</span>
                                 @Html.RadioButtonFor(m => m.Gender, "Female", Model.Gender == "F" ? new { Checked = "checked" } : null)  <span>Female</span>
@@ -98,9 +96,7 @@
                                 @Html.RadioButtonFor(m => m.IsHeadOfFamily, false, Model.IsHeadOfFamily == false ? new { Checked = "checked" } : null)  <span>No</span>
                             }
                             else {
-                                <label>@(property.DisplayName ?? property.PropertyName)</label>
-                                @Html.TextBox(property.PropertyName, null,
-                                    new { @class = "form-control" })
+                                @Html.TextBox(property.PropertyName, null, new { @class = "form-control", placeholder = property.PropertyName })
                             }
                             @Html.ValidationMessage(property.PropertyName)
                         </div>
