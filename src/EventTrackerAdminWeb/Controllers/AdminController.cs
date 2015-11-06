@@ -124,6 +124,7 @@ namespace EventTrackerAdminWeb.Controllers
 
         public ActionResult CreateMember()
         {
+            ViewBag.PanelHeading = "Add Member";
             return View("EditMember", new Member() { MemberOf = "CFC" });
         }
 
@@ -169,9 +170,11 @@ namespace EventTrackerAdminWeb.Controllers
 
         public ActionResult AddSpouse(int spousememberid, string spouseName, string gender)
         {
+            var arr = spouseName.Split(',');
+            var lname = (arr.Length > 0) ? arr[0] : string.Empty;
             ViewBag.PanelHeading = string.Format("Adding Spouse Of {0}", spouseName);
             var oppositeGender = (gender.ToLower().Equals("m")) ? "F" : "M";
-            return View("EditMember", new Member() { SpouseMemberId = spousememberid, SpouseName = spouseName, Gender = oppositeGender, MemberOf = "CFC" });
+            return View("EditMember", new Member() { SpouseMemberId = spousememberid, SpouseName = spouseName, Gender = oppositeGender, MemberOf = "CFC", LastName= lname });
         }
 
         public ActionResult AddChild(int parentmemberid)
@@ -182,10 +185,12 @@ namespace EventTrackerAdminWeb.Controllers
             Member father = null;
             Member mother = null;
             string parentNames;
+            var lname = string.Empty;
             //TODO: Refactor
             if (parentMember.Gender == "M")
             {
                 fatherId = parentMember.MemberId;
+                lname = parentMember.LastName;
                 //father = _membershipSvc.GetMember(fatherId.Value);
                 if (parentMember.SpouseMemberId.HasValue)
                 {
@@ -201,6 +206,7 @@ namespace EventTrackerAdminWeb.Controllers
             else
             {
                 motherId = parentMember.MemberId;
+                lname = parentMember.LastName;
                 if (parentMember.SpouseMemberId.HasValue)
                 {
                     fatherId = parentMember.SpouseMemberId.Value;
@@ -214,7 +220,7 @@ namespace EventTrackerAdminWeb.Controllers
             }
 
             ViewBag.PanelHeading = string.Format("Adding Child Of {0}", parentNames);
-            return View("EditMember", new Member() { FatherMemberId = fatherId, MotherMemberId = motherId, MemberOf = "KFC" });
+            return View("EditMember", new Member() { FatherMemberId = fatherId, MotherMemberId = motherId, MemberOf = "KFC", LastName=lname  });
         } 
         #endregion
 

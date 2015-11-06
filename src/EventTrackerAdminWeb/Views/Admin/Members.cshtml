@@ -35,17 +35,19 @@
     </div>
     <div class="panel-body">
 
-        <table class="table table-striped table-condensed table-bordered">
+        <table class="table table-striped table-condensed">
+    @*
             <tr>
                 <th class="text-center">
                     @Html.ActionLink("Last Name", "Members", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
                 </th>
                 <th class="text-center">Member Of</th>
                 <th class="text-center">HH</th>
-                <th class="text-center">
-                    @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-plus'></span>", "Add", "CreateMember", "Admin", null, htmlAttributes: new { @class = "btn btn-primary" })
-                </th>
-            </tr>
+
+    <th class="text-center">
+        @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-plus'></span>", "Add", "CreateMember", "Admin", null, htmlAttributes: new { @class = "btn btn-primary" })
+    </th>
+            </tr>*@
             @foreach (var item in Model)
         {
                 <tr>
@@ -70,15 +72,16 @@
                             @item.HouseholdName
                         }
                     </td>
-                    <td class="text-center">
-                        @using (Html.BeginForm("DeleteMember", "Admin"))
-                        {
-                            @Html.Hidden("MemberId", item.MemberId)
-                            <input type="submit"
-                                    class="btn btn-default btn-xs"
-                                    value="Delete" />
-                        }
-                    </td>
+                    @*
+    <td class="text-center">
+        @using (Html.BeginForm("DeleteMember", "Admin"))
+        {
+            @Html.Hidden("MemberId", item.MemberId)
+            <input type="submit"
+                    class="btn btn-default btn-xs"
+                    value="Delete" />
+        }
+    </td>*@
                 </tr>
             }
         </table>
