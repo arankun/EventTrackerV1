@@ -30,11 +30,12 @@
             }       
             else {
                 <div class="form-group">
-                    <label>Household Leader</label>
+                    <label>Household Leader:</label>
                     @*
                         @Html.DropDownList("HouseHoldLeaderMemberId", Model.HeadOfFamilyMembersList, "-- Select HH Leader --", new { @disabled = "disabled" })
                     *@
-                    @Html.Label(Model.HouseHoldLeader)
+
+                    @Html.ActionLink(Model.HouseHoldLeader, "EditMember", new { Model.HouseHoldLeaderMemberId })
                 </div>
             }
             <div class="form-group">
