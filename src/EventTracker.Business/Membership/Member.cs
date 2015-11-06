@@ -12,7 +12,7 @@ namespace EventTracker.BusinessModel.Membership
         [HiddenInput(DisplayValue = false)]
         public int MemberId { get; set; }
 
-        public string MemberOf { get; set; }
+        //public string MemberOf { get; set; }
 
         [HiddenInput(DisplayValue = false)]
         public int? SpouseMemberId { get; set; }

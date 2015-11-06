@@ -43,7 +43,7 @@
             @Html.HiddenFor(m => m.SpouseMemberId)
             @Html.HiddenFor(m => m.FatherMemberId)
             @Html.HiddenFor(m => m.MotherMemberId)
-
+            @Html.HiddenFor(m => m.MemberOf)
             @foreach (var property in ViewData.ModelMetadata.Properties) {
 
                 switch (property.PropertyName) {

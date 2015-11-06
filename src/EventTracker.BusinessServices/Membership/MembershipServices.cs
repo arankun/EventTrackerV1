@@ -48,7 +48,8 @@ namespace EventTracker.BusinessServices.Membership
                     SpouseMemberId = newMember.SpouseMemberId,
                     FatherMemberId = newMember.FatherMemberId,
                     MotherMemberId = newMember.MotherMemberId,
-                    IsHeadOfFamily = newMember.IsHeadOfFamily
+                    IsHeadOfFamily = newMember.IsHeadOfFamily,
+                    MemberOf = newMember.MemberOf
                 };
                 _unitOfWork.MemberRepository.Insert(dbMember);
                 _unitOfWork.Save();

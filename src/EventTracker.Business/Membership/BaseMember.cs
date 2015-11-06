@@ -2,7 +2,7 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
-
+using System.Web.Mvc;
 #endregion
 
 namespace EventTracker.BusinessModel.Membership
@@ -32,5 +32,8 @@ namespace EventTracker.BusinessModel.Membership
 
         [Display(Order = 6)]
         public string Email { get; set; }
+
+        [HiddenInput(DisplayValue = false)]
+        public string MemberOf { get; set; }
     }
 }
